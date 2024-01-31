@@ -1,11 +1,9 @@
-import './App.css';
+import React, { useState, useEffect } from "react";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        TASTEHUB
-      </header>
+      <h1 className='text-3xl font-bold underline'>TASTEHUB</h1>
     </div>
   );
 }
