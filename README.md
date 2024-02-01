@@ -5,3 +5,4 @@ ENSF 401 App Project
 - `git clone https://github.com/JadKhalil/TasteHub`
 - `npm install` to install all dependencies
 - tailwindcss is already configured and is ready to use
+- Please don't push to main branch. Pull requests only :)
