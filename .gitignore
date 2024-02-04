@@ -23,3 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 .DS_Store
+
+#IAC
+.terraform
+terraform.*
+.terraform.*
+*.zip
