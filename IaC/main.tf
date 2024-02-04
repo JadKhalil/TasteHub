@@ -89,8 +89,7 @@ resource "aws_dynamodb_table" "tastehub-users" {
   # up to 1KB per second
   write_capacity = 1
 
-  # we only need a student id to find an item in the table; therefore, we 
-  # don't need a sort key here
+  # primary key (hash_key) is username
   hash_key  = "username"
 
   # the hash_key data type is string
