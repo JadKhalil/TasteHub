@@ -63,7 +63,8 @@ resource "aws_iam_policy" "logs" {
         "dynamodb:GetItem",
         "dynamodb:Query"
       ],
-      "Resource": ["arn:aws:logs:*:*:*", "${aws_dynamodb_table.tastehub-users.arn}"],
+      "Resource": ["arn:aws:logs:*:*:*", "${aws_dynamodb_table.tastehub-users.arn}", "${aws_dynamodb_table.tastehub-posts.arn}",
+                    "${aws_dynamodb_table.tastehub-likes.arn}", "${aws_dynamodb_table.tastehub-comments.arn}", "${aws_dynamodb_table.tastehub-follows.arn}"],
       "Effect": "Allow"
     }
   ]
@@ -78,7 +79,7 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
   policy_arn = aws_iam_policy.logs.arn
 }
 
-# dynamodb table
+# Users table
 resource "aws_dynamodb_table" "tastehub-users" {
   name         = "tastehub-users"
   billing_mode = "PROVISIONED"
@@ -98,6 +99,130 @@ resource "aws_dynamodb_table" "tastehub-users" {
     type = "S"
   }
 }
+
+# Posts table
+resource "aws_dynamodb_table" "tastehub-posts" {
+  name         = "tastehub-posts"
+  billing_mode = "PROVISIONED"
+
+  # up to 8KB read per second (eventually consistent)
+  read_capacity = 1
+
+  # up to 1KB per second
+  write_capacity = 1
+
+  # primary key (hash_key) is postID
+  hash_key  = "postID"
+
+  # foreign key (range_key) is username
+  range_key = "username"
+
+# the hash_key data type is string
+  attribute {
+    name = "postID"
+    type = "S"
+  }
+
+  # the range_key data type is string
+  attribute {
+    name = "username"
+    type = "S"
+  }
+
+
+}
+
+# Likes table
+resource "aws_dynamodb_table" "tastehub-likes" {
+  name         = "tastehub-likes"
+  billing_mode = "PROVISIONED"
+
+  # up to 8KB read per second (eventually consistent)
+  read_capacity = 1
+
+  # up to 1KB per second
+  write_capacity = 1
+
+  # primary key (hash_key) is username of the person who liked the post
+  hash_key  = "likerUsername"
+
+  # secondary key (range_key) is postID
+  range_key = "postID"
+
+  # the hash_key data type is string
+  attribute {
+    name = "likerUsername"
+    type = "S"
+  }
+
+# the range_key data type is string
+  attribute {
+    name = "postID"
+    type = "S"
+  }
+}
+
+# Likes table
+resource "aws_dynamodb_table" "tastehub-comments" {
+  name         = "tastehub-comments"
+  billing_mode = "PROVISIONED"
+
+  # up to 8KB read per second (eventually consistent)
+  read_capacity = 1
+
+  # up to 1KB per second
+  write_capacity = 1
+
+  # primary key (hash_key) is username of the person who commented on the post
+  hash_key  = "commenterUsername"
+
+  # secondary key (range_key) is postID
+  range_key = "postID"
+
+  # the hash_key data type is string
+  attribute {
+    name = "commenterUsername"
+    type = "S"
+  }
+
+# the range_key data type is string
+  attribute {
+    name = "postID"
+    type = "S"
+  }
+}
+
+# Likes table
+resource "aws_dynamodb_table" "tastehub-follows" {
+  name         = "tastehub-follows"
+  billing_mode = "PROVISIONED"
+
+  # up to 8KB read per second (eventually consistent)
+  read_capacity = 1
+
+  # up to 1KB per second
+  write_capacity = 1
+
+  # primary key (hash_key) is username of the person who follows the followee
+  hash_key  = "usernameOfFollower"
+
+  # secondary key (range_key) is the username of the person being followed
+  range_key = "usernameOfFollowee"
+
+  # the hash_key data type is string
+  attribute {
+    name = "usernameOfFollower"
+    type = "S"
+  }
+
+# the range_key data type is string
+  attribute {
+    name = "usernameOfFollowee"
+    type = "S"
+  }
+}
+
+
 
 # creating archive file for create_post
 data "archive_file" "create_post" {
