@@ -5,20 +5,14 @@ import Global from "./components/Global.js";
 import Catered from "./components/Catered.js";
 import Profile from "./components/Profile.js";
 import Search from "./components/Search.js";
+import Settings from "./components/Settings.js";
+
+import Login from "./Login.js";
 import { GoogleLogin } from "@react-oauth/google";
 
 function App() {
-  const responseMessage = (response) => {
-    console.log(response);
-  };
-  const errorMessage = (error) => {
-    console.log(error);
-  };
   return (
     <div>
-      <br />
-      <br />
-      <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
@@ -26,6 +20,8 @@ function App() {
             <Route path="catered" element={<Catered />}></Route>
             <Route path="profile" element={<Profile />}></Route>
             <Route path="search" element={<Search />}></Route>
+            <Route path="settings" element={<Settings />}></Route>
+            <Route path="login" element={<Login />}></Route>
           </Route>
         </Routes>
       </BrowserRouter>
