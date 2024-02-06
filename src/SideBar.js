@@ -73,7 +73,7 @@ function SideBar() {
         <h4 className="text-lg">Search</h4>
       </Link>
 
-      <button className="flex absolute left-4 bottom-8">
+      <Link to = "settings" className="flex absolute left-4 bottom-8">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -86,7 +86,7 @@ function SideBar() {
             clipRule="evenodd"
           />
         </svg>
-      </button>
+      </Link>
     </div>
   );
 }

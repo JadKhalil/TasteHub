@@ -1,11 +1,13 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "../Login"; 
+import { googleLogout } from "@react-oauth/google";
 
 function Settings() {
   return (
-    <>
-      <h>Settings</h>
-    </>
+    <div>
+      <h2>Settings</h2>
+      <Login />
+    </div>
   );
 }
 
