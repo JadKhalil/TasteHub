@@ -227,8 +227,8 @@ resource "aws_dynamodb_table" "tastehub-follows" {
 # creating archive file for create_post
 data "archive_file" "create_post" {
   type        = "zip"
-  source_file = "../functions/create_post/main.py"
-  output_path = "../functions/create_post/artifact.zip"
+  source_file = "../functions/posts/create_post/main.py"
+  output_path = "../functions/posts/create_post/artifact.zip"
 }
 
 # create a Lambda function for create post file
@@ -237,7 +237,7 @@ resource "aws_lambda_function" "lambda_create_post" {
   role             = aws_iam_role.lambda.arn
   function_name    = local.function_create_post
   handler          = local.handler_name
-  filename         = "../functions/create_post/${local.artifact_name}"
+  filename         = "../functions/posts/create_post/${local.artifact_name}"
   source_code_hash = data.archive_file.create_post.output_base64sha256
 
   # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
