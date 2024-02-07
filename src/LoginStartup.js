@@ -3,6 +3,8 @@ import { useUser } from "./UserContext";
 import Login from "./Login";
 import SideBar from "./SideBar";
 import { useNavigate } from "react-router-dom";
+import tastehubImage from "./tasthub.png";
+import nameImage from "./name.png";
 
 function LoginStartup() {
   const { user } = useUser();
@@ -16,9 +18,18 @@ function LoginStartup() {
 
   return (
     <div className="startup-screen">
-      <h1 className="startup-text">TasteHub Startup</h1>
-      {!user && <Login />}
-      {user && <SideBar />}
+      <div className="big-box">
+        <img src={nameImage} alt="Tastehub name logo" />
+
+        <div className="row-container">
+          <div className="row">{!user && <Login />}</div>
+          <div className="row separator"></div>
+          <div className="row">OR</div>
+          <div className="row">Sign Up</div>
+        </div>
+
+        {user && <SideBar />}
+      </div>
     </div>
   );
 }

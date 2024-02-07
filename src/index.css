@@ -4,18 +4,18 @@
 
 .sidebar-right {
   grid-column: span 1;
-  background-color: #d1d5db; 
-  border-right: 2px solid #000000; 
+  background-color: #d1d5db;
+  border-right: 2px solid #000000;
 }
 
 .logo-title {
-  color: #6b7280; 
+  color: #6b7280;
   margin-left: 1rem;
   margin-top: 1rem;
-  margin-bottom: 3.5rem; 
+  margin-bottom: 3.5rem;
   font-weight: 600;
   font-size: 1.5rem;
-  line-height: 2rem; 
+  line-height: 2rem;
 }
 
 .sidebar-button {
@@ -40,16 +40,87 @@
 }
 
 .startup-text {
-  font-size: 2.25rem; 
-  font-weight: 700; 
-  margin-bottom: 2rem; 
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
 }
 
 .layout-grid {
   display: grid;
-  grid-template-columns: 1fr; 
+  grid-template-columns: 1fr;
 }
 
 .layout-grid.logged-in {
-  grid-template-columns: repeat(4, 1fr); 
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.startup-button {
+  --c: #f9a53f;
+
+  box-shadow: 0 0 0 0.1em inset var(--c);
+  --_g: linear-gradient(var(--c) 0 0) no-repeat;
+  background:
+    var(--_g) calc(var(--_p, 0%) - 100%) 0%,
+    var(--_g) calc(200% - var(--_p, 0%)) 0%,
+    var(--_g) calc(var(--_p, 0%) - 100%) 100%,
+    var(--_g) calc(200% - var(--_p, 0%)) 100%;
+  background-size: 50.5% calc(var(--_p, 0%) / 2 + 0.5%);
+  outline-offset: 0.1em;
+  transition:
+    background-size 0.4s,
+    background-position 0s 0.4s;
+}
+.startup-button:hover {
+  --_p: 100%;
+  transition:
+    background-position 0.4s,
+    background-size 0s;
+}
+.startup-button:active {
+  box-shadow: 0 0 9e9Q inset #0009;
+  background-color: var(--c);
+  color: #fff;
+}
+
+.startup-button {
+  font-family: system-ui, sans-serif;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0.1em 0.6em;
+  font-weight: bold;
+  border: none;
+}
+
+.big-box {
+  border: 2px solid #21921921; /* Add border around the box */
+  padding-top: 10px; /* Add some padding inside the box */
+  padding-right: 50px;
+  padding-left: 50px;
+}
+
+.tastehub-title {
+  font-size: 24px; /* Adjust font size for the title */
+  text-align: center; /* Center align the title */
+  margin-top: 0; /* Remove default margin */
+}
+
+.row-container {
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.row {
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  text-align: center;
+}
+
+.separator {
+  width: 100%; /* Make the separator span the full width of the container */
+  height: 1px; /* Adjust the height of the separator line */
+  background-color: #21921921; /* Color of the separator line */
+  text-align: center; /* Center the text within the separator */
+  margin: 10px 0; /* Add some space above and below the separator */
 }
