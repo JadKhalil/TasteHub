@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const { user: contextUser, login, logout } = useUser();
-  const [user, setUser] = useState(contextUser);
+  const [user, setUser] =  useState(contextUser);
   const navigate = useNavigate();
 
   useEffect(() => {
