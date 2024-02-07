@@ -1,3 +1,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.sidebar-right {
+  grid-column: span 1;
+  background-color: #d1d5db; 
+  border-right: 2px solid #000000; 
+}
+
+.logo-title {
+  color: #6b7280; 
+  margin-left: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 3.5rem; 
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 2rem; 
+}
+
+.sidebar-button {
+  display: flex;
+  margin-left: 1rem;
+  margin-top: 0.5rem;
+}
+
+.settings-button {
+  display: flex;
+  position: absolute;
+  left: 1rem;
+  bottom: 2rem;
+}
+
+.startup-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.startup-text {
+  font-size: 2.25rem; 
+  font-weight: 700; 
+  margin-bottom: 2rem; 
+}
+
+.layout-grid {
+  display: grid;
+  grid-template-columns: 1fr; 
+}
+
+.layout-grid.logged-in {
+  grid-template-columns: repeat(4, 1fr); 
+}

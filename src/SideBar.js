@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 
 function SideBar() {
   return (
-    <div className="col-span-1 bg-gray-300 md:border-r-2 border-black">
-      <h1 className="text-neutral-500 ml-4 mt-4 mb-14 font-semibold text-2xl">
+    <div className="sidebar-right">
+      <h1 className="logo-title">
         Taste Hub
       </h1>
-      <Link to="global" className="flex ml-4 mt-2">
+      <Link to="global" className="sidebar-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -23,7 +23,7 @@ function SideBar() {
         </svg>
         <h4 className="text-lg">Global</h4>
       </Link>
-      <Link to="catered" className="flex ml-4 mt-2">
+      <Link to="catered" className="sidebar-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -42,7 +42,7 @@ function SideBar() {
       </Link>
       {/*<button className="flex ml-4 mt-2"> */}
 
-      <Link to="profile" className="flex ml-4 mt-2">
+      <Link to="profile" className="sidebar-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -57,7 +57,7 @@ function SideBar() {
         </svg>
         <h4 className="text-lg">Profile</h4>
       </Link>
-      <Link to="search" className="flex ml-4 mt-2">
+      <Link to="search" className="sidebar-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -73,7 +73,7 @@ function SideBar() {
         <h4 className="text-lg">Search</h4>
       </Link>
 
-      <Link to = "settings" className="flex absolute left-4 bottom-8">
+      <Link to = "settings" className="settings-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"

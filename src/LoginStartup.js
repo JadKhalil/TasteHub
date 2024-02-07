@@ -15,8 +15,8 @@ function LoginStartup() {
   }, [user, navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-4xl font-bold mb-8">TasteHub Startup</h1>
+    <div className="startup-screen">
+      <h1 className="startup-text">TasteHub Startup</h1>
       {!user && <Login />}
       {user && <SideBar />}
     </div>
