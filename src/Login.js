@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const { user: contextUser, login, logout } = useUser();
-  const [user, setUser] =  useState(contextUser);
+  const [user, setUser] = useState(contextUser);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,7 +59,9 @@ function Login() {
           <button onClick={logOut}>Log out</button>
         </div>
       ) : (
-        <button onClick={loginWithGoogle}>Sign In To The Hub! </button>
+        <button className="startup-button" onClick={loginWithGoogle}>
+          Sign In
+        </button>
       )}
     </div>
   );
