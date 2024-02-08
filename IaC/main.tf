@@ -79,6 +79,10 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
   policy_arn = aws_iam_policy.logs.arn
 }
 
+/* 
+ Configuring 5 Database Tables in DynamoDB
+*/
+
 # Users table
 resource "aws_dynamodb_table" "tastehub-users" {
   name         = "tastehub-users"
@@ -90,12 +94,12 @@ resource "aws_dynamodb_table" "tastehub-users" {
   # up to 1KB per second
   write_capacity = 1
 
-  # primary key (hash_key) is username
-  hash_key  = "username"
+  # partition key (hash_key) is userEmail
+  hash_key  = "userEmail"
 
   # the hash_key data type is string
   attribute {
-    name = "username"
+    name = "userEmail"
     type = "S"
   }
 }
@@ -111,21 +115,21 @@ resource "aws_dynamodb_table" "tastehub-posts" {
   # up to 1KB per second
   write_capacity = 1
 
-  # primary key (hash_key) is postID
-  hash_key  = "postID"
+  # partition key is userEmail
+  hash_key  = "userEmail"
 
-  # foreign key (range_key) is username
-  range_key = "username"
+  # sort key is postID
+  range_key = "postID"
 
-# the hash_key data type is string
+  # the hash_key data type is string
   attribute {
-    name = "postID"
+    name = "userEmail"
     type = "S"
   }
 
   # the range_key data type is string
   attribute {
-    name = "username"
+    name = "postID"
     type = "S"
   }
 
@@ -143,15 +147,15 @@ resource "aws_dynamodb_table" "tastehub-likes" {
   # up to 1KB per second
   write_capacity = 1
 
-  # primary key (hash_key) is username of the person who liked the post
-  hash_key  = "likerUsername"
+  # partition key is userEmail
+  hash_key  = "userEmail"
 
-  # secondary key (range_key) is postID
+  # sort key is postID
   range_key = "postID"
 
   # the hash_key data type is string
   attribute {
-    name = "likerUsername"
+    name = "userEmail"
     type = "S"
   }
 
@@ -173,21 +177,21 @@ resource "aws_dynamodb_table" "tastehub-comments" {
   # up to 1KB per second
   write_capacity = 1
 
-  # primary key (hash_key) is username of the person who commented on the post
-  hash_key  = "commenterUsername"
+  # partition key is postID
+  hash_key  = "postID"
 
-  # secondary key (range_key) is postID
-  range_key = "postID"
+  # sort key is commentID
+  range_key = "commentID"
 
   # the hash_key data type is string
   attribute {
-    name = "commenterUsername"
+    name = "postID"
     type = "S"
   }
 
 # the range_key data type is string
   attribute {
-    name = "postID"
+    name = "commentID"
     type = "S"
   }
 }
@@ -203,26 +207,28 @@ resource "aws_dynamodb_table" "tastehub-follows" {
   # up to 1KB per second
   write_capacity = 1
 
-  # primary key (hash_key) is username of the person who follows the followee
-  hash_key  = "usernameOfFollower"
+  # primary key (hash_key) is user email of the person who follows the followee
+  hash_key  = "userEmailOfFollower"
 
-  # secondary key (range_key) is the username of the person being followed
-  range_key = "usernameOfFollowee"
+  # secondary key (range_key) is the user email of the person being followed
+  range_key = "userEmailOfFollowee"
 
   # the hash_key data type is string
   attribute {
-    name = "usernameOfFollower"
+    name = "userEmailOfFollower"
     type = "S"
   }
 
 # the range_key data type is string
   attribute {
-    name = "usernameOfFollowee"
+    name = "userEmailOfFollowee"
     type = "S"
   }
 }
 
-
+/* 
+ Creating archive file for all lambda functions
+*/
 
 # creating archive file for create_post
 data "archive_file" "create_post" {
@@ -244,7 +250,9 @@ resource "aws_lambda_function" "lambda_create_post" {
   runtime = "python3.9"
 }
 
-
+/*
+  Creating URLs for all Lambda functions
+ */
 # create a Function URL for Lambda create post
 # see the docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function_url
 resource "aws_lambda_function_url" "url_create_post" {
@@ -260,7 +268,7 @@ resource "aws_lambda_function_url" "url_create_post" {
   }
 }
 
-# show the Function URL after creation
+# show all Lambda Function URLs
 output "lambda_url_create_post" {
   value = aws_lambda_function_url.url_create_post.function_url
 }
