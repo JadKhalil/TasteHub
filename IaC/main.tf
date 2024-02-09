@@ -14,7 +14,6 @@ provider "aws" {
 
 # locals block to declare constants
 locals {
-  function_create_post   = "create_post"
   handler_name         = "main.lambda_handler"
   artifact_name        = "artifact.zip"
 }
@@ -61,7 +60,8 @@ resource "aws_iam_policy" "logs" {
         "dynamodb:PutItem",
         "dynamodb:DeleteItem",
         "dynamodb:GetItem",
-        "dynamodb:Query"
+        "dynamodb:Query",
+        "dynamodb:UpdateItem"
       ],
       "Resource": ["arn:aws:logs:*:*:*", "${aws_dynamodb_table.tastehub-users.arn}", "${aws_dynamodb_table.tastehub-posts.arn}",
                     "${aws_dynamodb_table.tastehub-likes.arn}", "${aws_dynamodb_table.tastehub-comments.arn}", "${aws_dynamodb_table.tastehub-follows.arn}"],
@@ -234,29 +234,57 @@ resource "aws_dynamodb_table" "tastehub-follows" {
 data "archive_file" "create_post" {
   type        = "zip"
   source_file = "../functions/posts/create_post/main.py"
-  output_path = "../functions/posts/create_post/artifact.zip"
+  output_path = "../functions/posts/create_post/${local.artifact_name}"
 }
 
-# create a Lambda function for create post file
-# see the docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function
+# creating archive file for create_comment
+data "archive_file" "create_comment" {
+  type        = "zip"
+  source_file = "../functions/comments/create_comment/main.py"
+  output_path = "../functions/comments/create_comment/${local.artifact_name}"
+}
+
+# create a Lambda function for create_post
 resource "aws_lambda_function" "lambda_create_post" {
   role             = aws_iam_role.lambda.arn
-  function_name    = local.function_create_post
+  function_name    = "tastehub-create_post"
   handler          = local.handler_name
   filename         = "../functions/posts/create_post/${local.artifact_name}"
   source_code_hash = data.archive_file.create_post.output_base64sha256
+  runtime = "python3.9"
+}
 
-  # see all available runtimes here: https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime
+# create a Lambda function for create_comment
+resource "aws_lambda_function" "lambda_create_comment" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-create-comment"
+  handler          = local.handler_name
+  filename         = "../functions/comments/create_comment/${local.artifact_name}"
+  source_code_hash = data.archive_file.create_comment.output_base64sha256
   runtime = "python3.9"
 }
 
 /*
   Creating URLs for all Lambda functions
  */
-# create a Function URL for Lambda create post
-# see the docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function_url
+
+# create a Function URL for Lambda create_post
 resource "aws_lambda_function_url" "url_create_post" {
   function_name      = aws_lambda_function.lambda_create_post.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["POST"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+# create a Function URL for Lambda create_comment
+resource "aws_lambda_function_url" "url_create_comment" {
+  function_name      = aws_lambda_function.lambda_create_comment.function_name
   authorization_type = "NONE"
 
   cors {
@@ -271,4 +299,8 @@ resource "aws_lambda_function_url" "url_create_post" {
 # show all Lambda Function URLs
 output "lambda_url_create_post" {
   value = aws_lambda_function_url.url_create_post.function_url
+}
+
+output "lambda_url_create_comment" {
+  value = aws_lambda_function_url.url_create_comment.function_url
 }
