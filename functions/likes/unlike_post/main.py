@@ -8,12 +8,12 @@ posts_table = dynamodb_resource.Table("tastehub-posts")
 
 '''
 This function removes a like from a post and decrements the number of likes in the posts table.
-Requires object as specified below.
+Requires: userEmailOfLiker (String), postID (String), and userEmailOfPoster (String)
 
 Use the following format:
 
 const res = await fetch(
-        "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${userEmailOfLiker}&postID=${postID}&userEmailOfPoster=${userEmailOfPoster}`",
+        `https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${userEmailOfLiker}&postID=${postID}&userEmailOfPoster=${userEmailOfPoster}`,
         {
             method: "DELETE",
             headers: {

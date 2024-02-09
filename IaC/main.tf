@@ -279,6 +279,20 @@ data "archive_file" "get_likes" {
   output_path = "../functions/likes/get_likes/${local.artifact_name}"
 }
 
+# creating archive file for follow_user
+data "archive_file" "follow_user" {
+  type        = "zip"
+  source_file = "../functions/followers/follow_user/main.py"
+  output_path = "../functions/followers/follow_user/${local.artifact_name}"
+}
+
+# creating archive file for unfollow_user
+data "archive_file" "unfollow_user" {
+  type        = "zip"
+  source_file = "../functions/followers/unfollow_user/main.py"
+  output_path = "../functions/followers/unfollow_user/${local.artifact_name}"
+}
+
 # create a Lambda function for create_post
 resource "aws_lambda_function" "lambda_create_post" {
   role             = aws_iam_role.lambda.arn
@@ -342,10 +356,30 @@ resource "aws_lambda_function" "lambda_unlike_post" {
 # create a Lambda function for get_likes
 resource "aws_lambda_function" "lambda_get_likes" {
   role             = aws_iam_role.lambda.arn
-  function_name    = "tastehub-get_likes"
+  function_name    = "tastehub-get-likes"
   handler          = local.handler_name
   filename         = "../functions/likes/get_likes/${local.artifact_name}"
   source_code_hash = data.archive_file.get_likes.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for follow_user
+resource "aws_lambda_function" "lambda_follow_user" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-follow-user"
+  handler          = local.handler_name
+  filename         = "../functions/followers/follow_user/${local.artifact_name}"
+  source_code_hash = data.archive_file.follow_user.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for unfollow_user
+resource "aws_lambda_function" "lambda_unfollow_user" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-unfollow-user"
+  handler          = local.handler_name
+  filename         = "../functions/followers/unfollow_user/${local.artifact_name}"
+  source_code_hash = data.archive_file.unfollow_user.output_base64sha256
   runtime = "python3.9"
 }
 
@@ -451,6 +485,34 @@ resource "aws_lambda_function_url" "url_get_likes" {
   }
 }
 
+# create a Function URL for Lambda follow_user
+resource "aws_lambda_function_url" "url_follow_user" {
+  function_name      = aws_lambda_function.lambda_follow_user.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["POST"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+# create a Function URL for Lambda unfollow_user
+resource "aws_lambda_function_url" "url_unfollow_user" {
+  function_name      = aws_lambda_function.lambda_unfollow_user.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["DELETE"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
 # show all Lambda Function URLs
 output "lambda_url_create_post" {
   value = aws_lambda_function_url.url_create_post.function_url
@@ -478,4 +540,12 @@ output "lambda_url_unlike_post" {
 
 output "lambda_url_get_likes" {
   value = aws_lambda_function_url.url_get_likes.function_url
+}
+
+output "lambda_url_follow_user" {
+  value = aws_lambda_function_url.url_follow_user.function_url
+}
+
+output "lambda_url_unfollow_user" {
+  value = aws_lambda_function_url.url_unfollow_user.function_url
 }
