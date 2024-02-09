@@ -7,6 +7,9 @@ comments_table = dynamodb_resource.Table("tastehub-comments")
 
 
 '''
+This function returns a list of all comments on a post.
+Requires: PostID (String).
+
 Use the following format:
 
 const res = await fetch(

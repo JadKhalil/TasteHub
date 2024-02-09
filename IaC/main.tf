@@ -147,15 +147,15 @@ resource "aws_dynamodb_table" "tastehub-likes" {
   # up to 1KB per second
   write_capacity = 1
 
-  # partition key is userEmail
-  hash_key  = "userEmail"
+  # partition key is userEmailOfLiker
+  hash_key  = "userEmailOfLiker"
 
   # sort key is postID
   range_key = "postID"
 
   # the hash_key data type is string
   attribute {
-    name = "userEmail"
+    name = "userEmailOfLiker"
     type = "S"
   }
 
@@ -258,6 +258,20 @@ data "archive_file" "get_comments" {
   output_path = "../functions/comments/get_comments/${local.artifact_name}"
 }
 
+# creating archive file for like_post
+data "archive_file" "like_post" {
+  type        = "zip"
+  source_file = "../functions/likes/like_post/main.py"
+  output_path = "../functions/likes/like_post/${local.artifact_name}"
+}
+
+# creating archive file for unlike_post
+data "archive_file" "unlike_post" {
+  type        = "zip"
+  source_file = "../functions/likes/unlike_post/main.py"
+  output_path = "../functions/likes/unlike_post/${local.artifact_name}"
+}
+
 # create a Lambda function for create_post
 resource "aws_lambda_function" "lambda_create_post" {
   role             = aws_iam_role.lambda.arn
@@ -295,6 +309,26 @@ resource "aws_lambda_function" "lambda_get_comments" {
   handler          = local.handler_name
   filename         = "../functions/comments/get_comments/${local.artifact_name}"
   source_code_hash = data.archive_file.get_comments.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for like_post
+resource "aws_lambda_function" "lambda_like_post" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-like-post"
+  handler          = local.handler_name
+  filename         = "../functions/likes/like_post/${local.artifact_name}"
+  source_code_hash = data.archive_file.like_post.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for unlike_post
+resource "aws_lambda_function" "lambda_unlike_post" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-unlike-post"
+  handler          = local.handler_name
+  filename         = "../functions/likes/unlike_post/${local.artifact_name}"
+  source_code_hash = data.archive_file.unlike_post.output_base64sha256
   runtime = "python3.9"
 }
 
@@ -358,6 +392,34 @@ resource "aws_lambda_function_url" "url_get_comments" {
   }
 }
 
+# create a Function URL for Lambda like_post
+resource "aws_lambda_function_url" "url_like_post" {
+  function_name      = aws_lambda_function.lambda_like_post.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["POST"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+# create a Function URL for Lambda unlike_post
+resource "aws_lambda_function_url" "url_unlike_post" {
+  function_name      = aws_lambda_function.lambda_unlike_post.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["DELETE"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
 # show all Lambda Function URLs
 output "lambda_url_create_post" {
   value = aws_lambda_function_url.url_create_post.function_url
@@ -373,4 +435,12 @@ output "lambda_url_delete_comment" {
 
 output "lambda_url_get_comments" {
   value = aws_lambda_function_url.url_get_comments.function_url
+}
+
+output "lambda_url_like_post" {
+  value = aws_lambda_function_url.url_like_post.function_url
+}
+
+output "lambda_url_unlike_post" {
+  value = aws_lambda_function_url.url_unlike_post.function_url
 }

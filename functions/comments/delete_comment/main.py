@@ -8,6 +8,9 @@ posts_table = dynamodb_resource.Table("tastehub-posts")
  
 
 '''
+This function deletes a comment on a post and decrements the number of comments in the post table.
+Requires: commentID (String), postID(String), and userEmailOfPoster (String)
+
 Use the following format:
 
 const res = await fetch(

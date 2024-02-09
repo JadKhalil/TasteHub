@@ -8,6 +8,9 @@ posts_table = dynamodb_resource.Table("tastehub-posts")
  
 
 '''
+This function creates a new comment on a post and increments the number of comments in the posts table.
+Requires a JSON object as specified below.
+
 Use the following format:
 
 const res = await fetch(

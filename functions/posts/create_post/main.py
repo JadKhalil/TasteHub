@@ -7,6 +7,9 @@ posts_table = dynamodb_resource.Table("tastehub-posts")
  
 
 '''
+This function creates a new post.
+Requires a JSON object as specified below.
+
 Use the following format:
 
 const res = await fetch(
@@ -21,6 +24,7 @@ const res = await fetch(
                 "postID": String,
                 "recipeName": String,
                 "imageLink": String (URL),
+                "prepTime": Number,
                 "postDescription": String,
                 "category": String,
                 "numberOfLikes": Number,
@@ -37,6 +41,7 @@ def lambda_handler(event, context):
             "userEmail": body["userEmail"],
             "postID": body["postID"],
             "recipeName": body["recipeName"],
+            "prepTime": body["prepTime"],
             "imageLink": body["imageLink"],
             "postDescription": body["postDescription"],
             "category": body["category"],
