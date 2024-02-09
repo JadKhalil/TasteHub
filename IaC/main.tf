@@ -272,6 +272,13 @@ data "archive_file" "unlike_post" {
   output_path = "../functions/likes/unlike_post/${local.artifact_name}"
 }
 
+# creating archive file for get_likes
+data "archive_file" "get_likes" {
+  type        = "zip"
+  source_file = "../functions/likes/get_likes/main.py"
+  output_path = "../functions/likes/get_likes/${local.artifact_name}"
+}
+
 # create a Lambda function for create_post
 resource "aws_lambda_function" "lambda_create_post" {
   role             = aws_iam_role.lambda.arn
@@ -329,6 +336,16 @@ resource "aws_lambda_function" "lambda_unlike_post" {
   handler          = local.handler_name
   filename         = "../functions/likes/unlike_post/${local.artifact_name}"
   source_code_hash = data.archive_file.unlike_post.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for get_likes
+resource "aws_lambda_function" "lambda_get_likes" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-get_likes"
+  handler          = local.handler_name
+  filename         = "../functions/likes/get_likes/${local.artifact_name}"
+  source_code_hash = data.archive_file.get_likes.output_base64sha256
   runtime = "python3.9"
 }
 
@@ -420,6 +437,20 @@ resource "aws_lambda_function_url" "url_unlike_post" {
   }
 }
 
+# create a Function URL for Lambda get_likes
+resource "aws_lambda_function_url" "url_get_likes" {
+  function_name      = aws_lambda_function.lambda_get_likes.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["GET"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
 # show all Lambda Function URLs
 output "lambda_url_create_post" {
   value = aws_lambda_function_url.url_create_post.function_url
@@ -443,4 +474,8 @@ output "lambda_url_like_post" {
 
 output "lambda_url_unlike_post" {
   value = aws_lambda_function_url.url_unlike_post.function_url
+}
+
+output "lambda_url_get_likes" {
+  value = aws_lambda_function_url.url_get_likes.function_url
 }
