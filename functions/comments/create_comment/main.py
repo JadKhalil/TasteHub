@@ -35,7 +35,7 @@ def lambda_handler(event, context):
         comments_table.put_item(Item={
             "postID": body["postID"],
             "commentID": body["commentID"],
-            "userEmail": body["userEmailOfCommenter"],
+            "userEmailOfCommenter": body["userEmailOfCommenter"],
             "content": body["content"]
         })
 

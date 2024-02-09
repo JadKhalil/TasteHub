@@ -13,39 +13,30 @@ posts_table = dynamodb_resource.Table("tastehub-posts")
 Use the following format:
 
 const res = await fetch(
-        "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws/",
+        "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws?commentID=${commentID}&postID=${postID}&userEmailOfPoster=${userEmailOfPoster}`",
         {
-            method: "POST",
+            method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                "postID": String,
-                "commentID": String,
-                "userEmailOfCommenter": String,
-                "content": String,
-                "userEmailOfPoster": String
-            })
         }
     );
 '''
 def lambda_handler(event, context):
-    body = json.loads(event["body"])
+    queryParameters = event["queryStringParameters"]
     try:
-        comments_table.put_item(Item={
-            "postID": body["postID"],
-            "commentID": body["commentID"],
-            "userEmail": body["userEmailOfCommenter"],
-            "content": body["content"]
+        comments_table.delete_item(Key={
+            "postID": queryParameters["postID"],
+            "commentID": queryParameters["commentID"],
         })
 
         posts_table.update_item(
             Key={
-                "userEmail": body["userEmailOfPoster"],
-                "postID": body["postID"]
+                "userEmail": queryParameters["userEmailOfPoster"],
+                "postID": queryParameters["postID"]
             },
             UpdateExpression="ADD numberOfComments :value",
-            ExpressionAttributeValues={":value": 1},
+            ExpressionAttributeValues={":value": -1},
             ReturnValues="UPDATED_NEW"
         )
 

@@ -244,10 +244,17 @@ data "archive_file" "create_comment" {
   output_path = "../functions/comments/create_comment/${local.artifact_name}"
 }
 
+# creating archive file for delete_comment
+data "archive_file" "delete_comment" {
+  type        = "zip"
+  source_file = "../functions/comments/delete_comment/main.py"
+  output_path = "../functions/comments/delete_comment/${local.artifact_name}"
+}
+
 # create a Lambda function for create_post
 resource "aws_lambda_function" "lambda_create_post" {
   role             = aws_iam_role.lambda.arn
-  function_name    = "tastehub-create_post"
+  function_name    = "tastehub-create-post"
   handler          = local.handler_name
   filename         = "../functions/posts/create_post/${local.artifact_name}"
   source_code_hash = data.archive_file.create_post.output_base64sha256
@@ -261,6 +268,16 @@ resource "aws_lambda_function" "lambda_create_comment" {
   handler          = local.handler_name
   filename         = "../functions/comments/create_comment/${local.artifact_name}"
   source_code_hash = data.archive_file.create_comment.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for delete_comment
+resource "aws_lambda_function" "lambda_delete_comment" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-delete-comment"
+  handler          = local.handler_name
+  filename         = "../functions/comments/delete_comment/${local.artifact_name}"
+  source_code_hash = data.archive_file.delete_comment.output_base64sha256
   runtime = "python3.9"
 }
 
@@ -296,6 +313,20 @@ resource "aws_lambda_function_url" "url_create_comment" {
   }
 }
 
+# create a Function URL for Lambda create_comment
+resource "aws_lambda_function_url" "url_delete_comment" {
+  function_name      = aws_lambda_function.lambda_delete_comment.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["DELETE"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
 # show all Lambda Function URLs
 output "lambda_url_create_post" {
   value = aws_lambda_function_url.url_create_post.function_url
@@ -303,4 +334,8 @@ output "lambda_url_create_post" {
 
 output "lambda_url_create_comment" {
   value = aws_lambda_function_url.url_create_comment.function_url
+}
+
+output "lambda_url_delete_comment" {
+  value = aws_lambda_function_url.url_delete_comment.function_url
 }
