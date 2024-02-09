@@ -251,6 +251,13 @@ data "archive_file" "delete_comment" {
   output_path = "../functions/comments/delete_comment/${local.artifact_name}"
 }
 
+# creating archive file for get_comments
+data "archive_file" "get_comments" {
+  type        = "zip"
+  source_file = "../functions/comments/get_comments/main.py"
+  output_path = "../functions/comments/get_comments/${local.artifact_name}"
+}
+
 # create a Lambda function for create_post
 resource "aws_lambda_function" "lambda_create_post" {
   role             = aws_iam_role.lambda.arn
@@ -278,6 +285,16 @@ resource "aws_lambda_function" "lambda_delete_comment" {
   handler          = local.handler_name
   filename         = "../functions/comments/delete_comment/${local.artifact_name}"
   source_code_hash = data.archive_file.delete_comment.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for get_comments
+resource "aws_lambda_function" "lambda_get_comments" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-get-comments"
+  handler          = local.handler_name
+  filename         = "../functions/comments/get_comments/${local.artifact_name}"
+  source_code_hash = data.archive_file.get_comments.output_base64sha256
   runtime = "python3.9"
 }
 
@@ -313,7 +330,7 @@ resource "aws_lambda_function_url" "url_create_comment" {
   }
 }
 
-# create a Function URL for Lambda create_comment
+# create a Function URL for Lambda delete_comment
 resource "aws_lambda_function_url" "url_delete_comment" {
   function_name      = aws_lambda_function.lambda_delete_comment.function_name
   authorization_type = "NONE"
@@ -322,6 +339,20 @@ resource "aws_lambda_function_url" "url_delete_comment" {
     allow_credentials = true
     allow_origins     = ["*"]
     allow_methods     = ["DELETE"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+# create a Function URL for Lambda get_comments
+resource "aws_lambda_function_url" "url_get_comments" {
+  function_name      = aws_lambda_function.lambda_get_comments.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["GET"]
     allow_headers     = ["*"]
     expose_headers    = ["keep-alive", "date"]
   }
@@ -338,4 +369,8 @@ output "lambda_url_create_comment" {
 
 output "lambda_url_delete_comment" {
   value = aws_lambda_function_url.url_delete_comment.function_url
+}
+
+output "lambda_url_get_comments" {
+  value = aws_lambda_function_url.url_get_comments.function_url
 }
