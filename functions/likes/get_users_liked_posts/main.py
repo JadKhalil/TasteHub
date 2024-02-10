@@ -3,17 +3,17 @@ import boto3
 from boto3.dynamodb.conditions import Key
 
 dynamodb_resource = boto3.resource("dynamodb")
-follows_table = dynamodb_resource.Table("tastehub-follows")
+likes_table = dynamodb_resource.Table("tastehub-likes")
 
 
 '''
-This function returns a list of all user emails that an individual follows.
-Requires: userEmail (String).
+This function returns a list of postIDs of all liked posts. Useful for seeing a collection of liked posts
+Requires: userEmailOfLiker (String).
 
 Use the following format:
 
 const res = await fetch(
-        "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws?userEmail=${userEmail}`",
+        "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${userEmailOfLiker}`",
         {
             method: "GET",
             headers: {
@@ -26,12 +26,12 @@ def lambda_handler(event, context):
 
     queryParameter = event["queryStringParameters"]
     try:
-        result = follows_table.query(KeyConditionExpression=Key('userEmailOfFollower').eq(queryParameter["userEmail"]))
+        result = likes_table.query(KeyConditionExpression=Key('userEmailOfLiker').eq(queryParameter["userEmailOfLiker"]))
         return {
             "statusCode": 200,
             "body": json.dumps({
                 "message": "success",
-                "commentList": result
+                "likeList": result
                 })
         }
     except Exception as exp:

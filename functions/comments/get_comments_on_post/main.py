@@ -3,17 +3,17 @@ import boto3
 from boto3.dynamodb.conditions import Key
 
 dynamodb_resource = boto3.resource("dynamodb")
-follows_table = dynamodb_resource.Table("tastehub-follows")
+comments_table = dynamodb_resource.Table("tastehub-comments")
 
 
 '''
-This function returns a list of all user emails that an individual follows.
-Requires: userEmail (String).
+This function returns a list of all comments on a post.
+Requires: PostID (String).
 
 Use the following format:
 
 const res = await fetch(
-        "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws?userEmail=${userEmail}`",
+        "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws?postID=${postID}`",
         {
             method: "GET",
             headers: {
@@ -26,7 +26,7 @@ def lambda_handler(event, context):
 
     queryParameter = event["queryStringParameters"]
     try:
-        result = follows_table.query(KeyConditionExpression=Key('userEmailOfFollower').eq(queryParameter["userEmail"]))
+        result = comments_table.query(KeyConditionExpression=Key('postID').eq(queryParameter["postID"]))
         return {
             "statusCode": 200,
             "body": json.dumps({
