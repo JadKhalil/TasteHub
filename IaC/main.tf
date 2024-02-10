@@ -107,12 +107,9 @@ resource "aws_dynamodb_table" "tastehub-users" {
 # Posts table
 resource "aws_dynamodb_table" "tastehub-posts" {
   name         = "tastehub-posts"
+
   billing_mode = "PROVISIONED"
-
-  # up to 8KB read per second (eventually consistent)
   read_capacity = 1
-
-  # up to 1KB per second
   write_capacity = 1
 
   # partition key is userEmail
@@ -132,19 +129,14 @@ resource "aws_dynamodb_table" "tastehub-posts" {
     name = "postID"
     type = "S"
   }
-
-
 }
 
 # Likes table
 resource "aws_dynamodb_table" "tastehub-likes" {
   name         = "tastehub-likes"
+
   billing_mode = "PROVISIONED"
-
-  # up to 8KB read per second (eventually consistent)
   read_capacity = 1
-
-  # up to 1KB per second
   write_capacity = 1
 
   # partition key is userEmailOfLiker
@@ -163,6 +155,14 @@ resource "aws_dynamodb_table" "tastehub-likes" {
   attribute {
     name = "postID"
     type = "S"
+  }
+
+  global_secondary_index {
+    name               = "idIndex"
+    hash_key           = "postID"
+    write_capacity     = 1
+    read_capacity      = 1
+    projection_type    = "KEYS_ONLY"
   }
 }
 
@@ -199,18 +199,12 @@ resource "aws_dynamodb_table" "tastehub-comments" {
 # Likes table
 resource "aws_dynamodb_table" "tastehub-follows" {
   name         = "tastehub-follows"
+
   billing_mode = "PROVISIONED"
-
-  # up to 8KB read per second (eventually consistent)
   read_capacity = 1
-
-  # up to 1KB per second
   write_capacity = 1
 
-  # primary key (hash_key) is user email of the person who follows the followee
   hash_key  = "userEmailOfFollower"
-
-  # secondary key (range_key) is the user email of the person being followed
   range_key = "userEmailOfFollowee"
 
   # the hash_key data type is string
@@ -223,6 +217,15 @@ resource "aws_dynamodb_table" "tastehub-follows" {
   attribute {
     name = "userEmailOfFollowee"
     type = "S"
+  }
+
+# Secondary index is defined to allow for more flexible queries
+  global_secondary_index {
+    name               = "followeeIndex"
+    hash_key           = "userEmailOfFollowee"
+    write_capacity     = 1
+    read_capacity      = 1
+    projection_type    = "KEYS_ONLY"
   }
 }
 
@@ -251,11 +254,11 @@ data "archive_file" "delete_comment" {
   output_path = "../functions/comments/delete_comment/${local.artifact_name}"
 }
 
-# creating archive file for get_comments
-data "archive_file" "get_comments" {
+# creating archive file for get_comments_on_post
+data "archive_file" "get_comments_on_post" {
   type        = "zip"
-  source_file = "../functions/comments/get_comments/main.py"
-  output_path = "../functions/comments/get_comments/${local.artifact_name}"
+  source_file = "../functions/comments/get_comments_on_post/main.py"
+  output_path = "../functions/comments/get_comments_on_post/${local.artifact_name}"
 }
 
 # creating archive file for like_post
@@ -272,11 +275,18 @@ data "archive_file" "unlike_post" {
   output_path = "../functions/likes/unlike_post/${local.artifact_name}"
 }
 
-# creating archive file for get_likes
-data "archive_file" "get_likes" {
+# creating archive file for get_users_liked_posts
+data "archive_file" "get_users_liked_posts" {
   type        = "zip"
-  source_file = "../functions/likes/get_likes/main.py"
-  output_path = "../functions/likes/get_likes/${local.artifact_name}"
+  source_file = "../functions/likes/get_users_liked_posts/main.py"
+  output_path = "../functions/likes/get_users_liked_posts/${local.artifact_name}"
+}
+
+# creating archive file for get_likes_on_post
+data "archive_file" "get_likes_on_post" {
+  type        = "zip"
+  source_file = "../functions/likes/get_likes_on_post/main.py"
+  output_path = "../functions/likes/get_likes_on_post/${local.artifact_name}"
 }
 
 # creating archive file for follow_user
@@ -291,6 +301,20 @@ data "archive_file" "unfollow_user" {
   type        = "zip"
   source_file = "../functions/followers/unfollow_user/main.py"
   output_path = "../functions/followers/unfollow_user/${local.artifact_name}"
+}
+
+# creating archive file for get_following
+data "archive_file" "get_following" {
+  type        = "zip"
+  source_file = "../functions/followers/get_following/main.py"
+  output_path = "../functions/followers/get_following/${local.artifact_name}"
+}
+
+# creating archive file for get_followers
+data "archive_file" "get_followers" {
+  type        = "zip"
+  source_file = "../functions/followers/get_followers/main.py"
+  output_path = "../functions/followers/get_followers/${local.artifact_name}"
 }
 
 # create a Lambda function for create_post
@@ -323,13 +347,13 @@ resource "aws_lambda_function" "lambda_delete_comment" {
   runtime = "python3.9"
 }
 
-# create a Lambda function for get_comments
-resource "aws_lambda_function" "lambda_get_comments" {
+# create a Lambda function for get_comments_on_post
+resource "aws_lambda_function" "lambda_get_comments_on_post" {
   role             = aws_iam_role.lambda.arn
-  function_name    = "tastehub-get-comments"
+  function_name    = "tastehub-get-comments-on-post"
   handler          = local.handler_name
-  filename         = "../functions/comments/get_comments/${local.artifact_name}"
-  source_code_hash = data.archive_file.get_comments.output_base64sha256
+  filename         = "../functions/comments/get_comments_on_post/${local.artifact_name}"
+  source_code_hash = data.archive_file.get_comments_on_post.output_base64sha256
   runtime = "python3.9"
 }
 
@@ -353,13 +377,23 @@ resource "aws_lambda_function" "lambda_unlike_post" {
   runtime = "python3.9"
 }
 
-# create a Lambda function for get_likes
-resource "aws_lambda_function" "lambda_get_likes" {
+# create a Lambda function for get_users_liked_posts
+resource "aws_lambda_function" "lambda_get_users_liked_posts" {
   role             = aws_iam_role.lambda.arn
-  function_name    = "tastehub-get-likes"
+  function_name    = "tastehub-get-users-liked-posts"
   handler          = local.handler_name
-  filename         = "../functions/likes/get_likes/${local.artifact_name}"
-  source_code_hash = data.archive_file.get_likes.output_base64sha256
+  filename         = "../functions/likes/get_users_liked_posts/${local.artifact_name}"
+  source_code_hash = data.archive_file.get_users_liked_posts.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for get_likes_on_post
+resource "aws_lambda_function" "lambda_get_likes_on_post" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-get-likes-on-post"
+  handler          = local.handler_name
+  filename         = "../functions/likes/get_likes_on_post/${local.artifact_name}"
+  source_code_hash = data.archive_file.get_likes_on_post.output_base64sha256
   runtime = "python3.9"
 }
 
@@ -380,6 +414,26 @@ resource "aws_lambda_function" "lambda_unfollow_user" {
   handler          = local.handler_name
   filename         = "../functions/followers/unfollow_user/${local.artifact_name}"
   source_code_hash = data.archive_file.unfollow_user.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for get_following
+resource "aws_lambda_function" "lambda_get_following" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-get-following"
+  handler          = local.handler_name
+  filename         = "../functions/followers/get_following/${local.artifact_name}"
+  source_code_hash = data.archive_file.get_following.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for get_followers
+resource "aws_lambda_function" "lambda_get_followers" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-get-followers"
+  handler          = local.handler_name
+  filename         = "../functions/followers/get_followers/${local.artifact_name}"
+  source_code_hash = data.archive_file.get_followers.output_base64sha256
   runtime = "python3.9"
 }
 
@@ -429,9 +483,9 @@ resource "aws_lambda_function_url" "url_delete_comment" {
   }
 }
 
-# create a Function URL for Lambda get_comments
-resource "aws_lambda_function_url" "url_get_comments" {
-  function_name      = aws_lambda_function.lambda_get_comments.function_name
+# create a Function URL for Lambda get_comments_on_post
+resource "aws_lambda_function_url" "url_get_comments_on_post" {
+  function_name      = aws_lambda_function.lambda_get_comments_on_post.function_name
   authorization_type = "NONE"
 
   cors {
@@ -471,9 +525,23 @@ resource "aws_lambda_function_url" "url_unlike_post" {
   }
 }
 
-# create a Function URL for Lambda get_likes
-resource "aws_lambda_function_url" "url_get_likes" {
-  function_name      = aws_lambda_function.lambda_get_likes.function_name
+# create a Function URL for Lambda get_users_liked_posts
+resource "aws_lambda_function_url" "url_get_users_liked_posts" {
+  function_name      = aws_lambda_function.lambda_get_users_liked_posts.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["GET"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+# create a Function URL for Lambda get_likes_on_post
+resource "aws_lambda_function_url" "url_get_likes_on_post" {
+  function_name      = aws_lambda_function.lambda_get_likes_on_post.function_name
   authorization_type = "NONE"
 
   cors {
@@ -513,6 +581,35 @@ resource "aws_lambda_function_url" "url_unfollow_user" {
   }
 }
 
+# create a Function URL for Lambda get_following
+resource "aws_lambda_function_url" "url_get_following" {
+  function_name      = aws_lambda_function.lambda_get_following.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["GET"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+# create a Function URL for Lambda get_followers
+resource "aws_lambda_function_url" "url_get_followers" {
+  function_name      = aws_lambda_function.lambda_get_followers.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["GET"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+
 # show all Lambda Function URLs
 output "lambda_url_create_post" {
   value = aws_lambda_function_url.url_create_post.function_url
@@ -526,8 +623,8 @@ output "lambda_url_delete_comment" {
   value = aws_lambda_function_url.url_delete_comment.function_url
 }
 
-output "lambda_url_get_comments" {
-  value = aws_lambda_function_url.url_get_comments.function_url
+output "lambda_url_get_comments_on_post" {
+  value = aws_lambda_function_url.url_get_comments_on_post.function_url
 }
 
 output "lambda_url_like_post" {
@@ -538,8 +635,12 @@ output "lambda_url_unlike_post" {
   value = aws_lambda_function_url.url_unlike_post.function_url
 }
 
-output "lambda_url_get_likes" {
-  value = aws_lambda_function_url.url_get_likes.function_url
+output "lambda_url_get_users_liked_posts" {
+  value = aws_lambda_function_url.url_get_users_liked_posts.function_url
+}
+
+output "lambda_url_get_likes_on_post" {
+  value = aws_lambda_function_url.url_get_likes_on_post.function_url
 }
 
 output "lambda_url_follow_user" {
@@ -548,4 +649,12 @@ output "lambda_url_follow_user" {
 
 output "lambda_url_unfollow_user" {
   value = aws_lambda_function_url.url_unfollow_user.function_url
+}
+
+output "lambda_url_get_following" {
+  value = aws_lambda_function_url.url_get_following.function_url
+}
+
+output "lambda_url_get_followers" {
+  value = aws_lambda_function_url.url_get_followers.function_url
 }

@@ -3,8 +3,8 @@ import boto3
 
 
 dynamodb_resource = boto3.resource("dynamodb")
-tastehub_follows = dynamodb_resource.Table("tastehub-follows")
-tastehub_users = dynamodb_resource.Table("tastehub-users")
+follows_table = dynamodb_resource.Table("tastehub-follows")
+users_table = dynamodb_resource.Table("tastehub-users")
  
 
 '''
@@ -31,12 +31,12 @@ const res = await fetch(
 def lambda_handler(event, context):
     body = json.loads(event["body"])
     try:
-        tastehub_follows.put_item(Item={
+        follows_table.put_item(Item={
             "userEmailOfFollower": body["userEmailOfFollower"],
             "userEmailOfFollowee": body["userEmailOfFollowee"]
         })
 
-        tastehub_users.update_item(
+        users_table.update_item(
             Key={
                 "userEmail": body["userEmailOfFollowee"],
             },
@@ -45,7 +45,7 @@ def lambda_handler(event, context):
             ReturnValues="UPDATED_NEW"
         )
 
-        tastehub_users.update_item(
+        users_table.update_item(
             Key={
                 "userEmail": body["userEmailOfFollower"],
             },
