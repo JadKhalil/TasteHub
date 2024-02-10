@@ -8,7 +8,8 @@ tastehub_users = dynamodb_resource.Table("tastehub-users")
  
 
 '''
-This function adds a like to a post and increments the number of likes in the posts table.
+This function adds a follow relationship to a follow table and 
+increments the numberOfFollowers andnumberOfFollowing for the followee and follower, respectively.
 Requires a JSON object as specified below.
 
 Use the following format:

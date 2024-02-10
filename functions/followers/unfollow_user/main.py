@@ -8,8 +8,9 @@ tastehub_users = dynamodb_resource.Table("tastehub-users")
  
 
 '''
-This function adds a like to a post and increments the number of likes in the posts table.
-Requires: userEmailOfFollower (String), userEmailOfFollowee (String)
+This function removes a follow relationship to a follow table and 
+decrements the numberOfFollowers andnumberOfFollowing for the followee and follower, respectively.
+Requires: userEmailOfFollower(String), userEmailOfFollowee(String)
 
 Use the following format:
 
@@ -26,7 +27,7 @@ const res = await fetch(
 def lambda_handler(event, context):
     queryParameters = event["queryStringParameters"]
     try:
-        tastehub_follows.delete_item(Item={
+        tastehub_follows.delete_item(Key={
             "userEmailOfFollower": queryParameters["userEmailOfFollower"],
             "userEmailOfFollowee": queryParameters["userEmailOfFollowee"]
         })
