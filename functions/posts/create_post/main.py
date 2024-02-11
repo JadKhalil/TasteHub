@@ -9,19 +9,23 @@ import os
 
 
 dynamodb_resource = boto3.resource("dynamodb")
-users_table = dynamodb_resource.Table("tastehub-users")
+users_table = dynamodb_resource.Table("tastehub-posts")
 client = boto3.client('ssm')
 
 '''
-This function creates a new user adding the info into the Tastehub-users table.
+This function creates a new post adding the info into the Tastehub-posts table.
 The body of the POST request must be in a binary format using FormData().
 The elements in FormData must be appended in the following order:
 1. userEmail (String)
-2. bio (String)
-3. numberOfFollowers (Number)
-4. numberOfFollowing (Number)
-5. creationDate (string)
-6. profile picture (image)
+2. postID (Unique)
+3. category (String)
+4. datePosted (String)
+5. contentImage (image)
+6. numberOfLikes (Number)
+7. numberOfComments (Number)
+8. postDescription (String)
+9. prepTime (Number)
+10. recipeName (String)
     const promise = await fetch(
         "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws/",
         {
@@ -42,25 +46,33 @@ def lambda_handler(event, context):
     
     binary_data = [part.content for part in data.parts]
     userEmail = binary_data[0].decode()
-    bio = binary_data[1].decode()
-    numberOfFollowers = binary_data[2].decode()
-    numberOfFollowing = binary_data[3].decode()
-    creationDate = binary_data[4].decode()
+    postID = binary_data[1].decode()
+    category = binary_data[2].decode()
+    datePosted = binary_data[3].decode()
+    numberOfLikes = binary_data[5].decode()
+    numberOfComments = binary_data[6].decode()
+    postDescription = binary_data[7].decode()
+    prepTime = binary_data[8].decode()
+    recipeName = binary_data[9].decode()
 
-    image = "profilePicture.png"
+    image = "contentImage.png"
     imageFile = os.path.join("/tmp", image)
     with open(imageFile, "wb") as file:
-        file.write(binary_data[5])
+        file.write(binary_data[4])
     
     cloudImage = upload_to_cloud(imageFile)
     
     try:
         users_table.put_item(Item={'userEmail': userEmail,
-                            'bio': bio,
-                            'numberOfFollowers': numberOfFollowers,
-                            'numberOfFollowing' : numberOfFollowing,
-                            'creationDate': creationDate,
-                            'image': cloudImage["secure_url"]
+                            'postID': postID,
+                            'category': category,
+                            'datePosted': datePosted,
+                            'numberOfLikes': numberOfLikes,
+                            'numberOfComments' : numberOfComments,
+                            'postDescription': postDescription,
+                            'prepTime': prepTime,
+                            'recipeName':recipeName,
+                            'imageLink': cloudImage["secure_url"]
                             })
 
         return {
@@ -140,6 +152,9 @@ def create_signature(body, api_secret):
 #simple dictionary sorter in alphabetical order
 def sort_dict(dictionary, exclude):
     return {k: v for k,v in sorted(dictionary.items(), key=lambda item: item[0]) if k not in exclude}
+
+
+## OLD CODE ##
 # import json
 # import boto3
 
