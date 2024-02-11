@@ -12,43 +12,58 @@ import os
 
 dynamodb_resource = boto3.resource("dynamodb")
 users_table = dynamodb_resource.Table("tastehub-users")
- 
+client = boto3.client('ssm')
 
 '''
 This function creates a new user adding the info into the Tastehub-users table.
-Requires a JSON object as specified below.
-
-Use the following format:
-
-const res = await fetch(
+The body of the POST request must be in a binary format using FormData().
+The elements in FormData must be appended in the following order:
+1. userEmail (String)
+2. bio (String)
+3. numberOfFollowers (Number)
+4. numberOfFollowing (Number)
+5. creationDate (string)
+6. profile picture (image)
+    const promise = await fetch(
         "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws/",
         {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "userEmail": String,
-                "profilePictureLink": String,
-                "bio": String,
-                "Username": String,
-                "numOfFollowers": Int,
-                "numOfFollowing": Int
-            })
+            body: formData,
         }
     );
 '''
 def lambda_handler(event, context):
-    body = json.loads(event["body"])
+    body = event["body"]
+
+    if event["isBase64Encoded"]:
+        body = base64.b64decode(body)
+
+
+    content_type = event["headers"]["content-type"]
+    data = decoder.MultipartDecoder(body, content_type)
+    
+    binary_data = [part.content for part in data.parts]
+    userEmail = binary_data[0].decode()
+    bio = binary_data[1].decode()
+    numberOfFollowers = binary_data[2].decode()
+    numberOfFollowing = binary_data[3].decode()
+    creationDate = binary_data[4].decode()
+
+    image = "profilePicture.png"
+    imageFile = os.path.join("/tmp", image)
+    with open(imageFile, "wb") as file:
+        file.write(binary_data[5])
+    
+    cloudImage = upload_to_cloud(imageFile)
+    
     try:
-        users_table.put_item(Item={
-            "userEmail": body["userEmail"],
-            "profilePictureLink": body["profilePictureLink"],
-            "bio": body["bio"],
-            "Username": body["Username"],
-            "numOfFollowers": body["numOfFollowers"],
-            "numOfFollowing": body["numOfFollowing"]
-        })
+        users_table.put_item(Item={'userEmail': userEmail,
+                            'bio': bio,
+                            'numberOfFollowers': numberOfFollowers,
+                            'numberOfFollowing' : numberOfFollowing,
+                            'creationDate': creationDate,
+                            'image': cloudImage["secure_url"]
+                            })
 
         return {
             "statusCode": 200,
@@ -65,9 +80,6 @@ def lambda_handler(event, context):
             })
         }
 
-##Cloudinary functionality
-    
-client = boto3.client('ssm')
 
 #get ssm keys
 response = client.get_parameters_by_path(
@@ -90,8 +102,8 @@ url for the image that needs to be put into DynamoDB we can use: res["secure_url
 '''
 
 def upload_to_cloud(filename, resource_type='image'):
-    api_key = "535718123262293" #Jacob's = 535718123262293, Eddie's = 
-    cloud_name = "drua7mqfb" #Jacob's = drua7mqfb, Eddie's = 
+    api_key = "535718123262293" #Jacob's = 535718123262293, Eddie's = 783689415177585
+    cloud_name = "drua7mqfb" #Jacob's = drua7mqfb, Eddie's = dh28kj5kr
     api_secret = get_keys("/tastehub/cloudinary-key")
     timestamp = int(time.time())
 
@@ -117,8 +129,10 @@ def create_signature(body, api_secret):
     exclude = ["api_key", "resource_type", "cloud_name"]
 
     sorted_body = sort_dict(body, exclude)
-    query_str = create_query_string(sorted_body)
-    query_str_appended = f"{query_str}{api_secret}"
+    query_string = ""
+    for idx, (k, v) in enumerate(sorted_body.items()):
+        query_string = f"{k}={v}" if idx == 0 else f"{query_string}&{k}={v}"
+    query_str_appended = f"{query_string}{api_secret}"
 
     hashed = hashlib.sha1(query_str_appended.encode())
     signature = hashed.hexdigest()
@@ -128,11 +142,3 @@ def create_signature(body, api_secret):
 #simple dictionary sorter in alphabetical order
 def sort_dict(dictionary, exclude):
     return {k: v for k,v in sorted(dictionary.items(), key=lambda item: item[0]) if k not in exclude}
-
-def create_query_string(body):
-    query_string = ""
-
-    for idx, (k, v) in enumerate(body.items()):
-        query_string = f"{k}={v}" if idx == 0 else f"{query_string}&{k}={v}"
-
-    return query_string
