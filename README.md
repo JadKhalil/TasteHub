@@ -5,8 +5,8 @@ ENSF 401 App Project
 ### Things to know for backend development
 ###### Some things needs to be hard coded if you want to deploy a backend on YOUR AWS account.
 
-- In AWS Parameter Store, you must manually create a `/tastehub/cloudinary-key` with Cloudinary API Secret Key stored as SecureString. We don't want to include this sensitive data in our lambda functions so it needs to be done
-- In the Terraform configuration file, `main.tf`, the aws_iam_policy must also be hard coded depedning on the user. The random string of numbers below is your IAM Account ID.
+- In AWS Parameter Store, you must manually create a `/tastehub/cloudinary-key` with Cloudinary API Secret Key stored as SecureString. We don't want to include this sensitive data in our lambda functions so this needs to be manually done.
+- In the Terraform configuration file, `main.tf`, the aws_iam_policy must also be hard coded depending on the user. The random string of numbers below is your IAM Account ID.
 
     - `"arn:aws:ssm:ca-central-1:228775797536:parameter/tastehub/"`
 
@@ -37,10 +37,10 @@ ENSF 401 App Project
         EOF
         }
         ```
-- 
+- The api_key and cloud_name in the `create_post` and `create_user_profile` must be hard coded. Make sure to use the API key, and not the secret API key. 
+
 
 ### Start the project
 - `git clone https://github.com/JadKhalil/TasteHub`
 - `npm install` to install all dependencies
-- tailwindcss is already configured and is ready to use
 - Please don't push to main branch. Pull requests only :)
