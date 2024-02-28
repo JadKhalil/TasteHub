@@ -1,6 +1,20 @@
 # TasteHub
 ENSF 401 App Project
 
+### Lambda function URLS
+- lambda_url_create_comment = "https://lnuwf7hmrat6ugtrnz7psympzq0zjlcx.lambda-url.ca-central-1.on.aws/"
+- lambda_url_create_post = "https://w6twud32h2wkjxtnjdml6vlbq40hrtgx.lambda-url.ca-central-1.on.aws/"
+- lambda_url_create_user_profile = "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/"
+- lambda_url_delete_comment = "https://arocnlgm5i7sjrxb34mimhvfmm0nxfft.lambda-url.ca-central-1.on.aws/"
+- lambda_url_follow_user = "https://rl4au3ybjajtx62g23eyzmiuce0ifzkc.lambda-url.ca-central-1.on.aws/"
+- lambda_url_get_comments_on_post = "https://nenqkh35mmdevuny2x7gbozquu0cquyy.lambda-url.ca-central-1.on.aws/"
+- lambda_url_get_followers = "https://kmjp6z5oboueqdiz5yaolqkm3a0lulye.lambda-url.ca-central-1.on.aws/"
+- lambda_url_get_following = "https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/"
+- lambda_url_get_likes_on_post = "https://jvvn5kge6vo2kd5ovsafif2fyi0mfusn.lambda-url.ca-central-1.on.aws/"
+- lambda_url_get_users_liked_posts = "https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws/"
+- lambda_url_like_post = "https://en46iryruu4einvaoz24oq5lie0ifwvy.lambda-url.ca-central-1.on.aws/"
+- lambda_url_unfollow_user = "https://jphbbhraofx2bnza766vsdujtq0bfdla.lambda-url.ca-central-1.on.aws/"
+- lambda_url_unlike_post = "https://bvraqaptwxnnop2ruzr26h5ppe0wtrxi.lambda-url.ca-central-1.on.aws/"
 
 ### Things to know for backend development
 ###### Some things needs to be hard coded if you want to deploy a backend on YOUR AWS account.
