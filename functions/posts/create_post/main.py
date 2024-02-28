@@ -112,8 +112,8 @@ url for the image that needs to be put into DynamoDB we can use: res["secure_url
 '''
 
 def upload_to_cloud(filename, resource_type='image'):
-    api_key = "535718123262293" #Jacob's = 535718123262293, Eddie's = 783689415177585
-    cloud_name = "drua7mqfb" #Jacob's = drua7mqfb, Eddie's = dh28kj5kr
+    api_key = "783689415177585" #Jacob's = 535718123262293, Eddie's = 783689415177585
+    cloud_name = "dh28kj5kr" #Jacob's = drua7mqfb, Eddie's = dh28kj5kr
     api_secret = get_keys("/tastehub/cloudinary-key")
     timestamp = int(time.time())
 
@@ -152,72 +152,3 @@ def create_signature(body, api_secret):
 #simple dictionary sorter in alphabetical order
 def sort_dict(dictionary, exclude):
     return {k: v for k,v in sorted(dictionary.items(), key=lambda item: item[0]) if k not in exclude}
-
-
-## OLD CODE ##
-# import json
-# import boto3
-
-
-# dynamodb_resource = boto3.resource("dynamodb")
-# posts_table = dynamodb_resource.Table("tastehub-posts")
- 
-
-# '''
-# This function creates a new post.
-# Requires a JSON object as specified below.
-
-# Use the following format:
-
-# const res = await fetch(
-#         "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws/",
-#         {
-#             method: "POST",
-#             headers: {
-#                 "Content-Type": "application/json"
-#             },
-#             body: JSON.stringify({
-#                 "userEmail": String,
-#                 "postID": String,
-#                 "recipeName": String,
-#                 "imageLink": String (URL),
-#                 "prepTime": Number,
-#                 "postDescription": String,
-#                 "category": String,
-#                 "numberOfLikes": Number,
-#                 "numberOfComments": Number,
-#                 "datePosted": String (example format: "2023-12-29T19:08")
-#             })
-#         }
-#     );
-# '''
-# def lambda_handler(event, context):
-#     body = json.loads(event["body"])
-#     try:
-#         posts_table.put_item(Item={
-#             "userEmail": body["userEmail"],
-#             "postID": body["postID"],
-#             "recipeName": body["recipeName"],
-#             "prepTime": body["prepTime"],
-#             "imageLink": body["imageLink"],
-#             "postDescription": body["postDescription"],
-#             "category": body["category"],
-#             "numberOfLikes": body["numberOfLikes"],
-#             "numberOfComments": body["numberOfComments"],
-#             "datePosted": body["datePosted"]
-#         })
-
-#         return {
-#             "statusCode": 200,
-#                 "body": json.dumps({
-#                     "message": "success"
-#                 })
-#         }
-#     except Exception as exp:
-#         print(f"exception: {exp}")
-#         return {
-#             "statusCode": 500,
-#                 "body": json.dumps({
-#                     "message":str(exp)
-#             })
-#         }

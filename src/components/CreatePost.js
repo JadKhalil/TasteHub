@@ -3,6 +3,20 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 
+
+/*
+    1. userEmail (String)
+    2. postID (Unique)
+    3. category (String)
+    4. datePosted (String)
+    5. contentImage (image)
+    6. numberOfLikes (Number)
+    7. numberOfComments (Number)
+    8. postDescription (String)
+    9. prepTime (Number)
+    10. recipeName (String)
+*/
+
 function CreatePostPage() {
 
     const [email, setEmail] = useState();
@@ -19,14 +33,15 @@ function CreatePostPage() {
     const dataToSubmit = new FormData();
     dataToSubmit.append("userEmail", email);
     dataToSubmit.append("postID", uuidv4());
-    dataToSubmit.append("recipeName", recipeName);
-    dataToSubmit.append("imageLink", imageFile);
-    dataToSubmit.append("prepTime", prepTime);
-    dataToSubmit.append("postDescription", description);
     dataToSubmit.append("category", category);
+    dataToSubmit.append("datePosted", Date.now());
+    dataToSubmit.append("contentImage", imageFile);
     dataToSubmit.append("numberOfLikes", 0);
     dataToSubmit.append("numberOfComments", 0);
-    dataToSubmit.append("datePosted", Date.now());
+    dataToSubmit.append("postDescription", description);
+    dataToSubmit.append("prepTime", prepTime);
+    dataToSubmit.append("recipeName", recipeName);
+
     const promise = await fetch(
         "https://w6twud32h2wkjxtnjdml6vlbq40hrtgx.lambda-url.ca-central-1.on.aws/", // Lambda Function URL (needs to be hard coded)
         {
@@ -36,7 +51,7 @@ function CreatePostPage() {
     );
     console.log(dataToSubmit.entries());
     const jsonPromise = await promise.json(); // Used to access the body of the returned Json
-
+    console.log(jsonPromise);
 }
 
   return (

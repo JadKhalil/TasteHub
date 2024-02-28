@@ -42,6 +42,30 @@ resource "aws_iam_role" "lambda" {
 EOF
 }
 
+resource "aws_iam_policy" "parameter_store" {
+  name        = "tastehub-parameter-store"
+  description = "IAM policy for ssm key fetch and decryption from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "ssm:GetParametersByPath",
+        "kms:Decrypt"
+      ],
+      "Resource": [
+        "arn:aws:ssm:ca-central-1:228775797536:parameter/tastehub/",
+        "arn:aws:kms:ca-central-1:228775797536:key/c531aee2-2247-4d3c-bd1a-1330532571cc"
+        ],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
 # create a policy for publishing logs to CloudWatch
 # see the docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy
 resource "aws_iam_policy" "logs" {
@@ -77,6 +101,11 @@ EOF
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
   role       = aws_iam_role.lambda.name
   policy_arn = aws_iam_policy.logs.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_parameter_store" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = aws_iam_policy.parameter_store.arn
 }
 
 /* 
@@ -236,84 +265,84 @@ resource "aws_dynamodb_table" "tastehub-follows" {
 # creating archive file for create_post
 data "archive_file" "create_post" {
   type        = "zip"
-  source_file = "../functions/posts/create_post/main.py"
+  source_dir = "../functions/posts/create_post"
   output_path = "../functions/posts/create_post/${local.artifact_name}"
 }
 
 # creating archive file for create_comment
 data "archive_file" "create_comment" {
   type        = "zip"
-  source_file = "../functions/comments/create_comment/main.py"
+  source_dir = "../functions/comments/create_comment"
   output_path = "../functions/comments/create_comment/${local.artifact_name}"
 }
 
 # creating archive file for delete_comment
 data "archive_file" "delete_comment" {
   type        = "zip"
-  source_file = "../functions/comments/delete_comment/main.py"
+  source_dir = "../functions/comments/delete_comment"
   output_path = "../functions/comments/delete_comment/${local.artifact_name}"
 }
 
 # creating archive file for get_comments_on_post
 data "archive_file" "get_comments_on_post" {
   type        = "zip"
-  source_file = "../functions/comments/get_comments_on_post/main.py"
+  source_dir = "../functions/comments/get_comments_on_post"
   output_path = "../functions/comments/get_comments_on_post/${local.artifact_name}"
 }
 
 # creating archive file for like_post
 data "archive_file" "like_post" {
   type        = "zip"
-  source_file = "../functions/likes/like_post/main.py"
+  source_dir = "../functions/likes/like_post"
   output_path = "../functions/likes/like_post/${local.artifact_name}"
 }
 
 # creating archive file for unlike_post
 data "archive_file" "unlike_post" {
   type        = "zip"
-  source_file = "../functions/likes/unlike_post/main.py"
+  source_dir = "../functions/likes/unlike_post"
   output_path = "../functions/likes/unlike_post/${local.artifact_name}"
 }
 
 # creating archive file for get_users_liked_posts
 data "archive_file" "get_users_liked_posts" {
   type        = "zip"
-  source_file = "../functions/likes/get_users_liked_posts/main.py"
+  source_dir = "../functions/likes/get_users_liked_posts"
   output_path = "../functions/likes/get_users_liked_posts/${local.artifact_name}"
 }
 
 # creating archive file for get_likes_on_post
 data "archive_file" "get_likes_on_post" {
   type        = "zip"
-  source_file = "../functions/likes/get_likes_on_post/main.py"
+  source_dir = "../functions/likes/get_likes_on_post"
   output_path = "../functions/likes/get_likes_on_post/${local.artifact_name}"
 }
 
 # creating archive file for follow_user
 data "archive_file" "follow_user" {
   type        = "zip"
-  source_file = "../functions/followers/follow_user/main.py"
+  source_dir = "../functions/followers/follow_user"
   output_path = "../functions/followers/follow_user/${local.artifact_name}"
 }
 
 # creating archive file for unfollow_user
 data "archive_file" "unfollow_user" {
   type        = "zip"
-  source_file = "../functions/followers/unfollow_user/main.py"
+  source_dir = "../functions/followers/unfollow_user"
   output_path = "../functions/followers/unfollow_user/${local.artifact_name}"
 }
 
 # creating archive file for get_following
 data "archive_file" "get_following" {
   type        = "zip"
-  source_file = "../functions/followers/get_following/main.py"
+  source_dir = "../functions/followers/get_following"
   output_path = "../functions/followers/get_following/${local.artifact_name}"
 }
 
 # creating archive file for get_followers
 data "archive_file" "get_followers" {
   type        = "zip"
-  source_file = "../functions/followers/get_followers/main.py"
+  source_dir = "../functions/followers/get_followers"
   output_path = "../functions/followers/get_followers/${local.artifact_name}"
 }
 

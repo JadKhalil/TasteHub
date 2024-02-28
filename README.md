@@ -1,6 +1,44 @@
 # TasteHub
 ENSF 401 App Project
 
+
+### Things to know for backend development
+###### Some things needs to be hard coded if you want to deploy a backend on YOUR AWS account.
+
+- In AWS Parameter Store, you must manually create a `/tastehub/cloudinary-key` with Cloudinary API Secret Key stored as SecureString. We don't want to include this sensitive data in our lambda functions so it needs to be done
+- In the Terraform configuration file, `main.tf`, the aws_iam_policy must also be hard coded depedning on the user. The random string of numbers below is your IAM Account ID.
+
+    - `"arn:aws:ssm:ca-central-1:228775797536:parameter/tastehub/"`
+
+    - `"arn:aws:kms:ca-central-1:228775797536:key/c531aee2-2247-4d3c-bd1a-1330532571cc"`
+
+        ```
+        resource "aws_iam_policy" "parameter_store" {
+        name        = "tastehub-parameter-store"
+        description = "IAM policy for ssm key fetch and decryption from a lambda"
+
+        policy = <<EOF
+        {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+            "Action": [
+                "ssm:GetParametersByPath",
+                "kms:Decrypt"
+            ],
+            "Resource": [
+                "arn:aws:ssm:ca-central-1:228775797536:parameter/tastehub/",
+                "arn:aws:kms:ca-central-1:228775797536:key/c531aee2-2247-4d3c-bd1a-1330532571cc"
+                ],
+            "Effect": "Allow"
+            }
+        ]
+        }
+        EOF
+        }
+        ```
+- 
+
 ### Start the project
 - `git clone https://github.com/JadKhalil/TasteHub`
 - `npm install` to install all dependencies

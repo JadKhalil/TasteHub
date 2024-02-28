@@ -5,7 +5,7 @@ import CreatePostPage from "./CreatePost";
 function Global() {
   return (
     <>
-      <h>Global</h>
+      <h1>Global</h1>
       <CreatePostPage />
     </>
   );
