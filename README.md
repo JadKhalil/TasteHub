@@ -1,6 +1,8 @@
 # TasteHub
 ENSF 401 App Project
 
+### Note
+change directory to IaC folder and run terraform output if you want to see the lambda function URLs
 
 ### Things to know for backend development
 ###### Some things needs to be hard coded if you want to deploy a backend on YOUR AWS account.
