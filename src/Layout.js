@@ -9,7 +9,7 @@ function Layout() {
 
   return (
     <>
-      <div className={`layout-grid ${user ? "logged-in" : ""} h-screen`}>
+      <div className={`layout-container ${user ? "logged-in" : ""}`}>
         {user && <SideBar />}
         <Outlet />
         <div></div>
