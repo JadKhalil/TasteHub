@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 function Profile() {
   return (
     <>
-      <h>Profile</h>
+      <h1>Profile</h1>
     </>
   );
 }

@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 function Search() {
   return (
     <>
-      <h>Search</h>
+      <h1>Search</h1>
     </>
   );
 }
