@@ -49,10 +49,10 @@ def lambda_handler(event, context):
     postID = binary_data[1].decode()
     category = binary_data[2].decode()
     datePosted = binary_data[3].decode()
-    numberOfLikes = binary_data[5].decode()
-    numberOfComments = binary_data[6].decode()
+    numberOfLikes = int(binary_data[5].decode('utf-8'))
+    numberOfComments = int(binary_data[6].decode('utf-8'))
     postDescription = binary_data[7].decode()
-    prepTime = binary_data[8].decode()
+    prepTime = int(binary_data[8].decode('utf-8'))
     recipeName = binary_data[9].decode()
 
     image = "contentImage.png"

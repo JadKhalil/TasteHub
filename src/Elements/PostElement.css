@@ -31,7 +31,7 @@
     object-position: 50% 50%;
 }
 
-.post-prep-time-container {
+.post-prep-time-badge {
     width: 6rem;
     height: 1.8rem;
     display: flex;
@@ -52,6 +52,21 @@
     height: 1.2rem;
     display: inline-block;
     padding-right: 3px;
+}
+
+.post-category-badge {
+    width: calc(100% - 4rem);
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: hwb(0 96% 4% / 0.713);
+    border-radius: 1rem;
+    position: absolute;
+    bottom: 0.8rem;
+    left: 2rem;
+    font-weight: bold;
+    font-size: small;
 }
 
 .post-user-email {
@@ -91,10 +106,15 @@
     display: flex;
 }
 
-.post-like-icon,
+.post-hollow-like-icon,
+.post-filled-like-icon,
 .post-comment-icon {
     padding-right: 10px;
     width: 1.5rem;
     height: 1.5rem;
     text-align: center;
+}
+
+.post-filled-like-icon {
+    color: red;
 }

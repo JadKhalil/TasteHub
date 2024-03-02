@@ -41,7 +41,7 @@ def lambda_handler(event, context):
                 "userEmail": body["userEmailOfPoster"],
                 "postID": body["postID"]
             },
-            UpdateExpression="ADD numberOfLikes :value",
+            UpdateExpression="SET numberOfLikes = numberOfLikes + :value",
             ExpressionAttributeValues={":value": 1},
             ReturnValues="UPDATED_NEW"
         )

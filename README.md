@@ -7,6 +7,7 @@ ENSF 401 App Project
 - lambda_url_create_user_profile = "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/"
 - lambda_url_delete_comment = "https://arocnlgm5i7sjrxb34mimhvfmm0nxfft.lambda-url.ca-central-1.on.aws/"
 - lambda_url_follow_user = "https://rl4au3ybjajtx62g23eyzmiuce0ifzkc.lambda-url.ca-central-1.on.aws/"
+- lambda_url_get_all_posts https://3l4lzvgaso73rkupogicrcwunm0voagl.lambda-url.ca-central-1.on.aws/
 - lambda_url_get_comments_on_post = "https://nenqkh35mmdevuny2x7gbozquu0cquyy.lambda-url.ca-central-1.on.aws/"
 - lambda_url_get_followers = "https://kmjp6z5oboueqdiz5yaolqkm3a0lulye.lambda-url.ca-central-1.on.aws/"
 - lambda_url_get_following = "https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/"

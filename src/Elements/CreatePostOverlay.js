@@ -2,17 +2,18 @@ import React from "react";
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
+import { useUser } from "../UserContext";
 
 
 const CreatePostOverlay = () => {
+    const { user } = useUser(); // Details of signed in user including their email
 
-    const [email, setEmail] = useState();
+    const [email, setEmail] = useState(user?.email);
     const [recipeName, setRecipeName] = useState();
     const [imageFile, setImageFile] = useState();
     const [prepTime, setPrepTime] = useState();
     const [description, setDescription] = useState();
     const [category, setCategory] = useState();
-     
 
   const handleSubmit = async (e) => { // Add lambda url
     e.preventDefault(); // Prevents the popup page from closing before event is handled
