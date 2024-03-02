@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import SideBar from "./SideBar.js";
+import SideBar from "./Elements/SideBar.js";
 import "./index.css";
 import { useUser } from "./UserContext";
 
@@ -12,7 +12,6 @@ function Layout() {
       <div className={`layout-container ${user ? "logged-in" : ""}`}>
         {user && <SideBar />}
         <Outlet />
-        <div></div>
       </div>
     </>
   );

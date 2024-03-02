@@ -85,7 +85,8 @@ resource "aws_iam_policy" "logs" {
         "dynamodb:DeleteItem",
         "dynamodb:GetItem",
         "dynamodb:Query",
-        "dynamodb:UpdateItem"
+        "dynamodb:UpdateItem",
+        "dynamodb:Scan"
       ],
       "Resource": ["arn:aws:logs:*:*:*", "${aws_dynamodb_table.tastehub-users.arn}", "${aws_dynamodb_table.tastehub-posts.arn}",
                     "${aws_dynamodb_table.tastehub-likes.arn}", "${aws_dynamodb_table.tastehub-comments.arn}", "${aws_dynamodb_table.tastehub-follows.arn}"],
@@ -269,6 +270,13 @@ data "archive_file" "create_post" {
   output_path = "../functions/posts/create_post/${local.artifact_name}"
 }
 
+# creating archive file for get_all_posts
+data "archive_file" "get_all_posts" {
+  type        = "zip"
+  source_dir = "../functions/posts/get_all_posts"
+  output_path = "../functions/posts/get_all_posts/${local.artifact_name}"
+}
+
 # creating archive file for create_comment
 data "archive_file" "create_comment" {
   type        = "zip"
@@ -360,6 +368,16 @@ resource "aws_lambda_function" "lambda_create_post" {
   handler          = local.handler_name
   filename         = "../functions/posts/create_post/${local.artifact_name}"
   source_code_hash = data.archive_file.create_post.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for get_all_posts
+resource "aws_lambda_function" "lambda_get_all_posts" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-get-all-posts"
+  handler          = local.handler_name
+  filename         = "../functions/posts/get_all_posts/${local.artifact_name}"
+  source_code_hash = data.archive_file.get_all_posts.output_base64sha256
   runtime = "python3.9"
 }
 
@@ -496,6 +514,20 @@ resource "aws_lambda_function_url" "url_create_post" {
     allow_credentials = true
     allow_origins     = ["*"]
     allow_methods     = ["POST"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+# create a Function URL for Lambda get_all_posts
+resource "aws_lambda_function_url" "url_get_all_posts" {
+  function_name      = aws_lambda_function.lambda_get_all_posts.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["GET"]
     allow_headers     = ["*"]
     expose_headers    = ["keep-alive", "date"]
   }
@@ -672,6 +704,10 @@ resource "aws_lambda_function_url" "url_create_user_profile" {
 # show all Lambda Function URLs
 output "lambda_url_create_post" {
   value = aws_lambda_function_url.url_create_post.function_url
+}
+
+output "lambda_url_get_all_posts" {
+  value = aws_lambda_function_url.url_get_all_posts.function_url
 }
 
 output "lambda_url_create_comment" {

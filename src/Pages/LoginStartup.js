@@ -1,10 +1,10 @@
 import React from "react";
-import { useUser } from "./UserContext";
+import { useUser } from "../UserContext";
 import Login from "./Login";
-import SideBar from "./SideBar";
+import SideBar from "../Elements/SideBar";
 import { useNavigate } from "react-router-dom";
-import tastehubImage from "./tasthub.png";
-import nameImage from "./name.png";
+import tastehubImage from "../tastehub.png";
+import nameImage from "../name.png";
 
 function LoginStartup() {
   const { user } = useUser();
