@@ -106,6 +106,10 @@
     display: flex;
 }
 
+.post-like-container:hover {
+    cursor: pointer;
+}
+
 .post-hollow-like-icon,
 .post-filled-like-icon,
 .post-comment-icon {

@@ -7,7 +7,12 @@ import "./Global.css";
 function Global() {
   const [ allPosts, setAllPosts ] = useState([]); // list of all posts
   const { user } = useUser(); // Details of signed in user including their email
-  const [ userLikedPostIDs, setUserLikedPostIDs ] = useState([]); // list of IDs of posts the user has liked
+  const [ likedPostIDList, setLikedPostIDList ] = useState([]); // list of IDs of posts the user has liked
+
+  // initially the likedpostID is not listed. 
+  // This hook is here to ensure the post is loaded AFTER all the liked post IDs are found in the database
+  // 
+  const [isLikedPostIDListLoaded, setIsLikedPostIDListLoaded ] = useState(false); 
   
   const loadAllPosts = async() => {
     const res = await fetch(
@@ -42,7 +47,7 @@ function Global() {
     }
   }
 
-  const loadLikedPostIDs = async () => {
+  const loadLikedPostIDList = async () => {
     const res = await fetch(
       `https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${user.email}`, // Lambda Function URL (needs to be hard coded)
       {
@@ -55,7 +60,8 @@ function Global() {
     const jsonRes = await res.json();
     if (res.status === 200)
     {
-      setUserLikedPostIDs([...jsonRes?.likeList?.Items]);
+      setLikedPostIDList([...jsonRes?.likeList?.Items]);
+      setIsLikedPostIDListLoaded(true);
     }
     else
     {
@@ -66,22 +72,22 @@ function Global() {
   useEffect(() => {
     // Check if user is not null before accessing email property
     if (user) {
-      loadLikedPostIDs();
+      loadLikedPostIDList();
       loadAllPosts();
     }
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
-  console.log(userLikedPostIDs);
+  console.log(likedPostIDList);
 
   return (
     <div className="global-container">
       <h1>Global</h1>
-      {allPosts.map((post)=> {
+      {isLikedPostIDListLoaded && allPosts.map((post)=> {
           return (<PostElement 
                   postObject={post} 
                   userEmail={user?.email} 
-                  isPostLikedParam={userLikedPostIDs.some(likedPost => likedPost.postID === post?.postID)} 
+                  isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
                   key={post?.postID}/>)
       })}
     </div>
