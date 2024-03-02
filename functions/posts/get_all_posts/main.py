@@ -1,12 +1,13 @@
 import json
 import boto3
 from boto3.dynamodb.conditions import Key
+from decimal import Decimal
 
 dynamodb_resource = boto3.resource("dynamodb")
 posts_table = dynamodb_resource.Table("tastehub-posts")
 
-from decimal import Decimal
 
+# Used to JSON dump data with type Decimal which is not supported by default
 class DecimalEncoder(json.JSONEncoder):
   def default(self, obj):
     if isinstance(obj, Decimal):
