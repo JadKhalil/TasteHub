@@ -11,7 +11,6 @@ function Global() {
 
   // initially the likedpostID is not listed. 
   // This hook is here to ensure the post is loaded AFTER all the liked post IDs are found in the database
-  // 
   const [isLikedPostIDListLoaded, setIsLikedPostIDListLoaded ] = useState(false); 
   
   const loadAllPosts = async() => {
@@ -78,8 +77,6 @@ function Global() {
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
-  console.log(likedPostIDList);
-
   return (
     <div className="global-container">
       <h1>Global</h1>
@@ -88,6 +85,7 @@ function Global() {
                   postObject={post} 
                   userEmail={user?.email} 
                   isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
+                  isGridLayout={false}
                   key={post?.postID}/>)
       })}
     </div>

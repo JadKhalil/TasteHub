@@ -39,7 +39,7 @@ def lambda_handler(event, context):
             "statusCode": 200,
             "body": json.dumps({
                 "message": "success",
-                "commentList": result
+                "postList": result
                 }, cls=DecimalEncoder)
         }
     except Exception as exp:
