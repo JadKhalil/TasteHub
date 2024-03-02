@@ -36,7 +36,7 @@ def lambda_handler(event, context):
                 "userEmail": queryParameters["userEmailOfPoster"],
                 "postID": queryParameters["postID"]
             },
-            UpdateExpression="ADD numberOfComments :value",
+            UpdateExpression="SET numberOfComments = numberOfComments + :value",
             ExpressionAttributeValues={":value": -1},
             ReturnValues="UPDATED_NEW"
         )

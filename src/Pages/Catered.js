@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 function Catered() {
   return (
     <>
-      <h>Catered</h>
+      <h2>Catered</h2>
     </>
   );
 }

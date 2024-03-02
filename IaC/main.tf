@@ -277,6 +277,13 @@ data "archive_file" "get_all_posts" {
   output_path = "../functions/posts/get_all_posts/${local.artifact_name}"
 }
 
+# creating archive file for get_personal_posts
+data "archive_file" "get_personal_posts" {
+  type        = "zip"
+  source_dir = "../functions/posts/get_personal_posts"
+  output_path = "../functions/posts/get_personal_posts/${local.artifact_name}"
+}
+
 # creating archive file for create_comment
 data "archive_file" "create_comment" {
   type        = "zip"
@@ -378,6 +385,16 @@ resource "aws_lambda_function" "lambda_get_all_posts" {
   handler          = local.handler_name
   filename         = "../functions/posts/get_all_posts/${local.artifact_name}"
   source_code_hash = data.archive_file.get_all_posts.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for get_personal_posts
+resource "aws_lambda_function" "lambda_get_personal_posts" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-get-personal-posts"
+  handler          = local.handler_name
+  filename         = "../functions/posts/get_personal_posts/${local.artifact_name}"
+  source_code_hash = data.archive_file.get_personal_posts.output_base64sha256
   runtime = "python3.9"
 }
 
@@ -522,6 +539,20 @@ resource "aws_lambda_function_url" "url_create_post" {
 # create a Function URL for Lambda get_all_posts
 resource "aws_lambda_function_url" "url_get_all_posts" {
   function_name      = aws_lambda_function.lambda_get_all_posts.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["GET"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+# create a Function URL for Lambda get_personal_posts
+resource "aws_lambda_function_url" "url_get_personal_posts" {
+  function_name      = aws_lambda_function.lambda_get_personal_posts.function_name
   authorization_type = "NONE"
 
   cors {
@@ -708,6 +739,10 @@ output "lambda_url_create_post" {
 
 output "lambda_url_get_all_posts" {
   value = aws_lambda_function_url.url_get_all_posts.function_url
+}
+
+output "lambda_url_get_personal_posts" {
+  value = aws_lambda_function_url.url_get_personal_posts.function_url
 }
 
 output "lambda_url_create_comment" {
