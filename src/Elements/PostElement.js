@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./PostElement.css";
+import { useUser } from "../UserContext";
 
 /**
  * 
@@ -9,6 +10,7 @@ import "./PostElement.css";
  * @returns {JSX}
  */
 const PostElement = ({ postObject , userEmail, isPostLikedParam}) => {
+    const { user } = useUser(); // Details of signed in user including their email
     const [isDetailsVisible, setIsDetailsVisible] = useState(false); // Used to show and hide the post caption
     const [postedDate, setPostedDate] = useState(); // Formatted date of the post
     const [isPostLiked, setIsPostLiked] = useState(isPostLikedParam);

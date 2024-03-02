@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import { useUser } from "../UserContext";
@@ -8,7 +8,7 @@ import { useUser } from "../UserContext";
 const CreatePostOverlay = () => {
     const { user } = useUser(); // Details of signed in user including their email
 
-    const [email, setEmail] = useState(user?.email);
+    const [email, setEmail] = useState();
     const [recipeName, setRecipeName] = useState();
     const [imageFile, setImageFile] = useState();
     const [prepTime, setPrepTime] = useState();
@@ -38,7 +38,15 @@ const CreatePostOverlay = () => {
         }
     );
     const jsonPromise = await promise.json(); // Used to access the body of the returned Json
-}
+    }
+
+    useEffect(() => {
+        // Check if user is not null before accessing email property
+        if (user) {
+          setEmail(user?.email);
+        }
+        // The dependency array ensures that this effect runs whenever user changes
+      }, [user]);
 
   return (
     <>
@@ -58,9 +66,6 @@ const CreatePostOverlay = () => {
                     onChange={(e) => setImageFile(e.target.files[0])}
                     required
                     />
-                </div>
-                <div className='create-post-name-container'>
-                    <input type="text" placeholder="Email" onChange={ (e) => setEmail(e.target.value) } required/>
                 </div>
                 <div className='create-post-recipeName-container'>
                     <input type="text" placeholder="Recipe Name" onChange={ (e) => setRecipeName(e.target.value) } required/>
