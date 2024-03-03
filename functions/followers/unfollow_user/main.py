@@ -8,8 +8,8 @@ tastehub_users = dynamodb_resource.Table("tastehub-users")
  
 
 '''
-This function removes a follow relationship to a follow table and 
-decrements the numberOfFollowers andnumberOfFollowing for the followee and follower, respectively.
+This function removes a follow relationship from a follows table, and
+decrements the numberOfFollowers and numberOfFollowing for the followee and follower, respectively, in the users table.
 Requires: userEmailOfFollower(String), userEmailOfFollowee(String)
 
 Use the following format:
@@ -36,7 +36,7 @@ def lambda_handler(event, context):
             Key={
                 "userEmail": queryParameters["userEmailOfFollowee"],
             },
-            UpdateExpression="ADD numberOfFollowers :value",
+            UpdateExpression="SET numberOfFollowers = numberOfFollowers + :value",
             ExpressionAttributeValues={":value": -1},
             ReturnValues="UPDATED_NEW"
         )
@@ -45,7 +45,7 @@ def lambda_handler(event, context):
             Key={
                 "userEmail": queryParameters["userEmailOfFollower"],
             },
-            UpdateExpression="ADD numberOfFollowing :value",
+            UpdateExpression="SET numberOfFollowing = numberOfFollowing :value",
             ExpressionAttributeValues={":value": -1},
             ReturnValues="UPDATED_NEW"
         )

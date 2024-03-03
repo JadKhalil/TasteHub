@@ -7,7 +7,8 @@ likes_table = dynamodb_resource.Table("tastehub-likes")
 
 
 '''
-This function returns a list of user email of all likes on a specific post. Useful for seeing who liked a post
+This function returns a list of user email of all likes on a specific post from the likes table.
+Useful for seeing who liked a post
 Requires: postID (String).
 
 Use the following format:

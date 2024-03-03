@@ -8,7 +8,8 @@ posts_table = dynamodb_resource.Table("tastehub-posts")
  
 
 '''
-This function adds a like to a post and increments the number of likes in the posts table.
+This function adds a row to the likes table
+and increments the number of likes for a post in the numberOfLikes column in the posts table.
 Requires a JSON object as specified below.
 
 Use the following format:

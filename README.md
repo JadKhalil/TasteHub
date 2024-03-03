@@ -2,8 +2,6 @@
 ENSF 401 App Project
 
 ### Things Left To Do
-- Create a delete_post lambda function
-    - This lambda function should delete post from tastehub-posts table as well as delete all user to post relationship data such as likes, and comments from tastehub-likes and tastehub-comments table
 - Create a get_following_post lambda function
     - This lambda function should find a list of users that the current user follows and get all of their posts (May be an expensive operation)
 - Create a get_user_profile lambda function
@@ -13,7 +11,7 @@ ENSF 401 App Project
     - When the button is clicked, an overlay should pop up to the CreatePostOverlay.js
 - Implement comment section (Lambda functions are implemented but front end is not)
     - Take a look at how liking post was implemented to get a general idea
-- Implement delete post functionality when user clicks on `Garbage icon button` (Lambda function must be implemented first before doing front end)
+- Implement delete post functionality when user clicks on `Garbage icon button` for front end
 - User profile for other users should also be available
     - Should be able to navigate to their page by clicking on their username on their post
     - Use get_personal_posts lambda function and pass in the user email of the other users
