@@ -2,26 +2,48 @@ import React, { useState, useEffect } from "react";
 import "./PostElement.css";
 
 /**
+ * JSX Component for a single post.
  * 
- * @param {Object} postObject JSON Object of the post
- * @param {String} userEmail Email of the user, not the poster. User email is needed to like and comment on the post
- * @param {Boolean} isPostLiked True or false depending on whether the user liked the post or not
+ * This JSX component is to be rendered on a page by calling one of the GET 'posts' lambda functions
+ * and iterating through the array of posts returned from the database and passing in the JSON data into the postObject parameter.
+ * 
+ * In order to determine the argument needed to be passed into the isPostLikedParam parameter, call 'get_user_liked_posts' lambda function
+ * on one of the pages that render this component to check if the returned array contains a postID that matches the postID of the postObject parameter.
+ * 
+ * @param {Object} postObject           JSON Object of the post
+ * @param {String} userEmail            Email of the user browsing the post, not the user who posted this recipe. It's an important distinction
+ *                                      userEmail parameter is needed to like and comment on the post.
+ * @param {Boolean} isPostLikedParam    True or false depending on whether the user liked the post or not.
+ * 
+ * @param {Boolean} isGridLayout        True or false depending on which page the post element is rendered. 
+ *                                      This parameter is used to change the styling of the returned JSX element.
+ * @param {function} deletePost         deletePost lambda function passed as a prop
  * @returns {JSX}
  */
-const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout}) => {
-    const [isDetailsVisible, setIsDetailsVisible] = useState(false); // Used to show and hide the post caption
-    const [postedDate, setPostedDate] = useState(); // Formatted date of the post
-    const [isPostLiked, setIsPostLiked] = useState(isPostLikedParam);
-    const [numberOfLikes, setNumberOfLikes] = useState(Number(postObject?.numberOfLikes));
-    const [numberOfComments, setNumberOfComments] = useState(Number(postObject?.numberOfComments));
+const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, deletePost}) => {
+    const [isDetailsVisible, setIsDetailsVisible] = useState(false); // Used to show and hide the post caption when user clicks on the image
+    const [postedDate, setPostedDate] = useState(); // Formatted date of the post. It is initialized in the useEffect hook
+
+    /* This hook is boolean type that used in determining whether clicking on a heart icon likes or unlikes a post.
+     * If set to true, the heart icon will be filled and clicking it will call the 'unlike_post' lambda function
+     * If set to false, the heart icon will be hollow and clicking it will call the 'like_post' lambda function
+     */
+    const [isPostLiked, setIsPostLiked] = useState(isPostLikedParam); 
+
+    const [numberOfLikes, setNumberOfLikes] = useState(Number(postObject?.numberOfLikes)); // the number of likes on the post
+    const [numberOfComments, setNumberOfComments] = useState(Number(postObject?.numberOfComments)); // the number of comments on the post
 
     /**
-     * Showing and hiding the post caption by clicking the image of the post
+     * Shows and hides the post caption by clicking the image of the post
      */
     const toggleDetails = () => {
       setIsDetailsVisible(!isDetailsVisible);
     };
 
+
+    /**
+     * Determines whether clicking on a heart icon should call the 'like_post' lambda function or the 'unlike_post' lambda function
+     */
     const handleLikes = async () => {
         if (isPostLiked === false) {
             likePost();
@@ -31,6 +53,11 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout}) 
         }
     }
 
+    /**
+     * Calls the 'like_post' lambda function to update backend,
+     * sets the isPostLiked hook to true,
+     * and increments the number of likes on the front end side as well.
+     */
     const likePost = async () => {
         const promise = await fetch(
             `https://en46iryruu4einvaoz24oq5lie0ifwvy.lambda-url.ca-central-1.on.aws`,
@@ -46,11 +73,15 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout}) 
                 })
             }
         );
-        const jsonPromise = await promise.json(); // Used to access the body of the returned Json
         setIsPostLiked(true);
         setNumberOfLikes((prevLikes) => prevLikes + 1);
     }
 
+    /**
+     * Calls the 'unlike_post' lambda function to update backend,
+     * sets the isPostLiked hook to false,
+     * and increments the number of likes on the front end side as well.
+     */
     const unlikePost = async () => {
         const promise = await fetch(
             `https://bvraqaptwxnnop2ruzr26h5ppe0wtrxi.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${userEmail}&postID=${postObject?.postID}&userEmailOfPoster=${postObject?.userEmail}`,
@@ -61,24 +92,23 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout}) 
                 },
             }
         );
-        const jsonPromise = await promise.json(); // Used to access the body of the returned Json
         setIsPostLiked(false);
         setNumberOfLikes((prevLikes) => prevLikes - 1);
     }
 
-    const deletePost = async () => {
-        const promise = await fetch(
-            // some url here
-            {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            }
-        );
-        window.alert("Not yet connected to backend");
-    }
+    /**
+     * Asks the user if they would like to delete the post for confirmation.
+     * Calls the deletePost async function passed in as a prop from a page that renders this component.
+     */
+    const deletePostHandler = async () => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+        if (confirmDelete) {
+          deletePost(postObject?.postID); // Call the deletePost function passed as a prop
+        }
+    };
+    
 
+    // sets the postedDate hook using the formatted value of the date this recipe is posted.
     useEffect(()=> {
         const date = new Date(Number(postObject?.datePosted));
         const options = {
@@ -144,7 +174,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout}) 
                 }
                 <span>{numberOfLikes}</span>
             </div>
-            <div className="post-comment-container" onClick={()=>window.alert("not yet implemented")}>
+            <div className="post-comment-container" onClick={deletePostHandler}>
                 <svg className="post-comment-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
                 </svg>
