@@ -7,7 +7,8 @@ likes_table = dynamodb_resource.Table("tastehub-likes")
 
 
 '''
-This function returns a list of postIDs of all liked posts. Useful for seeing a collection of liked posts
+This function returns a list of postIDs of all liked posts from the likes table.
+Useful for seeing a collection of liked posts
 Requires: userEmailOfLiker (String).
 
 Use the following format:

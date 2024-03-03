@@ -7,7 +7,8 @@ posts_table = dynamodb_resource.Table("tastehub-posts")
  
 
 '''
-This function removes a like from a post and decrements the number of likes in the posts table.
+This function removes a row from the likes table
+and decrements the number of likes for a post in the numberOfLikes column in the posts table.
 Requires: userEmailOfLiker (String), postID (String), and userEmailOfPoster (String)
 
 Use the following format:

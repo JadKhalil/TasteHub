@@ -8,8 +8,8 @@ users_table = dynamodb_resource.Table("tastehub-users")
  
 
 '''
-This function adds a follow relationship to a follow table and 
-increments the numberOfFollowers andnumberOfFollowing for the followee and follower, respectively.
+This function adds a follow relationship to a follows table, and 
+increments the numberOfFollowers andnumberOfFollowing for the followee and follower, respectively, in the follows table.
 Requires a JSON object as specified below.
 
 Use the following format:
@@ -40,7 +40,7 @@ def lambda_handler(event, context):
             Key={
                 "userEmail": body["userEmailOfFollowee"],
             },
-            UpdateExpression="ADD numberOfFollowers :value",
+            UpdateExpression="SET numberOfFollowers = numberOfFollowers + :value",
             ExpressionAttributeValues={":value": 1},
             ReturnValues="UPDATED_NEW"
         )
@@ -49,7 +49,7 @@ def lambda_handler(event, context):
             Key={
                 "userEmail": body["userEmailOfFollower"],
             },
-            UpdateExpression="ADD numberOfFollowing :value",
+            UpdateExpression="SET numberOfFollowing = numberOfFollowing + :value",
             ExpressionAttributeValues={":value": 1},
             ReturnValues="UPDATED_NEW"
         )
