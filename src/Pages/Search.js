@@ -113,7 +113,7 @@ function Search() {
 
       if (response.ok) {
         window.alert("Post deleted successfully");
-        setAllPosts(prevAllPosts => prevAllPosts.filter(post => post.id !== postID));  // removes the post from the AllPosts list
+        loadAllPosts(); // API Get Request
       } else {
         // Error handling for unsuccessful deletion
         window.alert("Failed to delete post");

@@ -11,7 +11,6 @@ ENSF 401 App Project
     - When the button is clicked, an overlay should pop up to the CreatePostOverlay.js
 - Implement comment section (Lambda functions are implemented but front end is not)
     - Take a look at how liking post was implemented to get a general idea
-- Implement delete post functionality when user clicks on `Garbage icon button` for front end
 - User profile for other users should also be available
     - Should be able to navigate to their page by clicking on their username on their post
     - Use get_personal_posts lambda function and pass in the user email of the other users
