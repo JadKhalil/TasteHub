@@ -88,8 +88,14 @@ resource "aws_iam_policy" "logs" {
         "dynamodb:UpdateItem",
         "dynamodb:Scan"
       ],
-      "Resource": ["arn:aws:logs:*:*:*", "${aws_dynamodb_table.tastehub-users.arn}", "${aws_dynamodb_table.tastehub-posts.arn}",
-                    "${aws_dynamodb_table.tastehub-likes.arn}", "${aws_dynamodb_table.tastehub-comments.arn}", "${aws_dynamodb_table.tastehub-follows.arn}"],
+      "Resource": ["arn:aws:logs:*:*:*", 
+                  "${aws_dynamodb_table.tastehub-users.arn}",
+                  "${aws_dynamodb_table.tastehub-posts.arn}",
+                  "${aws_dynamodb_table.tastehub-likes.arn}",
+                  "${aws_dynamodb_table.tastehub-comments.arn}",
+                  "${aws_dynamodb_table.tastehub-follows.arn}",
+                  "${aws_dynamodb_table.tastehub-likes.arn}/index/*",
+                  "${aws_dynamodb_table.tastehub-follows.arn}/index/*"],
       "Effect": "Allow"
     }
   ]
@@ -284,6 +290,13 @@ data "archive_file" "get_personal_posts" {
   output_path = "../functions/posts/get_personal_posts/${local.artifact_name}"
 }
 
+# creating archive file for delete_post
+data "archive_file" "delete_post" {
+  type        = "zip"
+  source_dir = "../functions/posts/delete_post"
+  output_path = "../functions/posts/delete_post/${local.artifact_name}"
+}
+
 # creating archive file for create_comment
 data "archive_file" "create_comment" {
   type        = "zip"
@@ -397,6 +410,17 @@ resource "aws_lambda_function" "lambda_get_personal_posts" {
   source_code_hash = data.archive_file.get_personal_posts.output_base64sha256
   runtime = "python3.9"
 }
+
+# create a Lambda function for delete_post
+resource "aws_lambda_function" "lambda_delete_post" {
+  role             = aws_iam_role.lambda.arn
+  function_name    = "tastehub-delete-post"
+  handler          = local.handler_name
+  filename         = "../functions/posts/delete_post/${local.artifact_name}"
+  source_code_hash = data.archive_file.delete_post.output_base64sha256
+  runtime = "python3.9"
+}
+
 
 # create a Lambda function for create_comment
 resource "aws_lambda_function" "lambda_create_comment" {
@@ -559,6 +583,20 @@ resource "aws_lambda_function_url" "url_get_personal_posts" {
     allow_credentials = true
     allow_origins     = ["*"]
     allow_methods     = ["GET"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
+# create a Function URL for Lambda delete_post
+resource "aws_lambda_function_url" "url_delete_post" {
+  function_name      = aws_lambda_function.lambda_delete_post.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["DELETE"]
     allow_headers     = ["*"]
     expose_headers    = ["keep-alive", "date"]
   }
@@ -743,6 +781,10 @@ output "lambda_url_get_all_posts" {
 
 output "lambda_url_get_personal_posts" {
   value = aws_lambda_function_url.url_get_personal_posts.function_url
+}
+
+output "lambda_url_delete_post" {
+  value = aws_lambda_function_url.url_delete_post.function_url
 }
 
 output "lambda_url_create_comment" {

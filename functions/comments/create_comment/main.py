@@ -25,6 +25,7 @@ const res = await fetch(
                 "commentID": String,
                 "userEmailOfCommenter": String,
                 "content": String,
+                "userEmailOfPoster": String
             })
         }
     );
