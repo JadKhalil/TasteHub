@@ -92,35 +92,34 @@ function Profile() {
   /**
    * Calls the 'delete_post' lambda function to remove the post from the database.
    * Removes the deleted post from personalPosts list
+   * 
+   * @param {String} postID           postID of the post
+   * @param {String} posterUserEmail  userEmail of the poster
    */
-  const deletePost = async (postID) => {
-    try {
-      const response = await fetch(
-        `https://your-backend-url/api/delete_post`, // Replace with your actual backend endpoint
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            postID: postID,
-            // Add any other necessary data that your backend requires for post deletion
-          })
+    const deletePost = async (postID, posterUserEmail) => {
+      try {
+        const response = await fetch(
+          `https://fbn3kgu4tkf52n3vkqw27qhx4m0xdyob.lambda-url.ca-central-1.on.aws?postID=${postID}&userEmail=${posterUserEmail}`, // Lambda Function URL (needs to be hard coded)
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+        );
+  
+        if (response.ok) {
+          window.alert("Post deleted successfully");
+          setPersonalPosts(prevAllPosts => prevAllPosts.filter(post => post.id !== postID));  // removes the post from the AllPosts list
+        } else {
+          // Error handling for unsuccessful deletion
+          window.alert("Failed to delete post");
         }
-      );
-
-      if (response.ok) {
-        window.alert("Post deleted successfully");
-        setPersonalPosts((prevPersonalPosts) => prevPersonalPosts.filter((post) => post?.id !== postID)); // removes the post from the AllPosts list
-      } else {
-        // Error handling for unsuccessful deletion
-        window.alert("Failed to delete post");
+      } catch (error) {
+        console.error("Error deleting post:", error);
+        window.alert("An error occurred while deleting the post");
       }
-    } catch (error) {
-      console.error("Error deleting post:", error);
-      window.alert("An error occurred while deleting the post");
-    }
-  };
+    };
 
   // When the user data is fetched, the likedPostIDList and loadAllPosts functions are called
   // This is to ensure that the posts are rendered after all the liked post is returned

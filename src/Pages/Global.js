@@ -92,26 +92,25 @@ function Global() {
   /**
    * Calls the 'delete_post' lambda function to remove the post from the database.
    * Removes the deleted post from allPosts list
+   * 
+   * @param {String} postID           postID of the post
+   * @param {String} posterUserEmail  userEmail of the poster
    */
-  const deletePost = async (postID) => {
+  const deletePost = async (postID, posterUserEmail) => {
     try {
       const response = await fetch(
-        `https://your-backend-url/api/delete_post`, // Replace with your actual backend endpoint
+        `https://fbn3kgu4tkf52n3vkqw27qhx4m0xdyob.lambda-url.ca-central-1.on.aws?postID=${postID}&userEmail=${posterUserEmail}`, // Lambda Function URL (needs to be hard coded)
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            postID: postID,
-            // Add any other necessary data that your backend requires for post deletion
-          })
+          }
         }
       );
 
       if (response.ok) {
         window.alert("Post deleted successfully");
-        setAllPosts((prevAllPosts) => prevAllPosts.filter((post) => post?.id !== postID)); // removes the post from the AllPosts list
+        setAllPosts(prevAllPosts => prevAllPosts.filter(post => post.id !== postID));  // removes the post from the AllPosts list
       } else {
         // Error handling for unsuccessful deletion
         window.alert("Failed to delete post");
