@@ -1,45 +1,135 @@
 
 .sidebar {
-    width: 15%;
-    height: 100%;
-    background-color: #d1d5db;
-    border-right: 2px solid #000000;
-    z-index: 2;
-  }
+  display: flex;
+  flex-direction: column;
+  width: 15%;
+  height: 100%;
+  max-height: 100%;
+  background-color: #d1d5db;
+  border-right: 2px solid #000000;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.logo-bigger-box {
+  display: flex;
+  flex: 1;
+  background-color: inherit;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5px;
+  padding-bottom: 20px;
+  min-height: fit-content;
   
-  .logo-title {
-    color: #6b7280;
-    margin-left: 1rem;
-    margin-top: 1rem;
-    margin-bottom: 3.5rem;
-    font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 2rem;
-  }
-  
-  .sidebar-button {
-    display: flex;
-    margin-left: 1rem;
-    margin-top: 0.5rem;
-    text-decoration: none;
-    color: black;
-  }
-  
-  .sidebar-button > svg {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-  
-  .settings-button {
-    display: flex;
-    position: absolute;
-    left: 1rem;
-    bottom: 2rem;
-    text-decoration: none;
-    color: black;
-  }
-  
-  .settings-button > svg {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
+}
+
+.left-bar-logo-buffer {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  height: inherit;
+  background-color: #C0D685;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-box {
+  display: flex;
+  flex: 15;
+  background-color: inherit;
+  justify-content: center;
+  align-items: center;
+  min-height: fit-content;
+
+}
+
+.logo-image {
+  background-color: inherit;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+
+.sb-tools-list-bigger-box {
+  display: flex;
+  flex: 50;
+  flex-direction: column;
+
+}
+
+.sb-tools-list-box {
+  display: flex;
+  flex: 10;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+}
+
+.sb-tool-item-box {
+  display: flex;
+  flex-direction: row;
+
+}
+
+.sb-tool-link {
+  display: flex;
+  flex: 1;
+  text-decoration: none;
+  color: black;
+  gap: 10px;
+}
+
+.sb-tool-link > svg {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  min-height: 20px;
+  min-width: 20px;
+}
+
+.sb-tool-link > h4 {
+  display: flex;
+  flex: 2;
+  justify-content: center;
+  align-items: center;
+}
+
+.sb-tool-link-buffer-left,
+.sb-tool-link-buffer-right {
+  flex: 1;
+}
+
+
+
+
+
+
+.sb-setting-tool-box {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
+.sb-setting-tool-link {
+  display: flex;
+  flex: 1;
+  text-decoration: none;
+  color: black;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.sb-setting-tool-link > svg {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  min-height: 20px;
+  min-width: 20px;
+  max-height: 40px;
+  max-width: 1000px;
+  padding: 10px;
+}
