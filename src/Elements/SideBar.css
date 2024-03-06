@@ -1,45 +1,78 @@
 
 .sidebar {
-    width: 15%;
-    height: 100%;
-    background-color: #d1d5db;
-    border-right: 2px solid #000000;
-    z-index: 2;
-  }
+  width: 15%;
+  height: 100%;
+  background-color: #d1d5db;
+  border-right: 2px solid #000000;
+  z-index: 2;
+}
+
+.logo-bigger-box {
+  display: flex;
+  flex: 1;
+  background-color: inherit;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5px;
+  padding-bottom: 20px;
+  min-height: fit-content;
   
-  .logo-title {
-    color: #6b7280;
-    margin-left: 1rem;
-    margin-top: 1rem;
-    margin-bottom: 3.5rem;
-    font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 2rem;
-  }
-  
-  .sidebar-button {
-    display: flex;
-    margin-left: 1rem;
-    margin-top: 0.5rem;
-    text-decoration: none;
-    color: black;
-  }
-  
-  .sidebar-button > svg {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-  
-  .settings-button {
-    display: flex;
-    position: absolute;
-    left: 1rem;
-    bottom: 2rem;
-    text-decoration: none;
-    color: black;
-  }
-  
-  .settings-button > svg {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
+}
+
+.left-bar-logo-buffer {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  height: inherit;
+  background-color: #C0D685;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-box {
+  display: flex;
+  flex: 15;
+  background-color: inherit;
+  justify-content: center;
+  align-items: center;
+  min-height: fit-content;
+
+}
+
+.logo-image {
+  background-color: inherit;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+
+
+
+
+.sidebar-button {
+  display: flex;
+  margin-left: 1rem;
+  margin-top: 0.5rem;
+  text-decoration: none;
+  color: black;
+}
+
+.sidebar-button > svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.settings-button {
+  display: flex;
+  position: absolute;
+  left: 1rem;
+  bottom: 2rem;
+  text-decoration: none;
+  color: black;
+}
+
+.settings-button > svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}

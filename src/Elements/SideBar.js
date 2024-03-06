@@ -1,13 +1,26 @@
 import React from "react";
 import "./SideBar.css";
 import { Link } from "react-router-dom";
+import TH_img_01 from "./../images/TH_img_01.png"
 
 function SideBar() {
   return (
     <div className="sidebar">
-      <h1 className="logo-title">
-        Taste Hub
-      </h1>
+      {/* The box for the Logo in the left corner */}
+      <div class="logo-bigger-box">
+        <div class="left-bar-logo-buffer">
+        </div>
+        <div class="logo-box">
+          {/* The logo TH_img_01 in the top left corner */}
+          <img 
+            class="logo-image"
+            src={TH_img_01}
+            alt="user"
+          />
+        </div>
+        <div class="left-bar-logo-buffer">
+        </div>
+      </div>
       <Link to="global" className="sidebar-button">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
           <path fillRule="evenodd"
