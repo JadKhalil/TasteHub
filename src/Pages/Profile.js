@@ -137,8 +137,23 @@ function Profile() {
   return (
     user && (
     <div className="profile-container">
-      <h1>Profile</h1>
-      <CreatePostOverlay/>
+      
+      <div className="profileHeader-container">
+        <h1>Profile</h1>
+      </div>
+
+      <div className="profilePosts-container">
+        <div className="posts-container">
+          <h2>posts-n-stuff</h2>
+        </div>
+
+        <div className="createposts-overlay-container">
+          <CreatePostOverlay/>
+        </div>
+
+      </div>
+      
+      
 
       <div className="profile-grid-container" >
       {isLikedPostIDListLoaded && personalPosts.map((post)=> { 
