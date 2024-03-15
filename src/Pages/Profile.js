@@ -139,7 +139,22 @@ function Profile() {
     <div className="profile-container">
       
       <div className="profileHeader-container">
-        <h1>Profile</h1>
+        <div className="profileImg">
+          <img className="imgprofile-container"/>
+          img
+        </div>
+
+        <div className="profileName-bio-container">
+          <div className="name-container">name</div>
+          <div className="bio-information-container">bio</div>
+        </div>
+
+        <div className="profileFollower-container">
+            <div className="profilefollowers">0 :*(</div>
+            <div className="profilefollowers">100000</div>
+        </div>
+
+
       </div>
 
       <div className="profilePosts-container">
