@@ -1,0 +1,159 @@
+
+
+
+.settings-big-box {
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: inherit;
+
+}
+
+
+.settings-box {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    background-color: inherit;
+}
+
+
+.settings-header-big-box {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: black;
+
+    background-color: #f9a53f;
+}
+
+.settings-header-box {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    
+    background-color: inherit;
+}
+
+
+.settings-header-label-h1 {
+    background-color: inherit;
+}
+
+
+.settings-categories-big-box {
+    display: flex;
+    flex: 10;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+
+    background-color: inherit;
+}
+
+
+.settings-categories-box {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 20px;
+    scroll-padding-top: 40px;
+
+    background-color: inherit;
+}
+
+
+.settings-category-big-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+    background-color: inherit;
+}
+
+
+.settings-category-box {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    width: 60%;
+
+    background-color: inherit;
+}
+
+
+.settings-category-title-box {
+    display: flex;
+    flex-direction: column;
+
+    background-color: inherit;
+}
+
+
+.settings-category-title-h4 {
+    font-size: 1.2rem;
+
+    background-color: inherit;
+}
+
+
+.settings-options-box {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin-left: 30px;
+
+    background-color: inherit;
+}
+
+
+.settings-option-box {
+    display: flex;
+    flex-direction: column;
+
+    background-color: inherit;
+}
+
+
+.settings-option,
+.active-settings-option {
+    display: flex;
+    flex-direction: column;
+
+    cursor: pointer;
+
+    padding: 5px;
+
+    font-size: 1rem;
+
+    background-color: inherit;
+}
+
+
+.active-settings-option {
+    background-color: lightgoldenrodyellow;
+}
+
