@@ -25,9 +25,9 @@ once all of these changes have been implemnted, please let Jean Know so that he 
 
 ---
 
-#### PostElement: Ln42
-- This useState needs to start of with a list of the existing comments of that post in the format: [ { username : "John Doe", comment : "I really like this meal, thank you !" }, { username : "Jane Doe", comment : "I really hate this meal, you should be banned!" } ]
-- Dont forget to remove teh place holder comments
+#### ~~PostElement: Ln42~~
+- ~~This useState needs to start of with a list of the existing comments of that post in the format: [ { username : "John Doe", comment : "I really like this meal, thank you !" }, { username : "Jane Doe", comment : "I really hate this meal, you should be banned!" } ]~~
+- ~~Dont forget to remove teh place holder comments~~
 
 ---
 
@@ -37,17 +37,17 @@ once all of these changes have been implemnted, please let Jean Know so that he 
 
 ---
 
-#### PostElement: Ln105
-- This function needs to call the database to add a comment to teh list of comments top that post
-- If you want to, you can use the newListOfComments to completely reset teh list to this new list
-- Dont forget to make the call last in this function (implement it after the already written logic)
+#### ~~PostElement: Ln105~~
+- ~~This function needs to call the database to add a comment to teh list of comments top that post~~
+- ~~If you want to, you can use the newListOfComments to completely reset teh list to this new list~~
+- ~~Dont forget to make the call last in this function (implement it after the already written logic)~~
 
 ---
 
-#### PostElement: Ln125
-- This function needs to call the database to remove a comment from the list of comments
-- If you want to, you can use the newListOfComments to completely reset teh list to this new list
-- Dont forget to make the call last in this function (implement it after the already written logic)
+#### ~~PostElement: Ln125~~
+- ~~This function needs to call the database to remove a comment from the list of comments~~
+- ~~If you want to, you can use the newListOfComments to completely reset teh list to this new list~~
+- ~~Dont forget to make the call last in this function (implement it after the already written logic)~~
 
 ---
 
@@ -57,9 +57,9 @@ once all of these changes have been implemnted, please let Jean Know so that he 
 
 ---
 
-#### PostElement: Ln264
-- This effect will need to call the db for teh actual stored number instead of calculating it manually
-- Only once the other chnages are made.
+#### ~~PostElement: Ln264~~
+- ~~This effect will need to call the db for teh actual stored number instead of calculating it manually~~
+- ~~Only once the other chnages are made.~~
 
 ---
 

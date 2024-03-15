@@ -34,12 +34,9 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
         //
         false
     );
-    const [showComments, setShowComments] = useState(false);
-    const [newComment, setNewComment] = useState("");
-    const [comments, setComments] = useState([]);
-
-
-
+    const [showComments, setShowComments] = useState(false); // Boolean for showing comments when comment button is clicked
+    const [newComment, setNewComment] = useState(""); // A comment on a comment box. If this state is empty, the submit button disappears
+    const [comments, setComments] = useState([]); // List of JSON objects for all comments on a post
     const [isDetailsVisible, setIsDetailsVisible] = useState(false); // Used to show and hide the post caption when user clicks on the image
     const [postedDate, setPostedDate] = useState(); // Formatted date of the post. It is initialized in the useEffect hook
 
