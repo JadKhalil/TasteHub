@@ -132,19 +132,35 @@ function Global() {
   }, [user]);
 
   return (
-    <div className="global-container">
-      <h1>Global</h1>
-      {isLikedPostIDListLoaded && allPosts.map((post)=> { 
-        // Posts are rendered only after the likedPostIDList is loaded to ensure the heart icon is filled/empty depending on
-        // whether the user has previous liked the post
-          return (<PostElement 
-                  postObject={post} 
-                  userEmail={user?.email} 
-                  isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
-                  isGridLayout={false}
-                  deletePost={deletePost}
-                  key={post?.postID}/>)
-      })}
+    <div className="global-big-box">
+      <div className="global-box">
+
+        <div className="global-header-big-box">
+          <div className="global-header-box">
+            <h1 className="global-header-label-h1">Global</h1>
+          </div>
+        </div>
+
+        <div className="global-post-list-big-box">
+          <div className="global-post-list-box">
+            {isLikedPostIDListLoaded && allPosts.map((post)=> { 
+              // Posts are rendered only after the likedPostIDList is loaded to ensure the heart icon is filled/empty depending on
+              // whether the user has previous liked the post
+                return (
+                  <PostElement 
+                    postObject={post} 
+                    userEmail={user?.email} 
+                    isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
+                    isGridLayout={false}
+                    deletePost={deletePost}
+                    key={post?.postID}
+                  />
+                )
+            })}
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }

@@ -1,8 +1,107 @@
-.global-container {
+
+
+/* 
+    Outlet Containers
+*/
+
+.global-big-box {
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow: auto;
+    width: 100%;
+
+    background-color: white;
+}
+
+
+.global-box {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
     width: 100%;
     align-items: center;
+
+    background-color: inherit;
+}
+
+
+
+
+/* 
+    Outlet Items
+*/
+
+.global-header-big-box {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: black;
+
+    background-color: #f9a53f;
+}
+
+.global-post-list-big-box {
+    display: flex;
+    flex: 10;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    padding-top: 20px;
+
+    background-color: inherit;
+}
+
+
+
+
+/* 
+    Header Container and Items
+*/
+
+.global-header-box {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    
+    background-color: inherit;
+}
+
+.global-header-label-h1 {
+
+    background-color: inherit;
+}
+
+
+
+
+/* 
+    Post List Container and Items
+*/
+
+.global-post-list-box {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    align-items: center;
+    gap: 20px;
+    padding-top: 20px;
+    scroll-padding-top: 40px;
+    padding-bottom: 10px;
+
+    background-color: white;
 }
