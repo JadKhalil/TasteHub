@@ -6,41 +6,53 @@ function Settings() {
 
   const [setingsList, setSettingList] = useState([
     {
-      categoryName : "Category 1",
+      categoryName : "Colour Theme",
+      categoryType : "Selector",
       optionsList : [
         {
-          optionName : "Option 1",
-          optionID : "C1O1",
+          optionName : "Light-Mode",
           isSelected : true
         },
         {
-          optionName : "Option 2",
-          optionID : "C1O2",
-          isSelected : false
-        },
-        {
-          optionName : "Option 3",
-          optionID : "C1O3",
+          optionName : "Dark-Mode",
           isSelected : false
         }
       ]
     },
     {
-      categoryName : "Category 2",
+      categoryName : "Account",
+      categoryType : "Edit",
       optionsList : [
         {
-          optionName : "Option 1",
-          optionID : "C2O1",
-          isSelected : true
-        },
+          optionType : "EditText",
+          optionName : "UserName",
+          optionValue : "John Doe",
+          optionNewValue : ""
+        }
+      ]
+    },
+    {
+      categoryName : "Favorite Food",
+      categoryType : "Selector",
+      optionsList : [
         {
-          optionName : "Option 2",
-          optionID : "C2O2",
+          optionName : "Italian",
           isSelected : false
         },
         {
-          optionName : "Option 3",
-          optionID : "C2O3",
+          optionName : "Mexican",
+          isSelected : false
+        },
+        {
+          optionName : "Vegetarian",
+          isSelected : false
+        },
+        {
+          optionName : "Carnivore",
+          isSelected : true
+        },
+        {
+          optionName : "Indian",
           isSelected : false
         }
       ]
@@ -53,15 +65,27 @@ function Settings() {
       <div className="settings-category-big-box">
         <div className="settings-category-box">
 
+
           <div className="settings-category-title-box">
             <h4 className="settings-category-title-h4">
               {category.categoryName}
             </h4>
           </div>
 
-          <div className="settings-options-box">
-            {category.optionsList.map((option) => handleOptions(option, category))}
-          </div>
+
+          {category.categoryType === "Selector" ? (
+            <div className="settings-options-box">
+              {category.optionsList.map((option) => handleSelectorOptions(option, category))}
+            </div>
+          ) : ( <></> )}
+
+
+          {category.categoryType === "Edit" ? (
+            <div className="settings-options-box">
+              {category.optionsList.map((option) => handleEditOptions(option, category))}
+            </div>
+          ) : ( <></> )}
+
 
         </div>
       </div>
@@ -69,12 +93,116 @@ function Settings() {
   }
 
 
-  const handleOptions = (option, category) => {
+  const handleEditOptions = (option, category) => {
+    if (option.optionType === "EditText") {
+      return (
+        <>
+          {handleEditTextOptions(option, category)}
+        </>
+      )
+    }
+  }
+  
+
+
+  const handleEditTextOptions = (option, category) => {
     return (
-      <div className="settings-option-box">
+      <div className="settings-edit-text-option-box">
+
+        <span className="settings-edit-text-option">
+          {`${option.optionName}:`}
+        </span>
+
+        <div className="settings-edit-text-option-textBox-box">
+          <input
+          className="settings-edit-text-option-textBox"
+          type="text" 
+          placeholder={option.optionValue}
+          value={option.optionNewValue}
+          onChange={(e) => handleOnChangeEditTextOptions(
+            category.categoryName, 
+            option.optionName, 
+            e.target.value
+          )}
+          />
+          {option.optionNewValue !== "" ? (
+              <button 
+              className="settings-edit-text-option-submit-button"
+              onClick={() => handleOnSubmitEditTextOptions(
+                category.categoryName, 
+                option.optionName
+              )}
+              >
+                  Submit
+              </button>
+          ) : ( <></> )}
+        </div>
+
+      </div>
+    )
+  }
+
+  const handleOnChangeEditTextOptions = (categoryName, optionName, newValue) => {
+    setSettingList(currentSettingsList =>
+      currentSettingsList.map(category => {
+        // Find the matching category
+        if (category.categoryName === categoryName) {
+          return {
+            ...category,
+            optionsList: category.optionsList.map(option => {
+              // Find the matching option and update its optionNewValue
+              if (option.optionName === optionName) {
+                return {
+                  ...option,
+                  optionNewValue: newValue,
+                };
+              }
+              return option;
+            }),
+          };
+        }
+        return category;
+      })
+    );
+  };
+  
+
+  const handleOnSubmitEditTextOptions = (categoryName, optionName) => {
+    setSettingList(currentSettingsList =>
+      currentSettingsList.map(category => {
+        // Find the matching category
+        if (category.categoryName === categoryName) {
+          return {
+            ...category,
+            optionsList: category.optionsList.map(option => {
+              // Find the matching option and update its optionValue
+              if (option.optionName === optionName) {
+                return {
+                  ...option,
+                  optionValue: option.optionNewValue,
+                  optionNewValue: '', // Reset optionNewValue if desired
+                };
+              }
+              return option;
+            }),
+          };
+        }
+        return category;
+      })
+    );
+  };
+
+  
+
+  const handleSelectorOptions = (option, category) => {
+    
+    const optionID = `${category.categoryName} : ${option.optionName}`
+
+    return (
+      <div className="settings-selector-option-box">
         <span 
-        className={option.isSelected ? "active-settings-option" : "settings-option"} 
-        onClick={() => handleOptionClicked(option.optionID, category)}
+        className={option.isSelected ? "active-settings-selector-option" : "settings-selector-option"} 
+        onClick={() => handleSelectorOptionClicked(optionID, category)}
         >
           {option.optionName}
         </span>
@@ -84,7 +212,8 @@ function Settings() {
 
 
 
-  const handleOptionClicked = (ID, clickedCategory) => {
+  const handleSelectorOptionClicked = (optionID, clickedCategory) => {
+
     // Update state with new settingsList
     const newSettingsList = setingsList.map(category => {
       if (category.categoryName === clickedCategory.categoryName) {
@@ -94,7 +223,7 @@ function Settings() {
           optionsList: category.optionsList.map(option => ({
             ...option,
             // Set isSelected to true if the optionID matches the clicked ID, otherwise false
-            isSelected: option.optionID === ID,
+            isSelected: `${category.categoryName} : ${option.optionName}` === optionID,
           })),
         };
       } else {
@@ -104,7 +233,7 @@ function Settings() {
     })
     
     setSettingList(newSettingsList);
-    console.log(`${ID} was clicked!`);
+    console.log(`${optionID} was clicked!`);
   };
 
 
