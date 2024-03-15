@@ -79,11 +79,19 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     /**
      * Calls the 'create_comment' lambda function to update backend,
      * updates the comments state to include the new comment
-     * and increments the number of likes on the front end side as well.
+     * and increments the number of comments on the front end side as well.
      */
     const handleAddComment = async () => {
         setNumberOfComments((prevNumberOfComments) => prevNumberOfComments + 1);
-        setComments([...comments, {username : userEmail, comment : newComment}]);
+
+        const newCommentObject = {
+            "postID": postObject?.postID,
+            "commentID": uuidv4(),
+            "userEmailOfCommenter": userEmail,
+            "content": newComment,
+            "userEmailOfPoster": postObject?.userEmail
+        };
+        setComments([...comments, newCommentObject]);
         const res = await fetch(
             "https://lnuwf7hmrat6ugtrnz7psympzq0zjlcx.lambda-url.ca-central-1.on.aws/",
             {
@@ -91,35 +99,34 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    "postID": postObject?.postID,
-                    "commentID": uuidv4(),
-                    "userEmailOfCommenter": userEmail,
-                    "content": newComment,
-                    "userEmailOfPoster": postObject?.userEmail
-                })
+                body: JSON.stringify(newCommentObject)
             }
         );
-        setNewComment("");
+        setNewComment(""); // resets the new comment state to be empty after adding comment
     }
 
 
     /**
-     * handles adding a comment
+     * Calls the 'delete_comment' lambda function to update backend,
+     * updates the comments state to remove the deleted comment
+     * and decrements the number of comments on the front end side as well.
      */
-    const handleRemoveComment = (comment) => {
+    const handleRemoveComment = async (comment) => {
+        console.log(comment);
         setNumberOfComments((prevNumberOfComments) => prevNumberOfComments - 1);
-        const newListOfComments = comments.filter((item) => item !== comment);
+        const newListOfComments = comments.filter((item) => item?.commentID !== comment?.commentID);
         setComments(() => {
             return newListOfComments;
         })
-        // 5
-        //
-        //
-        // The calls to the data base to remove a comment should be done here
-        //
-        //
-        //
+        const res = await fetch(
+            `https://arocnlgm5i7sjrxb34mimhvfmm0nxfft.lambda-url.ca-central-1.on.aws?commentID=${comment?.commentID}&postID=${comment?.postID}&userEmailOfPoster=${postObject?.userEmail}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }
+        );
     }
 
 
@@ -128,7 +135,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
      */
     const buildComment = (comment) => {
         return (
-            <div className="PE-comment-big-box">
+            <div className="PE-comment-big-box" key={comment?.commentID}>
                 <div className="PE-comment-box">
                     <div className="PE-comment-username">
                         {comment?.userEmailOfCommenter}:
@@ -150,7 +157,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                     //
                     // 
                 */}
-                {comment.username === userEmail ? (
+                {comment?.userEmailOfCommenter === userEmail ? (
                     <div className="PE-comment-delete-box">
                         <button onClick={() => handleRemoveComment(comment)} className="PE-comment-delete-button">
                             Delete
@@ -235,7 +242,6 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
             }
         );
         const jsonRes = await res.json();
-        console.log(res);
         console.log(jsonRes);
         if (res.status === 200)
         {
@@ -279,14 +285,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     },[]);
     
 
-    // 7
-    //
-    //
-    // This effect will need to call the db for teh actual stored number instead of calculating it manually
-    // Only once the other chnages are made.
-    //
-    //
-    //
+    // loads comments under a post whenever the showComments state is changed (via clicking comment button)
     useEffect(() => {
         if (showComments === true) {
             getComments();
