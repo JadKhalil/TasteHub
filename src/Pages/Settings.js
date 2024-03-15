@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Settings.css";
+import Login from "./Login";
 
 function Settings() {
 
@@ -250,14 +251,12 @@ function Settings() {
           </div>
         </div>
 
-
+        <Login />
         <div className="settings-categories-big-box">
           <div className="settings-categories-box">
             {setingsList.map(handleCategories)}
           </div>
         </div>
-
-
       </div>
     </div>
   );
