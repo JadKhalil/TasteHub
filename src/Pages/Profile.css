@@ -6,6 +6,36 @@
     width: 100%;
     align-items: center;
     position: relative;
+    padding: 10px;
+}
+
+.profileHeader-container {
+    display: flex;
+    flex-direction: row;
+    flex: 2;
+}
+
+.profileImg {
+    display: flex;
+}
+
+
+.profileName-bio-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.imgprofile-container {}
+
+
+.profileFollower-container {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.profilePosts-container {
+    flex: 8;
 }
 
 .profile-grid-container {
