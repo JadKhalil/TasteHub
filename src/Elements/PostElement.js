@@ -23,7 +23,7 @@ import "./PostElement.css";
  */
 const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, deletePost}) => {
     const [isFollowed, setIsFollowed] = useState(
-        //
+        // 1
         //
         //
         // The call to get the followed state of this post goes here
@@ -36,7 +36,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     const [showComments, setShowComments] = useState(false);
     const [newComment, setNewComment] = useState("");
     const [comments, setComments] = useState([
-        //
+        // 2
         //
         //
         // The call to get the comments of this post goes here
@@ -79,9 +79,9 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     /**
      * Followes and unfollowes
      */
-    const toggleIsFollowed = () => {
+    const handleIsFollowed = () => {
         setIsFollowed(!isFollowed);
-        //
+        // 3
         //
         //
         // The calls to follow/unfollow should be done here
@@ -96,12 +96,33 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
      */
     const handleAddComment = () => {
         setNumberOfComments((numberOfComments + 1))
-        setComments([...comments, {username : userEmail, comment : newComment}])
-        setNewComment("")
-        //
+        const newListOfComments = [...comments, {username : userEmail, comment : newComment}];
+        setComments(newListOfComments)
+        setNewComment("");
+        // 4
         //
         //
         // The calls to the data base to add a comment should be done here
+        //      commentItem is the item to add to the comments list in the db
+        //
+        //
+        //
+    }
+
+
+    /**
+     * handles adding a comment
+     */
+    const handleRemoveComment = (comment) => {
+        setNumberOfComments((numberOfComments - 1))
+        const newListOfComments = comments.filter((item) => item !== comment);
+        setComments(() => {
+            return newListOfComments;
+        })
+        // 5
+        //
+        //
+        // The calls to the data base to remove a comment should be done here
         //
         //
         //
@@ -122,9 +143,22 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                         {comment.comment}
                     </div>
                 </div>
+                {/* 
+                    // 6
+                    //
+                    //
+                    // Bellow this comment, replace userEmail with the UserName of the 
+                    // current browsing user.
+                    //
+                    // This change needs to be done in conjunction with a future comment 
+                    // located where this fucntuion is being called from.
+                    //
+                    //
+                    // 
+                */}
                 {comment.username === userEmail ? (
                     <div className="PE-comment-delete-box">
-                        <button className="PE-comment-delete-button">
+                        <button onClick={() => handleRemoveComment(comment)} className="PE-comment-delete-button">
                             Delete
                         </button>
                     </div>
@@ -202,13 +236,6 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
           deletePost(postObject?.postID, postObject?.userEmail); // Call the deletePost function passed as a prop
         }
     };
-
-    /**
-     * Handles the follow/unfollow button
-     */
-    const isFollowedHandler = () => {
-        toggleIsFollowed(!isFollowed)
-    };
     
 
     // sets the postedDate hook using the formatted value of the date this recipe is posted.
@@ -231,7 +258,14 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     },[]);
     
 
-    // sets the postedDate hook using the formatted value of the date this recipe is posted.
+    // 7
+    //
+    //
+    // This effect will need to call the db for teh actual stored number instead of calculating it manually
+    // Only once the other chnages are made.
+    //
+    //
+    //
     useEffect(()=> {
         setNumberOfComments(comments.length);
     },[comments]);
@@ -244,7 +278,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
             {postObject.userEmail === userEmail ? (
                 <></>
             ) : (
-                <button className="PE-follow-button" onClick={isFollowedHandler}>{isFollowed ? "Unfollow" : "Follow"}</button>
+                <button className="PE-follow-button" onClick={handleIsFollowed}>{isFollowed ? "Unfollow" : "Follow"}</button>
             )}
             {(postObject?.userEmail === userEmail) ? 
                 <div className="post-delete-container" onClick={()=> deletePostHandler()}>
@@ -306,6 +340,15 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                     {comments.map( (comment) => buildComment(comment) )}
                     <div className="PE-comment-box">
                         <div className="PE-comment-username">
+                            {/* 
+                                // 8
+                                //
+                                //
+                                // This userEmail var needs to be chnaged to the userName of the Browsing user.
+                                //
+                                //
+                                //
+                            */}
                             {userEmail}:
                         </div>
                             <input
