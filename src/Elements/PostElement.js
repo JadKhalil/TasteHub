@@ -22,7 +22,40 @@ import "./PostElement.css";
  * @returns {JSX}
  */
 const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, deletePost}) => {
-    const [isFollowed, setIsFollowed] = useState(false);
+    const [isFollowed, setIsFollowed] = useState(
+        //
+        //
+        //
+        // The call to get the followed state of this post goes here
+        //      - Make sure to remove the placeholder state bellow
+        //
+        //
+        //
+        false
+    );
+    const [showComments, setShowComments] = useState(false);
+    const [newComment, setNewComment] = useState("");
+    const [comments, setComments] = useState([
+        //
+        //
+        //
+        // The call to get the comments of this post goes here
+        //      - Make sure to remove the placeholder comment bellow
+        //
+        //
+        //
+        {
+            username : "John Doe",
+            comment : "I really like this meal, thank you !"
+        },
+        {
+            username : "Jane Doe",
+            comment : "I really hate this meal, you should be banned!"
+        }
+    ]);
+
+
+
     const [isDetailsVisible, setIsDetailsVisible] = useState(false); // Used to show and hide the post caption when user clicks on the image
     const [postedDate, setPostedDate] = useState(); // Formatted date of the post. It is initialized in the useEffect hook
 
@@ -34,6 +67,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
 
     const [numberOfLikes, setNumberOfLikes] = useState(Number(postObject?.numberOfLikes)); // the number of likes on the post
     const [numberOfComments, setNumberOfComments] = useState(Number(postObject?.numberOfComments)); // the number of comments on the post
+
 
     /**
      * Shows and hides the post caption by clicking the image of the post
@@ -47,7 +81,60 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
      */
     const toggleIsFollowed = () => {
         setIsFollowed(!isFollowed);
+        //
+        //
+        //
+        // The calls to follow/unfollow should be done here
+        //
+        //
+        //
     };
+
+
+    /**
+     * handles adding a comment
+     */
+    const handleAddComment = () => {
+        setNumberOfComments((numberOfComments + 1))
+        setComments([...comments, {username : userEmail, comment : newComment}])
+        setNewComment("")
+        //
+        //
+        //
+        // The calls to the data base to add a comment should be done here
+        //
+        //
+        //
+    }
+
+
+    /**
+     * Determines whether clicking on a heart icon should call the 'like_post' lambda function or the 'unlike_post' lambda function
+     */
+    const buildComment = (comment) => {
+        return (
+            <div className="PE-comment-big-box">
+                <div className="PE-comment-box">
+                    <div className="PE-comment-username">
+                        {comment.username}:
+                    </div>
+                    <div className="PE-comment-text">
+                        {comment.comment}
+                    </div>
+                </div>
+                {comment.username === userEmail ? (
+                    <div className="PE-comment-delete-box">
+                        <button className="PE-comment-delete-button">
+                            Delete
+                        </button>
+                    </div>
+                ) : (
+                    <></>
+                )}
+            </div>
+    
+        )
+    }
 
 
     /**
@@ -142,6 +229,12 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
         const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
         setPostedDate(formattedDate);
     },[]);
+    
+
+    // sets the postedDate hook using the formatted value of the date this recipe is posted.
+    useEffect(()=> {
+        setNumberOfComments(comments.length);
+    },[comments]);
 
     return (
     <div className={isGridLayout===true?"post-square-container" : "post-container"}>
@@ -151,7 +244,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
             {postObject.userEmail === userEmail ? (
                 <></>
             ) : (
-                <button className="PE-follow-button" onClick={isFollowedHandler}>{isFollowed ? "Follow" : "Unfollow"}</button>
+                <button className="PE-follow-button" onClick={isFollowedHandler}>{isFollowed ? "Unfollow" : "Follow"}</button>
             )}
             {(postObject?.userEmail === userEmail) ? 
                 <div className="post-delete-container" onClick={()=> deletePostHandler()}>
@@ -187,7 +280,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
         )}
 
         <div className="post-like-comment-container">
-            <div className="post-like-container" onClick={()=>handleLikes()}>
+            <div className="post-like-container" onClick={ () => handleLikes() }>
                 {isPostLiked===true ? 
                 <svg className="post-filled-like-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" >
                     <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
@@ -199,7 +292,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                 }
                 <span>{numberOfLikes}</span>
             </div>
-            <div className="post-comment-container" onClick={()=> window.alert("commenting not yet implemented")}>
+            <div className="post-comment-container" onClick={ () => setShowComments(!showComments) }>
                 <svg className="post-comment-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
                 </svg>
@@ -207,6 +300,38 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
             </div>
         </div>
 
+        {showComments ? (
+            <div className="PE-comments-big-box">
+                <div className="PE-comments-box">
+                    {comments.map( (comment) => buildComment(comment) )}
+                    <div className="PE-comment-box">
+                        <div className="PE-comment-username">
+                            {userEmail}:
+                        </div>
+                            <input
+                            className="PE-comment-text-input"
+                            type="text" 
+                            placeholder="Enter a new comment here."
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            onSubmitCapture={(e) => setNewComment("set")}
+                            />
+                            {newComment !== "" ? (
+                                <button 
+                                className="PE-comment-text-submit-button"
+                                onClick={() => handleAddComment()}
+                                >
+                                    Post New Comment
+                                </button>
+                            ) : (
+                                <></>
+                            )}
+                    </div>
+                </div>
+            </div>
+        ) : (
+            <></>
+        )}
     </div>
     );
 
