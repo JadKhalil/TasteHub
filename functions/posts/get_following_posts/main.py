@@ -1,6 +1,7 @@
 import json
 import boto3
 from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Attr
 from decimal import Decimal
 
 
@@ -43,7 +44,8 @@ def lambda_handler(event, context):
             }
 
         # 4. Construct a filter expression to query for posts from following users
-        filter_expression = Key('userEmail').in_(following_emails)
+        filter_expression = Attr('userEmail').is_in(following_emails)
+
 
         # 5. Query the posts table with the filter expression
         response = posts_table.scan(FilterExpression=filter_expression)
