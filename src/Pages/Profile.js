@@ -135,8 +135,10 @@ function Profile() {
       
       <div className="profileHeader-container">
         <div className="profileImg">
-          <img className="imgprofile-container"/>
-          img
+          <img src="https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681-1024x1024.jpg" 
+          alt="profile-img"
+          className="imgprofile-container"/>
+          
         </div>
 
         <div className="profileName-bio-container">
