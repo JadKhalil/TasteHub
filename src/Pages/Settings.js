@@ -1,9 +1,27 @@
 import React, { useEffect, useState } from "react";
 import "./Settings.css";
 import Login from "./Login";
+import { useGoogleLogin, googleLogout } from "@react-oauth/google";
+import axios from "axios";
+import { useUser } from "../UserContext";
 
 function Settings() {
+  const { user: contextUser, login, logout } = useUser();
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const logOut = () => {
+    googleLogout();
+    localStorage.removeItem("user");
+    logout();
+    setUser(null);
+  };
 
   const [setingsList, setSettingList] = useState([
     {
@@ -26,9 +44,14 @@ function Settings() {
       optionsList : [
         {
           optionType : "EditText",
-          optionName : "UserName",
-          optionValue : "John Doe",
+          optionName : "Name",
+          optionValue : (user.name),
           optionNewValue : ""
+        },
+        {
+          optionType : "EditButton",
+          optionName : "LogOut",
+          optionAction : () => logOut(),
         }
       ]
     },
@@ -101,7 +124,30 @@ function Settings() {
           {handleEditTextOptions(option, category)}
         </>
       )
+    } else if (option.optionType === "EditButton") {
+      return (
+        <>
+          {handleEditButtonOptions(option, category)}
+        </>
+      )
     }
+  }
+  
+
+
+  const handleEditButtonOptions = (option, category) => {
+    return (
+      <div className="settings-edit-button-option-box">
+
+        <button 
+        className="settings-edit-button-option-submit-button"
+        onClick={() => option.optionAction()}
+        >
+            {option.optionName}
+        </button>
+
+      </div>
+    )
   }
   
 
@@ -251,7 +297,6 @@ function Settings() {
           </div>
         </div>
 
-        <Login />
         <div className="settings-categories-big-box">
           <div className="settings-categories-box">
             {setingsList.map(handleCategories)}
