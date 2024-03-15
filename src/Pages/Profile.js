@@ -131,6 +131,7 @@ function Profile() {
   }, [user]); // The dependency array ensures that this effect runs whenever user changes
 
   return (
+    user && (
     <div className="profile-container">
       <h1>Profile</h1>
       <CreatePostOverlay/>
@@ -149,6 +150,7 @@ function Profile() {
       })}
       </div>
     </div>
+    )
   );
 }
 

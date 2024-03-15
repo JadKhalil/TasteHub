@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import "./PostElement.css";
 
 /**
@@ -33,29 +34,9 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
         //
         false
     );
-    const [showComments, setShowComments] = useState(false);
-    const [newComment, setNewComment] = useState("");
-    const [comments, setComments] = useState([
-        // 2
-        //
-        //
-        // The call to get the comments of this post goes here
-        //      - Make sure to remove the placeholder comment bellow
-        //
-        //
-        //
-        {
-            username : "John Doe",
-            comment : "I really like this meal, thank you !"
-        },
-        {
-            username : "Jane Doe",
-            comment : "I really hate this meal, you should be banned!"
-        }
-    ]);
-
-
-
+    const [showComments, setShowComments] = useState(false); // Boolean for showing comments when comment button is clicked
+    const [newComment, setNewComment] = useState(""); // A comment on a comment box. If this state is empty, the submit button disappears
+    const [comments, setComments] = useState([]); // List of JSON objects for all comments on a post
     const [isDetailsVisible, setIsDetailsVisible] = useState(false); // Used to show and hide the post caption when user clicks on the image
     const [postedDate, setPostedDate] = useState(); // Formatted date of the post. It is initialized in the useEffect hook
 
@@ -91,56 +72,73 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     };
 
 
+    
     /**
-     * handles adding a comment
+     * Calls the 'create_comment' lambda function to update backend,
+     * updates the comments state to include the new comment
+     * and increments the number of comments on the front end side as well.
      */
-    const handleAddComment = () => {
-        setNumberOfComments((numberOfComments + 1))
-        const newListOfComments = [...comments, {username : userEmail, comment : newComment}];
-        setComments(newListOfComments)
-        setNewComment("");
-        // 4
-        //
-        //
-        // The calls to the data base to add a comment should be done here
-        //      commentItem is the item to add to the comments list in the db
-        //
-        //
-        //
+    const handleAddComment = async () => {
+        setNumberOfComments((prevNumberOfComments) => prevNumberOfComments + 1);
+
+        const newCommentObject = {
+            "postID": postObject?.postID,
+            "commentID": uuidv4(),
+            "userEmailOfCommenter": userEmail,
+            "content": newComment,
+            "userEmailOfPoster": postObject?.userEmail
+        };
+        setComments([...comments, newCommentObject]);
+        const res = await fetch(
+            "https://lnuwf7hmrat6ugtrnz7psympzq0zjlcx.lambda-url.ca-central-1.on.aws/",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newCommentObject)
+            }
+        );
+        setNewComment(""); // resets the new comment state to be empty after adding comment
     }
 
 
     /**
-     * handles adding a comment
+     * Calls the 'delete_comment' lambda function to update backend,
+     * updates the comments state to remove the deleted comment
+     * and decrements the number of comments on the front end side as well.
      */
-    const handleRemoveComment = (comment) => {
-        setNumberOfComments((numberOfComments - 1))
-        const newListOfComments = comments.filter((item) => item !== comment);
+    const handleRemoveComment = async (comment) => {
+        console.log(comment);
+        setNumberOfComments((prevNumberOfComments) => prevNumberOfComments - 1);
+        const newListOfComments = comments.filter((item) => item?.commentID !== comment?.commentID);
         setComments(() => {
             return newListOfComments;
         })
-        // 5
-        //
-        //
-        // The calls to the data base to remove a comment should be done here
-        //
-        //
-        //
+        const res = await fetch(
+            `https://arocnlgm5i7sjrxb34mimhvfmm0nxfft.lambda-url.ca-central-1.on.aws?commentID=${comment?.commentID}&postID=${comment?.postID}&userEmailOfPoster=${postObject?.userEmail}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }
+        );
     }
 
 
     /**
-     * Determines whether clicking on a heart icon should call the 'like_post' lambda function or the 'unlike_post' lambda function
+     * 
      */
     const buildComment = (comment) => {
         return (
-            <div className="PE-comment-big-box">
+            <div className="PE-comment-big-box" key={comment?.commentID}>
                 <div className="PE-comment-box">
                     <div className="PE-comment-username">
-                        {comment.username}:
+                        {comment?.userEmailOfCommenter}:
                     </div>
                     <div className="PE-comment-text">
-                        {comment.comment}
+                        {comment?.content}
                     </div>
                 </div>
                 {/* 
@@ -156,7 +154,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                     //
                     // 
                 */}
-                {comment.username === userEmail ? (
+                {comment?.userEmailOfCommenter === userEmail ? (
                     <div className="PE-comment-delete-box">
                         <button onClick={() => handleRemoveComment(comment)} className="PE-comment-delete-button">
                             Delete
@@ -227,6 +225,32 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     }
 
     /**
+     * Calls the 'get_comments_on_post' lambda function fetch all the comments on this post.
+     * Fills the comments array with the data.
+     */
+    const getComments = async () => {
+        const res = await fetch(
+            `https://nenqkh35mmdevuny2x7gbozquu0cquyy.lambda-url.ca-central-1.on.aws?postID=${postObject?.postID}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }
+        );
+        const jsonRes = await res.json();
+        console.log(jsonRes);
+        if (res.status === 200)
+        {
+            setComments([...jsonRes?.commentList?.Items]);
+        }
+        else
+        {
+            window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
+        }
+    }
+
+    /**
      * Asks the user if they would like to delete the post for confirmation.
      * Calls the deletePost async function passed in as a prop from a page that renders this component.
      */
@@ -258,17 +282,12 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     },[]);
     
 
-    // 7
-    //
-    //
-    // This effect will need to call the db for teh actual stored number instead of calculating it manually
-    // Only once the other chnages are made.
-    //
-    //
-    //
-    useEffect(()=> {
-        setNumberOfComments(comments.length);
-    },[comments]);
+    // loads comments under a post whenever the showComments state is changed (via clicking comment button)
+    useEffect(() => {
+        if (showComments === true) {
+            getComments();
+        }
+    },[showComments]);
 
     return (
     <div className={isGridLayout===true?"post-square-container" : "post-container"}>

@@ -136,6 +136,7 @@ function Search() {
 
 
   return (
+    user && (
     <div className="search-container">
       <div className="search-header-container">
         <h1>Global</h1>
@@ -163,6 +164,7 @@ function Search() {
         })}
       </div>
     </div>
+    )
   );
 }
 
