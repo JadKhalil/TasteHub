@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PostElement from "../Elements/PostElement";
 import { useUser } from "../UserContext";
-import "./Catered.css";
+import "./Global.css";
 
 /**
  * JSX Component for the global page.
@@ -59,7 +59,7 @@ function Catered() {
       setAllPosts([
         ...jsonRes?.postList?.Items.filter(item => 
           followedUserEmailList.some(followed => 
-            followed.userEmailOfFollowed === item.userEmail
+            followed.userEmailOfFollowee === item.userEmail
           )
         )
       ]);
@@ -91,7 +91,6 @@ function Catered() {
     if (res.status === 200)
     {
       setLikedPostIDList([...jsonRes?.likeList?.Items]);
-      console.log([...jsonRes?.likeList?.Items])
       setIsLikedPostIDListLoaded(true);
     }
     else
@@ -107,33 +106,26 @@ function Catered() {
    * Sets the isFollowedPostIDListLoaded hook to true.
    */
   const loadFollowedUserEmaiList = async () => {
-    // const res = await fetch(
-    //   `https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`,
-    //   {
-    //       method: "GET",
-    //       headers: {
-    //           "Content-Type": "application/json"
-    //       },
-    //   }
-    // );
-    // const jsonRes = await res.json();
-    // if (res.status === 200)
-    // {
-    //   setFollowedPostIDList([...jsonRes?.followedList?.items]);
-    //   setFollowedPostIDListLoaded(true);
-    // }
-    // else
-    // {
-    //   window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
-    // }
-
-    setFollowedUserEmailList([
-      { 
-        userEmailOfFollower : "jeannicolasrouette@gmail.com",
-        userEmailOfFollowed : "edward.an03@gmail.com"
+    const res = await fetch(
+      `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`,
+      {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json"
+          },
       }
-    ]);
-    setIsFollowedUserEmailLoaded(true);
+    );
+    const jsonRes = await res.json();
+    if (res.status === 200)
+    {
+      // console.log([...jsonRes?.commentList?.Items]);
+      setFollowedUserEmailList([...jsonRes?.commentList?.Items]);
+      setIsFollowedUserEmailLoaded(true);
+    }
+    else
+    {
+      window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
+    }
   }
 
   /**

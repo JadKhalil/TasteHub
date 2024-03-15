@@ -60,8 +60,23 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     /**
      * Followes and unfollowes
      */
-    const handleIsFollowed = () => {
+    const handleIsFollowed = async () => {
         setIsFollowed(!isFollowed);
+
+        // const res = await fetch(
+        //     "https://rl4au3ybjajtx62g23eyzmiuce0ifzkc.lambda-url.ca-central-1.on.aws/",
+        //     {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         },
+        //         body: JSON.stringify({
+        //             "userEmailOfFollower": "jeannicolasrouette@gmail.com",
+        //             "userEmailOfFollowee": "edward.an03@gmail.com"
+        //         })
+        //     }
+        // );
+        
         // 3
         //
         //
@@ -109,7 +124,6 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
      * and decrements the number of comments on the front end side as well.
      */
     const handleRemoveComment = async (comment) => {
-        console.log(comment);
         setNumberOfComments((prevNumberOfComments) => prevNumberOfComments - 1);
         const newListOfComments = comments.filter((item) => item?.commentID !== comment?.commentID);
         setComments(() => {
