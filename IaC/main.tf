@@ -367,6 +367,13 @@ data "archive_file" "get_following" {
   output_path = "../functions/followers/get_following/${local.artifact_name}"
 }
 
+# creating archive file for get_following_posts
+data "archive_file" "get_following_posts" {
+  type = "zip"
+  source_dir = "../functions/posts/get_following_posts"
+  output_path = "../functions/posts/get_following_posts/${local.artifact_name}"
+}
+
 # creating archive file for get_followers
 data "archive_file" "get_followers" {
   type        = "zip"
@@ -388,6 +395,16 @@ resource "aws_lambda_function" "lambda_create_post" {
   handler          = local.handler_name
   filename         = "../functions/posts/create_post/${local.artifact_name}"
   source_code_hash = data.archive_file.create_post.output_base64sha256
+  runtime = "python3.9"
+}
+
+# create a Lambda function for get_following_posts
+resource "aws_lambda_function" "lambda_get_following_posts" {
+  role = aws_iam_role.lambda.arn
+  function_name = "tastehub-get-following-posts"
+  handler = local.handler_name
+  filename = "../functions/posts/get_following_posts/${local.artifact_name}"
+  source_code_hash = data.archive_file.get_following_posts.output_base64sha256
   runtime = "python3.9"
 }
 
@@ -770,6 +787,20 @@ resource "aws_lambda_function_url" "url_create_user_profile" {
   }
 }
 
+# create a Function URL for Lambda get_following_posts
+resource "aws_lambda_function_url" "url_get_following_posts" {
+  function_name = aws_lambda_function.lambda_get_following_posts.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["GET"]
+    allow_headers     = ["*"]
+    expose_headers    = ["keep-alive", "date"]
+  }
+}
+
 # show all Lambda Function URLs
 output "lambda_url_create_post" {
   value = aws_lambda_function_url.url_create_post.function_url
@@ -833,4 +864,8 @@ output "lambda_url_get_followers" {
 
 output "lambda_url_create_user_profile" {
   value = aws_lambda_function_url.url_create_user_profile.function_url
+}
+
+output "lambda_url_get_following_posts" {
+  value = aws_lambda_function_url.url_get_following_posts.function_url
 }
