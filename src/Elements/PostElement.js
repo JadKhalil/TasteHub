@@ -22,7 +22,7 @@ import "./PostElement.css";
  *                                      const deletePost = async (postID, posterUserEmail) => { ... }
  * @returns {JSX}
  */
-const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, deletePost}) => {
+const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, deletePost, isCatered}) => {
     const [isFollowed, setIsFollowed] = useState(
         // 1
         //
@@ -32,7 +32,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
         //
         //
         //
-        false
+        (isCatered ? true : false)
     );
     const [showComments, setShowComments] = useState(false); // Boolean for showing comments when comment button is clicked
     const [newComment, setNewComment] = useState(""); // A comment on a comment box. If this state is empty, the submit button disappears

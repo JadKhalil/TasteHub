@@ -154,6 +154,7 @@ function Global() {
                     isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
                     isGridLayout={false}
                     deletePost={deletePost}
+                    isCatered={false}
                     key={post?.postID}
                   />
                 )

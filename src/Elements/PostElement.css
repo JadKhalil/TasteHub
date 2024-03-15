@@ -1,6 +1,5 @@
 .post-container {
     display: flex;
-    flex: 1;
     flex-direction: column;
     max-width: 30rem;
     align-items: center;
