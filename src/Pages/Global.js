@@ -132,6 +132,7 @@ function Global() {
   }, [user]);
 
   return (
+    user && (
     <div className="global-big-box">
       <div className="global-box">
 
@@ -162,6 +163,7 @@ function Global() {
 
       </div>
     </div>
+    )
   );
 }
 
