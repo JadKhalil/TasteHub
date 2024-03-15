@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import "./PostElement.css";
 
 /**
@@ -35,24 +36,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     );
     const [showComments, setShowComments] = useState(false);
     const [newComment, setNewComment] = useState("");
-    const [comments, setComments] = useState([
-        // 2
-        //
-        //
-        // The call to get the comments of this post goes here
-        //      - Make sure to remove the placeholder comment bellow
-        //
-        //
-        //
-        {
-            username : "John Doe",
-            comment : "I really like this meal, thank you !"
-        },
-        {
-            username : "Jane Doe",
-            comment : "I really hate this meal, you should be banned!"
-        }
-    ]);
+    const [comments, setComments] = useState([]);
 
 
 
@@ -91,22 +75,32 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     };
 
 
+    
     /**
-     * handles adding a comment
+     * Calls the 'create_comment' lambda function to update backend,
+     * updates the comments state to include the new comment
+     * and increments the number of likes on the front end side as well.
      */
-    const handleAddComment = () => {
-        setNumberOfComments((numberOfComments + 1))
-        const newListOfComments = [...comments, {username : userEmail, comment : newComment}];
-        setComments(newListOfComments)
+    const handleAddComment = async () => {
+        setNumberOfComments((prevNumberOfComments) => prevNumberOfComments + 1);
+        setComments([...comments, {username : userEmail, comment : newComment}]);
+        const res = await fetch(
+            "https://lnuwf7hmrat6ugtrnz7psympzq0zjlcx.lambda-url.ca-central-1.on.aws/",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "postID": postObject?.postID,
+                    "commentID": uuidv4(),
+                    "userEmailOfCommenter": userEmail,
+                    "content": newComment,
+                    "userEmailOfPoster": postObject?.userEmail
+                })
+            }
+        );
         setNewComment("");
-        // 4
-        //
-        //
-        // The calls to the data base to add a comment should be done here
-        //      commentItem is the item to add to the comments list in the db
-        //
-        //
-        //
     }
 
 
@@ -114,7 +108,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
      * handles adding a comment
      */
     const handleRemoveComment = (comment) => {
-        setNumberOfComments((numberOfComments - 1))
+        setNumberOfComments((prevNumberOfComments) => prevNumberOfComments - 1);
         const newListOfComments = comments.filter((item) => item !== comment);
         setComments(() => {
             return newListOfComments;
@@ -130,17 +124,17 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
 
 
     /**
-     * Determines whether clicking on a heart icon should call the 'like_post' lambda function or the 'unlike_post' lambda function
+     * 
      */
     const buildComment = (comment) => {
         return (
             <div className="PE-comment-big-box">
                 <div className="PE-comment-box">
                     <div className="PE-comment-username">
-                        {comment.username}:
+                        {comment?.userEmailOfCommenter}:
                     </div>
                     <div className="PE-comment-text">
-                        {comment.comment}
+                        {comment?.content}
                     </div>
                 </div>
                 {/* 
@@ -227,6 +221,33 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     }
 
     /**
+     * Calls the 'get_comments_on_post' lambda function fetch all the comments on this post.
+     * Fills the comments array with the data.
+     */
+    const getComments = async () => {
+        const res = await fetch(
+            `https://nenqkh35mmdevuny2x7gbozquu0cquyy.lambda-url.ca-central-1.on.aws?postID=${postObject?.postID}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }
+        );
+        const jsonRes = await res.json();
+        console.log(res);
+        console.log(jsonRes);
+        if (res.status === 200)
+        {
+            setComments([...jsonRes?.commentList?.Items]);
+        }
+        else
+        {
+            window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
+        }
+    }
+
+    /**
      * Asks the user if they would like to delete the post for confirmation.
      * Calls the deletePost async function passed in as a prop from a page that renders this component.
      */
@@ -266,9 +287,11 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
     //
     //
     //
-    useEffect(()=> {
-        setNumberOfComments(comments.length);
-    },[comments]);
+    useEffect(() => {
+        if (showComments === true) {
+            getComments();
+        }
+    },[showComments]);
 
     return (
     <div className={isGridLayout===true?"post-square-container" : "post-container"}>
