@@ -5,7 +5,47 @@
     overflow: auto;
     width: 100%;
     align-items: center;
-    position: relative;
+    padding: 10px;
+}
+
+.profileHeader-container {
+    display: flex;
+    flex-direction: row;
+    flex: 2;
+    border: 1px solid black;
+    width: 100%;
+}
+
+.profileImg {
+    display: flex;
+    flex: 1;
+
+}
+
+
+.profileName-bio-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.imgprofile-container {
+    width: 225px;
+    height: 225px;
+    border-radius: 50%;
+    padding: 4px;
+}
+
+
+.profileFollower-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+
+.profilePosts-container {
+    flex: 8;
 }
 
 .profile-grid-container {
