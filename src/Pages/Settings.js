@@ -21,10 +21,13 @@ function Settings() {
   const logOut = () => {
     googleLogout();
     localStorage.removeItem("user");
+    // Remove the settings from localStorage upon logout
+    localStorage.removeItem("settings");
     logout();
     setUser(null);
     navigate("/");
   };
+  
 
   const [setingsList, setSettingList] = useState([
     {
@@ -85,6 +88,17 @@ function Settings() {
       ]
     }
   ]);
+
+  
+  const updateSettingsInLocalStorage = () => {
+    const settings = {
+      colourTheme: setingsList.find(category => category.categoryName === "Colour Theme")?.optionsList.find(option => option.isSelected)?.optionName,
+      favoriteFood: setingsList.find(category => category.categoryName === "Favorite Food")?.optionsList.find(option => option.isSelected)?.optionName,
+    };
+  
+    localStorage.setItem("settings", JSON.stringify(settings));
+  };
+  
 
 
   const handleCategories = (category) => {
@@ -279,7 +293,6 @@ function Settings() {
 
 
   const handleSelectorOptionClicked = (optionID, clickedCategory) => {
-
     // Update state with new settingsList
     const newSettingsList = setingsList.map(category => {
       if (category.categoryName === clickedCategory.categoryName) {
@@ -296,12 +309,27 @@ function Settings() {
         // If this is not the category of the clicked option, return the category as is
         return category;
       }
-    })
-    
+    });
+  
     setSettingList(newSettingsList);
-    console.log(`${optionID} was clicked!`);
+    // Update settings in localStorage after state update
+    updateSettingsInLocalStorage();
   };
-
+  
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const storedSettings = localStorage.getItem("settings");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    if (storedSettings) {
+      const settings = JSON.parse(storedSettings);
+      // Logic to initialize component state with these settings
+      // This could involve finding the corresponding options in your `setingsList`
+      // and marking them as selected based on these stored settings
+    }
+  }, []);
+  
 
   return (
     <div className="settings-big-box">

@@ -34,20 +34,34 @@ function Login() {
           setUser(userData);
           login(userData);
           localStorage.setItem("user", JSON.stringify(userData));
+  
+          // Check if settings already exist in localStorage, initialize if not
+          if (!localStorage.getItem("settings")) {
+            const defaultSettings = {
+              colourTheme: "Light-Mode",
+              favoriteFood: "Carnivore",
+            };
+            localStorage.setItem("settings", JSON.stringify(defaultSettings));
+          }
+  
           navigate("/");
         })
         .catch((err) => console.log(err));
     },
     onError: (error) => console.log("Login Failed:", error),
   });
+  
 
   const logOut = () => {
     googleLogout();
     localStorage.removeItem("user");
+    // Remove the settings from localStorage upon logout
+    localStorage.removeItem("settings");
     logout();
     setUser(null);
     navigate("/");
   };
+  
 
   return (
     <div>
