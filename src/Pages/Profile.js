@@ -190,20 +190,17 @@ function Profile() {
 
       <div className="profilePosts-container">
         {selectedTab === 'posts' ? (
-          <div>
-            {/* Your Posts Component or JSX here */}
-            <Posts/>
-          </div>
+          <>
+            <Posts posts={personalPosts}/>
+          </>
           ) : selectedTab === 'saved' ? (
-            <div>
-              {/* Your Saved Component or JSX here */}
+            <>
               <Saved/>
-            </div>
+            </>
           ) : selectedTab === 'tagged' ? (
-            <div>
-              {/* Your Tagged Component or JSX here */}
+            <>
               <Taged/>
-            </div>
+            </>
           ) : null}
 
       </div>
