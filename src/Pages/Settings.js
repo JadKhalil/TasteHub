@@ -226,11 +226,26 @@ function Settings() {
             ...category,
             optionsList: category.optionsList.map(option => {
               // Find the matching option and update its optionValue
-              if (option.optionName === optionName) {
+              if (option.optionName === optionName && option.optionName === "Name") {
+                // Retrieve the user object from localStorage
+                const storedUser = JSON.parse(localStorage.getItem("user"));
+  
+                // Update the user object with the new name
+                const updatedUser = {
+                  ...storedUser,
+                  name: option.optionNewValue,
+                };
+  
+                // Save the updated user object back to localStorage
+                localStorage.setItem("user", JSON.stringify(updatedUser));
+  
+                // Update the user state to reflect the changes in the UI
+                setUser(updatedUser);
+  
                 return {
                   ...option,
                   optionValue: option.optionNewValue,
-                  optionNewValue: '', // Reset optionNewValue if desired
+                  optionNewValue: '', // Optionally reset optionNewValue
                 };
               }
               return option;
@@ -241,6 +256,7 @@ function Settings() {
       })
     );
   };
+  
 
   
 
