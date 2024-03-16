@@ -180,17 +180,32 @@ function Profile() {
       <ProfileTabs selected={selectedTab} onSelect={setSelectedTab} />
 
       <div className="profilePosts-container">
-        {/* <div className="posts-container">
+        {selectedTab === 'posts' ? (
+          <div>
+            {/* Your Posts Component or JSX here */}
+            Posts
+          </div>
+          ) : selectedTab === 'saved' ? (
+            <div>
+              {/* Your Saved Component or JSX here */}
+              Saved
+            </div>
+          ) : selectedTab === 'tagged' ? (
+            <div>
+              {/* Your Tagged Component or JSX here */}
+              Tagged
+            </div>
+          ) : null}
+
+      </div>
+      
+      {/* <div className="posts-container">
           
         </div>
 
         <div className="createposts-overlay-container">
           <CreatePostOverlay/>
         </div> */}
-
-      </div>
-      
-      
 
       <div className="profile-grid-container" >
       {isLikedPostIDListLoaded && personalPosts.map((post)=> {
