@@ -20,46 +20,11 @@ import "./PostElement.css";
  *                                      This parameter is used to change the styling of the returned JSX element.
  * @param {function} deletePost         deletePost lambda function passed as a prop. It is in this form
  *                                      const deletePost = async (postID, posterUserEmail) => { ... }
+ * @param {Boolean} isPosterFollowedParam True or false depending on whether the user liked the post or not.
  * @returns {JSX}
  */
-const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, deletePost, isCatered}) => {
+const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, deletePost, isPosterFollowedParam}) => {
     
-
-    /**
-     * Followes and unfollowes
-     */
-    const loadListOfFollowing = async (userEmailOfFollower) => {
-        const res = await fetch(
-            `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/?userEmail=${userEmailOfFollower}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            }
-        );
-        const jsonRes = await res.json();
-        if (res.status === 200)
-        {
-          setListOfFollowedEmails([...jsonRes?.commentList?.Items]);
-        }
-        else
-        {
-          window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
-        }
-    };
-    
-    
-    const [isFollowed, setIsFollowed] = useState(
-        (
-            isCatered ? (
-                true
-            ) : (
-                false
-            )
-        )
-    );
-    const [listOfFollowedEmails, setListOfFollowedEmails] = useState([]);
     const [showComments, setShowComments] = useState(false); // Boolean for showing comments when comment button is clicked
     const [newComment, setNewComment] = useState(""); // A comment on a comment box. If this state is empty, the submit button disappears
     const [comments, setComments] = useState([]); // List of JSON objects for all comments on a post
@@ -71,6 +36,12 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
      * If set to false, the heart icon will be hollow and clicking it will call the 'like_post' lambda function
      */
     const [isPostLiked, setIsPostLiked] = useState(isPostLikedParam); 
+
+    /* This hook is boolean type that used in determining whether clicking on a heart icon likes or unlikes a post.
+     * If set to true, the heart icon will be filled and clicking it will call the 'unlike_post' lambda function
+     * If set to false, the heart icon will be hollow and clicking it will call the 'like_post' lambda function
+     */
+    const [isPosterFollowed, setIsPosterFollowed] = useState(isPosterFollowedParam);
 
     const [numberOfLikes, setNumberOfLikes] = useState(Number(postObject?.numberOfLikes)); // the number of likes on the post
     const [numberOfComments, setNumberOfComments] = useState(Number(postObject?.numberOfComments)); // the number of comments on the post
@@ -87,9 +58,8 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
      * Followes and unfollowes
      */
     const handleIsFollowed = async (userEmailOfFollower, userEmailOfFollowee) => {
-
-        if (!isFollowed) {
-            setIsFollowed(!isFollowed);
+        if (isPosterFollowed === false) { // The user does not already follow the poster
+            setIsPosterFollowed(true);
             try {
                 const res = await fetch(
                     "https://rl4au3ybjajtx62g23eyzmiuce0ifzkc.lambda-url.ca-central-1.on.aws/",
@@ -115,8 +85,9 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                 console.error(`Error following ${userEmailOfFollowee}: `, error);
                 window.alert(`An error occurred while following ${userEmailOfFollowee}`);
             }
-        } else {
-            setIsFollowed(!isFollowed);
+        } 
+        else {
+            setIsPosterFollowed(false); // The user already follows the poster
             try {
                 const res = await fetch(
                     `https://jphbbhraofx2bnza766vsdujtq0bfdla.lambda-url.ca-central-1.on.aws/?userEmailOfFollower=${userEmailOfFollower}&userEmailOfFollowee=${userEmailOfFollowee}`,
@@ -137,7 +108,6 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                 console.error(`Error unfollowing ${userEmailOfFollowee}: `, error);
             }
         }
-        loadListOfFollowing(userEmailOfFollower)
     };
 
 
@@ -328,15 +298,10 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
           deletePost(postObject?.postID, postObject?.userEmail); // Call the deletePost function passed as a prop
         }
     };
-
-    const handleSelectFollowButtonLabel = async () => {
-
-    }
     
 
     // sets the postedDate hook using the formatted value of the date this recipe is posted.
     useEffect(()=> {
-        loadListOfFollowing(userEmail)
         const date = new Date(Number(postObject?.datePosted));
         const options = {
             weekday: 'short',
@@ -361,16 +326,6 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
             getComments();
         }
     },[showComments]);
-    
-
-    // loads comments under a post whenever the showComments state is changed (via clicking comment button)
-    useEffect(() => {
-        console.log(`listOfFollowedEmails Effect: ${
-            listOfFollowedEmails.some(followedEmail => followedEmail.userEmailOfFollowee === postObject.userEmail)
-        }`)
-        setIsFollowed(listOfFollowedEmails.some(followedEmail => followedEmail.userEmailOfFollowee === postObject.userEmail))
-        console.log(listOfFollowedEmails)
-    },[listOfFollowedEmails]);
 
     return (
     <div className={isGridLayout===true?"post-square-container" : "post-container"}>
@@ -380,7 +335,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
             {postObject.userEmail === userEmail ? (
                 <></>
             ) : (
-                <button className="PE-follow-button" onClick={() => handleIsFollowed(userEmail, postObject.userEmail)}>{isFollowed ? "Unfollow" : "Follow"}</button>
+                <button className="PE-follow-button" onClick={() => handleIsFollowed(userEmail, postObject.userEmail)}>{isPosterFollowed ? "Unfollow" : "Follow"}</button>
             )}
             {(postObject?.userEmail === userEmail) ? 
                 <div className="post-delete-container" onClick={()=> deletePostHandler()}>

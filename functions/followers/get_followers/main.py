@@ -34,7 +34,7 @@ def lambda_handler(event, context):
             "statusCode": 200,
             "body": json.dumps({
                 "message": "success",
-                "commentList": result
+                "followList": result
                 })
         }
     except Exception as exp:

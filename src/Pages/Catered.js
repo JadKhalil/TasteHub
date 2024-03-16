@@ -7,15 +7,15 @@ import "./Global.css";
 /**
  * JSX Component for the global page.
  * 
- * Loads all posts in a scrollable layout
+ * Loads catered posts in a scrollable layout
  * 
  * @returns {JSX}
  */
 function Catered() {
-  const [ allPosts, setAllPosts ] = useState([]); // list of all posts
+  const [ cateredPosts, setCateredPosts ] = useState([]); // list of catered posts
   const { user } = useUser(); // Details of signed in user including their email
   const [ likedPostIDList, setLikedPostIDList ] = useState([]); // list of IDs of posts the user has liked
-  const [ followedUserEmailList, setFollowedUserEmailList ] = useState([]);
+  const [ followedUserEmailList, setFollowedUserEmailList ] = useState([]); // list of email of other users the user follows
 
   /* 
    * initially set to false as the list of likedPostIDs take time to load from the database.
@@ -25,15 +25,22 @@ function Catered() {
    */ 
   const [isLikedPostIDListLoaded, setIsLikedPostIDListLoaded ] = useState(false); 
   const [isFollowedUserEmailLoaded, setIsFollowedUserEmailLoaded ] = useState(false); 
+
+  /* 
+   * initially set to false as the list of followedUserEmails take time to load from the database.
+   * This hook is here to ensure the post is loaded AFTER all the followed emails are found in the database.
+   * Without this hook, there may be bugs where follow button of the rendered post says "follow" despite the fact that the user has previously
+   * followed the user
+   */ 
+    const [isFollowedUserEmailListLoaded, setIsFollowedUserEmailListLoaded ] = useState(false); 
   
   /**
-   * Calls the 'get_all_posts' lambda function to fetch all the posts in the application.
+   * Calls the 'get_following_posts' lambda function to fetch all the posts from followed users.
    * Sorts the returned data based on the date posted and fills the allPosts array with the sorted data.
-   * This fuction also filters teh list based on the followed list fetch using the loadFollowedPostIDList function
    */
-  const loadAllCateredPosts = async (listOfFollowedEmails) => {
+  const loadCateredPosts = async () => {
     const res = await fetch(
-      "https://3l4lzvgaso73rkupogicrcwunm0voagl.lambda-url.ca-central-1.on.aws/", // Lambda Function URL (needs to be hard coded)
+      `https://ncvpqlzqzobltjs6xbdwjtw2iy0whsun.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`, // Lambda Function URL (needs to be hard coded)
       {
         method: "GET",
         headers: {
@@ -45,8 +52,9 @@ function Catered() {
     const jsonRes = await res.json();
     if (res.status === 200)
     {
+      console.log(jsonRes);
       // the post list items are ordered by submit time
-      jsonRes?.postList?.Items.sort((a, b) => {
+      jsonRes?.postList?.Items?.sort((a, b) => {
         if (a['datePosted'] > b['datePosted']) {
           return -1;
         }
@@ -55,22 +63,13 @@ function Catered() {
         }
         return 0;
       });
-
-      setAllPosts([
-        ...jsonRes?.postList?.Items.filter(item => 
-          followedUserEmailList.some(followed => 
-            followed.userEmailOfFollowee === item.userEmail
-          )
-        )
-      ]);
-      
+      setCateredPosts([...jsonRes?.postList?.Items]);
     }
     else
     {
       window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
     }
   }
-
 
   /**
    * Calls the 'get_user_liked_posts' lambda function to fetch the IDs of all the posts the user has previously liked.
@@ -99,34 +98,32 @@ function Catered() {
     }
   }
 
-
   /**
-   * Calls the 'get_user_followed_userEmail' lambda function to fetch the IDs of all the posts the user has previously liked.
-   * Fills the followedUserEmailList with the returned data.
-   * Sets the isFollowedPostIDListLoaded hook to true.
+   * Calls the 'get_following' lambda function to fetch the emails of all the users the user has previously followed.
+   * Fills the listOfFollowedEmails with the returned data.
+   * Sets the isListOfFollowedEmailsLoaded hook to true.
    */
-  const loadFollowedUserEmaiList = async () => {
+  const loadListOfFollowing = async () => {
     const res = await fetch(
-      `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`,
-      {
-          method: "GET",
-          headers: {
-              "Content-Type": "application/json"
-          },
-      }
+        `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/?userEmail=${user.email}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }
     );
     const jsonRes = await res.json();
     if (res.status === 200)
     {
-      // console.log([...jsonRes?.commentList?.Items]);
-      setFollowedUserEmailList([...jsonRes?.commentList?.Items]);
-      setIsFollowedUserEmailLoaded(true);
+      setFollowedUserEmailList([...jsonRes?.followList?.Items]);
+      setIsFollowedUserEmailListLoaded(true);
     }
     else
     {
       window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
     }
-  }
+  };
 
   /**
    * Calls the 'delete_post' lambda function to remove the post from the database.
@@ -149,7 +146,7 @@ function Catered() {
 
       if (response.ok) {
         window.alert("Post deleted successfully");
-        loadAllCateredPosts(); // API Get Request
+        loadCateredPosts(); // API Get Request
       } else {
         // Error handling for unsuccessful deletion
         window.alert("Failed to delete post");
@@ -160,30 +157,16 @@ function Catered() {
     }
   };
 
-  // When the user data is fetched, the likedPostIDList and loadFollowedPostIDList functions are called
+  // When the user data is fetched, the likedPostIDList, loadListOfFollowing, and loadCateredPosts functions are called
+  // This is to ensure that the posts are rendered after all the liked post is returned
   useEffect(() => {
     if (user) {
       loadLikedPostIDList();
-      loadFollowedUserEmaiList();
+      loadListOfFollowing();
+      loadCateredPosts();
     }
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
-
-  // When the isFollowedPostIDListLoaded is fetched, the loadAllCateredPosts function is called
-  useEffect(() => {
-    if (isFollowedUserEmailLoaded === true) {
-      loadAllCateredPosts();
-    }
-    // The dependency array ensures that this effect runs whenever user changes
-  }, [isFollowedUserEmailLoaded]);
-
-  // When the isFollowedPostIDListLoaded is fetched, the loadAllCateredPosts function is called
-  useEffect(() => {
-    if (isFollowedUserEmailLoaded === true) {
-      loadAllCateredPosts();
-    }
-    // The dependency array ensures that this effect runs whenever user changes
-  }, [followedUserEmailList]);
 
   return (
     user && (
@@ -198,7 +181,7 @@ function Catered() {
 
         <div className="global-post-list-big-box">
           <div className="global-post-list-box">
-            {isLikedPostIDListLoaded && allPosts.map((post)=> { 
+            {isLikedPostIDListLoaded && cateredPosts.map((post)=> { 
               // Posts are rendered only after the likedPostIDList is loaded to ensure the heart icon is filled/empty depending on
               // whether the user has previous liked the post
                 return (
@@ -208,7 +191,7 @@ function Catered() {
                     isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
                     isGridLayout={false}
                     deletePost={deletePost}
-                    isCatered={true}
+                    isPosterFollowedParam={followedUserEmailList.some(followed => followed.userEmailOfFollowee === post?.userEmail)}
                     key={post?.postID}
                   />
                 )

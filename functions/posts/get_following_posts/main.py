@@ -17,8 +17,20 @@ class DecimalEncoder(json.JSONEncoder):
     return json.JSONEncoder.default(self, obj)
 
 '''
-documentation not done yet
+This function returns a list of posts from all followed users
+Requires: userEmail (String).
 
+Use the following format:
+
+const res = await fetch(
+        "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws?userEmail=${userEmail}`",
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }
+    );
 '''
 
 def lambda_handler(event, context):
@@ -39,7 +51,9 @@ def lambda_handler(event, context):
                 "statusCode": 200,
                 "body": json.dumps({
                     "message": "success",
-                    "postList": [],
+                    "postList": {
+                       "Items": []
+                    },
                 }, cls=DecimalEncoder)
             }
 
@@ -55,7 +69,7 @@ def lambda_handler(event, context):
             "statusCode": 200,
             "body": json.dumps({
                 "message": "success",
-                "postList": response["Items"],
+                "postList": response,
             }, cls=DecimalEncoder)
         }
 
