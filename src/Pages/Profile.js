@@ -141,6 +141,9 @@ function Profile() {
   // use state for the selected Tab
   const [selectedTab, setSelectedTab] = useState('posts');
 
+  // use state for the selected Tab
+  const [selectedTab, setSelectedTab] = useState('posts');
+
   return (
     user && (
     <div className="profile-container">
