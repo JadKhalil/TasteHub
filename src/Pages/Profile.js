@@ -4,7 +4,7 @@ import CreatePostOverlay from "../Elements/CreatePostOverlay";
 import { useUser } from "../UserContext";
 import "./Profile.css";
 import PostElement from "../Elements/PostElement";
-
+import ProfileTabs from "./ProfileTabs";
 /**
  * JSX Component for the Profile page.
  * 
@@ -134,6 +134,9 @@ function Profile() {
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
+  // use state for the selected Tab
+  const [selectedTab, setSelectedTab] = useState('posts');
+
   return (
     user && (
     <div className="profile-container">
@@ -160,7 +163,6 @@ function Profile() {
                   Log Out
                 </button>
               </div>
-
             </div>  
 
             <div className="Follwer-FollowingDisplay">
@@ -178,15 +180,13 @@ function Profile() {
               </p>
             </div>
         </div>
-
-        
-
-
       </div>
+
+      <ProfileTabs selected={selectedTab} onSelect={setSelectedTab} />
 
       <div className="profilePosts-container">
         <div className="posts-container">
-          <h2>posts-n-stuff</h2>
+          
         </div>
 
         <div className="createposts-overlay-container">
