@@ -151,13 +151,31 @@
 
     font-size: 1rem;
 
+    border-radius: 10px;
     background-color: inherit;
 }
 
 
+.settings-selector-option:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.settings-selector-option:active {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+
 .active-settings-selector-option {
-    border-radius: 10px;
-    background-color: #ffe7b4;
+    background-color: rgb(255, 231, 180);
+}
+
+
+.active-settings-selector-option:hover {
+    background-color: rgba(255, 231, 180, 0.5);
+}
+
+.active-settings-selector-option:active {
+    background-color: rgb(238, 216, 169);
 }
 
 
@@ -166,6 +184,7 @@
     flex-direction: row;
     align-items: center;
     gap: 10px;
+    padding: 5px;
 
     background-color: inherit;
 }
@@ -206,5 +225,36 @@
     box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
     border: 0px;
     cursor: pointer;
+    padding: 5px;
+}
+
+
+.settings-edit-button-option-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+
+    background-color: inherit;
+}
+
+
+.settings-edit-button-option-submit-button {
+    flex: 1;
+    background-color: inherit;
+    border-radius: 10px;
+    box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
+    border: 0px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+button:active {
+    background-color: rgba(0, 0, 0, 0.2);
 }
 

@@ -34,6 +34,7 @@ function Login() {
           setUser(userData);
           login(userData);
           localStorage.setItem("user", JSON.stringify(userData));
+          navigate("/");
         })
         .catch((err) => console.log(err));
     },
