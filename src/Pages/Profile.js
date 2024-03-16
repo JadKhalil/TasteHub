@@ -138,8 +138,7 @@ function Profile() {
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
-  // use state for the selected Tab
-  const [selectedTab, setSelectedTab] = useState('posts');
+  
 
   // use state for the selected Tab
   const [selectedTab, setSelectedTab] = useState('posts');
