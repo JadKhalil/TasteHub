@@ -6,7 +6,7 @@ import "./Profile.css";
 import PostElement from "../Elements/PostElement";
 import ProfileTabs from "./ProfileTabs";
 
-import Pages from "./ProfileRenderingPages/Pages";
+import Posts from "./ProfileRenderingPages/Posts";
 import Saved from "./ProfileRenderingPages/Saved";
 import Taged from "./ProfileRenderingPages/Taged";
 /**
@@ -187,7 +187,7 @@ function Profile() {
         {selectedTab === 'posts' ? (
           <div>
             {/* Your Posts Component or JSX here */}
-            <Pages/>
+            <Posts/>
           </div>
           ) : selectedTab === 'saved' ? (
             <div>
