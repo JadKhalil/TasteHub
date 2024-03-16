@@ -49,11 +49,10 @@ function Global() {
         },
       }
     );
-
+    console.log("load all posts request called");
     const jsonRes = await res.json();
     if (res.status === 200)
     {
-      console.log(jsonRes);
       // the post list items are ordered by submit time
       jsonRes?.postList?.Items?.sort((a, b) => {
         if (a['datePosted'] > b['datePosted']) {
@@ -89,6 +88,7 @@ function Global() {
           },
       }
     );
+    console.log("load liked post id request called");
     const jsonRes = await res.json();
     if (res.status === 200)
     {
@@ -116,6 +116,7 @@ function Global() {
             },
         }
     );
+    console.log("load list of following request called");
     const jsonRes = await res.json();
     if (res.status === 200)
     {
@@ -146,7 +147,7 @@ function Global() {
           }
         }
       );
-
+      console.log("delete request called");
       if (response.ok) {
         window.alert("Post deleted successfully");
         loadAllPosts(); // API Get Request

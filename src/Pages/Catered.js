@@ -24,7 +24,6 @@ function Catered() {
    * liked the post. 
    */ 
   const [isLikedPostIDListLoaded, setIsLikedPostIDListLoaded ] = useState(false); 
-  const [isFollowedUserEmailLoaded, setIsFollowedUserEmailLoaded ] = useState(false); 
 
   /* 
    * initially set to false as the list of followedUserEmails take time to load from the database.
@@ -48,11 +47,10 @@ function Catered() {
         },
       }
     );
-
+    console.log("load catered posts requst called");
     const jsonRes = await res.json();
     if (res.status === 200)
     {
-      console.log(jsonRes);
       // the post list items are ordered by submit time
       jsonRes?.postList?.Items?.sort((a, b) => {
         if (a['datePosted'] > b['datePosted']) {
@@ -87,6 +85,7 @@ function Catered() {
       }
     );
     const jsonRes = await res.json();
+    console.log("load liked post id requst called");
     if (res.status === 200)
     {
       setLikedPostIDList([...jsonRes?.likeList?.Items]);
@@ -114,6 +113,7 @@ function Catered() {
         }
     );
     const jsonRes = await res.json();
+    console.log("load list of following requst called");
     if (res.status === 200)
     {
       setFollowedUserEmailList([...jsonRes?.followList?.Items]);
@@ -143,7 +143,7 @@ function Catered() {
           }
         }
       );
-
+      console.log("delete posts requst called");
       if (response.ok) {
         window.alert("Post deleted successfully");
         loadCateredPosts(); // API Get Request
@@ -181,7 +181,7 @@ function Catered() {
 
         <div className="global-post-list-big-box">
           <div className="global-post-list-box">
-            {isLikedPostIDListLoaded && cateredPosts.map((post)=> { 
+            {isLikedPostIDListLoaded && isFollowedUserEmailListLoaded && cateredPosts.map((post)=> { 
               // Posts are rendered only after the likedPostIDList is loaded to ensure the heart icon is filled/empty depending on
               // whether the user has previous liked the post
                 return (

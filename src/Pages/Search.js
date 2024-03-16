@@ -52,7 +52,7 @@ function Search() {
         },
       }
     );
-
+    console.log("load all posts request called");
     const jsonRes = await res.json();
     if (res.status === 200)
     {
@@ -90,6 +90,7 @@ function Search() {
           },
       }
     );
+    console.log("load liked postid request called");
     const jsonRes = await res.json();
     if (res.status === 200)
     {
@@ -117,6 +118,7 @@ function Search() {
               },
           }
       );
+      console.log("load list of following request called");
       const jsonRes = await res.json();
       if (res.status === 200)
       {
@@ -147,7 +149,7 @@ function Search() {
           }
         }
       );
-
+      console.log("delete post request called");
       if (response.ok) {
         window.alert("Post deleted successfully");
         loadAllPosts(); // API Get Request

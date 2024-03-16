@@ -7,18 +7,18 @@ function SideBar() {
   return (
     <div className="sidebar">
       {/* The box for the Logo in the left corner */}
-      <div class="logo-bigger-box">
-        <div class="left-bar-logo-buffer">
+      <div className="logo-bigger-box">
+        <div className="left-bar-logo-buffer">
         </div>
-        <div class="logo-box">
+        <div className="logo-box">
           {/* The logo TH_img_01 in the top left corner */}
           <img 
-            class="logo-image"
+            className="logo-image"
             src={TH_img_01}
             alt="user"
           />
         </div>
-        <div class="left-bar-logo-buffer">
+        <div className="left-bar-logo-buffer">
         </div>
       </div>
 

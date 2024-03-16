@@ -11,6 +11,9 @@ import "./PostElement.css";
  * In order to determine the argument needed to be passed into the isPostLikedParam parameter, call 'get_user_liked_posts' lambda function
  * on one of the pages that render this component to check if the returned array contains a postID that matches the postID of the postObject parameter.
  * 
+ * In order to determine the argument needed to be passed into the isPosterFollowedParam parameter, call 'get_following' lambda function
+ * on one of the pages that render this component to check if the returned array contains an email that matches the email of the postObject parameter.
+ * 
  * @param {Object} postObject           JSON Object of the post
  * @param {String} userEmail            Email of the user browsing the post, not the user who posted this recipe. It's an important distinction
  *                                      userEmail parameter is needed to like and comment on the post.
@@ -54,63 +57,58 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
       setIsDetailsVisible(!isDetailsVisible);
     };
 
-    /**
-     * Followes and unfollowes
-     */
-    const handleIsFollowed = async (userEmailOfFollower, userEmailOfFollowee) => {
-        if (isPosterFollowed === false) { // The user does not already follow the poster
-            setIsPosterFollowed(true);
-            try {
-                const res = await fetch(
-                    "https://rl4au3ybjajtx62g23eyzmiuce0ifzkc.lambda-url.ca-central-1.on.aws/",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            "userEmailOfFollower": userEmailOfFollower,
-                            "userEmailOfFollowee": userEmailOfFollowee
-                        })
-                    }
-                );
-        
-                if (res.ok) {
-                    window.alert(`Followed ${userEmailOfFollowee} successfully`);
-                } else {
-                    // Error handling for unsuccessful deletion
-                    window.alert(`Failed to follow ${userEmailOfFollowee}`);
+    const follow = async (userEmailOfFollower, userEmailOfFollowee) => {
+        setIsPosterFollowed(true);
+        try {
+            const res = await fetch(
+                "https://rl4au3ybjajtx62g23eyzmiuce0ifzkc.lambda-url.ca-central-1.on.aws/",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "userEmailOfFollower": userEmailOfFollower,
+                        "userEmailOfFollowee": userEmailOfFollowee
+                    })
                 }
-            } catch (error) {
-                console.error(`Error following ${userEmailOfFollowee}: `, error);
-                window.alert(`An error occurred while following ${userEmailOfFollowee}`);
+            );
+            console.log("follow request called");
+            if (res.ok) {
+                window.alert(`Followed ${userEmailOfFollowee} successfully`);
+            } else {
+                // Error handling for unsuccessful deletion
+                window.alert(`Failed to follow ${userEmailOfFollowee}`);
             }
-        } 
-        else {
-            setIsPosterFollowed(false); // The user already follows the poster
-            try {
-                const res = await fetch(
-                    `https://jphbbhraofx2bnza766vsdujtq0bfdla.lambda-url.ca-central-1.on.aws/?userEmailOfFollower=${userEmailOfFollower}&userEmailOfFollowee=${userEmailOfFollowee}`,
-                    {
-                        method: "DELETE",
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    }
-                );
-                if (res.ok) {
-                    window.alert(`Unfollowed ${userEmailOfFollowee} successfully`);
-                } else {
-                    // Error handling for unsuccessful deletion
-                    window.alert(`Failed to unfollow ${userEmailOfFollowee}`);
-                }
-            } catch (error) {
-                console.error(`Error unfollowing ${userEmailOfFollowee}: `, error);
-            }
+        } catch (error) {
+            console.error(`Error following ${userEmailOfFollowee}: `, error);
+            window.alert(`An error occurred while following ${userEmailOfFollowee}`);
         }
-    };
+    }
 
-
+    const unfollow = async (userEmailOfFollower, userEmailOfFollowee) => {
+        setIsPosterFollowed(false);
+        try {
+            const res = await fetch(
+                `https://jphbbhraofx2bnza766vsdujtq0bfdla.lambda-url.ca-central-1.on.aws/?userEmailOfFollower=${userEmailOfFollower}&userEmailOfFollowee=${userEmailOfFollowee}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+            console.log("unfollow request called");
+            if (res.ok) {
+                window.alert(`Unfollowed ${userEmailOfFollowee} successfully`);
+            } else {
+                // Error handling for unsuccessful deletion
+                window.alert(`Failed to unfollow ${userEmailOfFollowee}`);
+            }
+        } catch (error) {
+            console.error(`Error unfollowing ${userEmailOfFollowee}: `, error);
+        }
+    }
     
     /**
      * Calls the 'create_comment' lambda function to update backend,
@@ -139,6 +137,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
             }
         );
         setNewComment(""); // resets the new comment state to be empty after adding comment
+        console.log("add comment request called");
     }
 
 
@@ -162,6 +161,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                 },
             }
         );
+        console.log("remove comment request called");
     }
 
 
@@ -206,6 +206,17 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
         )
     }
 
+    /**
+     * Determines whether clicking on the follow/unfollow button should call the 'follow_user' lambda function or the 'unfollow_user' lambda function
+     */
+        const handleFollows = (userEmailOfFollower, userEmailOfFollowee) => {
+            if (isPosterFollowed === false) {
+                follow(userEmailOfFollower, userEmailOfFollowee);
+            }
+            else {
+                unfollow(userEmailOfFollower, userEmailOfFollowee);
+            }
+        }
 
     /**
      * Determines whether clicking on a heart icon should call the 'like_post' lambda function or the 'unlike_post' lambda function
@@ -241,6 +252,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                 })
             }
         );
+        console.log("like post request called");
     }
 
     /**
@@ -260,6 +272,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                 },
             }
         );
+        console.log("unlike post request called");
     }
 
     /**
@@ -276,8 +289,8 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                 },
             }
         );
+        console.log("get comments request called");
         const jsonRes = await res.json();
-        console.log(jsonRes);
         if (res.status === 200)
         {
             setComments([...jsonRes?.commentList?.Items]);
@@ -332,11 +345,6 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
 
         <div className="post-header-container">
             <h4 className="post-name">{postObject?.recipeName}</h4>
-            {postObject.userEmail === userEmail ? (
-                <></>
-            ) : (
-                <button className="PE-follow-button" onClick={() => handleIsFollowed(userEmail, postObject.userEmail)}>{isPosterFollowed ? "Unfollow" : "Follow"}</button>
-            )}
             {(postObject?.userEmail === userEmail) ? 
                 <div className="post-delete-container" onClick={()=> deletePostHandler()}>
                     <svg className="post-delete-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -344,7 +352,7 @@ const PostElement = ({ postObject , userEmail, isPostLikedParam, isGridLayout, d
                     </svg>
                 </div>
             :
-                <></>
+                <button className="PE-follow-button" onClick={() => handleFollows(userEmail, postObject.userEmail)}>{isPosterFollowed ? "Unfollow" : "Follow"}</button>
             }
         </div>
 
