@@ -4,10 +4,12 @@ import Login from "./Login";
 import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 import axios from "axios";
 import { useUser } from "../UserContext";
+import { useNavigate } from "react-router-dom";
 
 function Settings() {
   const { user: contextUser, login, logout } = useUser();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -21,6 +23,7 @@ function Settings() {
     localStorage.removeItem("user");
     logout();
     setUser(null);
+    navigate("/");
   };
 
   const [setingsList, setSettingList] = useState([
