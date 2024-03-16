@@ -39,12 +39,12 @@ function Profile() {
         },
       }
     );
-
+    console.log("load personal posts request called");
     const jsonRes = await res.json();
     if (res.status === 200)
     {
       // the post list items are ordered by submit time
-      jsonRes?.postList?.Items.sort((a, b) => {
+      jsonRes?.postList?.Items?.sort((a, b) => {
         if (a['datePosted'] > b['datePosted']) {
           return -1;
         }
@@ -77,6 +77,7 @@ function Profile() {
           },
       }
     );
+    console.log("load liked post id request called");
     const jsonRes = await res.json();
     if (res.status === 200)
     {
@@ -88,6 +89,8 @@ function Profile() {
       window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
     }
   }
+
+
 
   /**
    * Calls the 'delete_post' lambda function to remove the post from the database.
@@ -107,7 +110,7 @@ function Profile() {
             }
           }
         );
-  
+        console.log("delete post request called");
         if (response.ok) {
           window.alert("Post deleted successfully");
           loadPersonalPosts(); // API Get Request
@@ -121,14 +124,15 @@ function Profile() {
       }
     };
 
-  // When the user data is fetched, the likedPostIDList and loadAllPosts functions are called
+  // When the user data is fetched, the loadLikedPostIDList, loadListOfFollowing, and loadPersonalPosts functions are called
   // This is to ensure that the posts are rendered after all the liked post is returned
   useEffect(() => {
     if (user) {
       loadLikedPostIDList();
       loadPersonalPosts();
     }
-  }, [user]); // The dependency array ensures that this effect runs whenever user changes
+    // The dependency array ensures that this effect runs whenever user changes
+  }, [user]);
 
   return (
     user && (
@@ -137,16 +141,21 @@ function Profile() {
       <CreatePostOverlay/>
 
       <div className="profile-grid-container" >
-      {isLikedPostIDListLoaded && personalPosts.map((post)=> {
-        // Posts are rendered only after the likedPostIDList is loaded to ensure the heart icon is filled/empty depending on
-        // whether the user has previous liked the post
-      return (<PostElement 
-              postObject={post} 
-              userEmail={user?.email} 
-              isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
-              isGridLayout={true}
-              deletePost={deletePost}
-              key={post?.postID}/>)
+      {isLikedPostIDListLoaded && personalPosts.map((post)=> { 
+              // Posts are rendered only after the likedPostIDList and listOfFollowedEmails are loaded to ensure 
+              // the heart icon is filled/empty depending on whether the user has previous liked the post
+              // and to ensure the follow/unfollow button is shown depending on whether the user has previously followed the user
+                return (
+                  <PostElement 
+                    postObject={post} 
+                    userEmail={user?.email} 
+                    isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
+                    isGridLayout={true}
+                    deletePost={deletePost}
+                    isPosterFollowedParam={false}
+                    key={post?.postID}
+                  />
+                )
       })}
       </div>
     </div>

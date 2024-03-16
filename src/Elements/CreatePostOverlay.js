@@ -17,7 +17,6 @@ const CreatePostOverlay = () => {
 
   const handleSubmit = async (e) => { // Add lambda url
     e.preventDefault(); // Prevents the popup page from closing before event is handled
-    console.log("You clicked submit");
     const dataToSubmit = new FormData();
     dataToSubmit.append("userEmail", email);
     dataToSubmit.append("postID", uuidv4());
