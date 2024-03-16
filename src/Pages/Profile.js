@@ -138,18 +138,43 @@ function Profile() {
           <img src="https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681-1024x1024.jpg" 
           alt="profile-img"
           className="imgprofile-container"/>
-          
         </div>
 
         <div className="profileName-bio-container">
-          <div className="name-container">name</div>
-          <div className="bio-information-container">bio</div>
+          
+          <div className="profileFollower-container">
+            <div className="name-container">The rock</div>
+              <div className="editprofile-div">
+                <button className="editprofile-button">
+                  Edit profile
+                </button>
+              </div>
+
+              <div className="logoutprofile-div"> 
+                <button className="logoutprofile-button">
+                  Log Out
+                </button>
+              </div>
+
+            </div>  
+
+            <div className="Follwer-FollowingDisplay">
+              <div className="profilePosts">0 Posts</div>
+              <div className="profilefollowers">0 :*( Followers</div>
+              <div className="profilefollowing">100000 Following</div>
+            </div>
+
+         
+
+            <div className="bio-information-container">
+              <p>
+                Just a milf who adores the rock and 
+                sharing cooking recepies it turns me on  ;)
+              </p>
+            </div>
         </div>
 
-        <div className="profileFollower-container">
-            <div className="profilefollowers">0 :*(</div>
-            <div className="profilefollowers">100000</div>
-        </div>
+        
 
 
       </div>
