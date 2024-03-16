@@ -91,13 +91,50 @@
 
 }
 
-
 .profilePosts-container {
     flex: 8;
 }
+
+.profile-action-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-item {
+    margin: 0 20px;
+    padding: 16px 0;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Style for active tab */
+.action-item.active {
+    border-top: 1px solid black;
+}
+
 
 .profile-grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     overflow: auto;
+}
+
+.profile-tabs-container {
+    display: flex;
+    border-bottom: 1px solid #dbdbdb;
+    justify-content: center;
+    padding: 16px 0;
+}
+
+.profile-tab {
+    margin: 0 16px;
+    cursor: pointer;
+}
+
+.profile-tab.active {
+    font-weight: bold;
+    border-top: 2px solid black;
+    padding-top: 16px;
+    /* Adjust padding to compensate for the border */
 }
