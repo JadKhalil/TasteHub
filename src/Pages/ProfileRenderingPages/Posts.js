@@ -1,6 +1,34 @@
+import CreatePostOverlay from "../../Elements/CreatePostOverlay";
+import { useState } from "react";
+
 function Posts({posts}) {
-    if (posts.length === 0) {
-        return <div className="profile-posts-container">No posts available.</div>;
+    
+  const [showPostCreate, setPostCreate] = useState(false);
+
+  const toggleCreatePostOverlay = () => {
+    setPostCreate(!showPostCreate);
+  }
+
+
+  if (posts.length === 0) {
+     
+      return <div className="emptyProfileContainer">
+
+          <div>
+            Share Recepies
+          </div>
+          <div>
+            <button onClick={toggleCreatePostOverlay}>
+              share your first recepie
+            </button>
+          </div>
+
+          {showPostCreate && <CreatePostOverlay 
+            setPostCreate={setPostCreate}
+          /> }
+           
+        
+        </div>;
       }
     
       // If there are posts, map through them and render accordingly
