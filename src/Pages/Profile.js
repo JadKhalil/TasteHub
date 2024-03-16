@@ -5,6 +5,10 @@ import { useUser } from "../UserContext";
 import "./Profile.css";
 import PostElement from "../Elements/PostElement";
 import ProfileTabs from "./ProfileTabs";
+
+import Pages from "./ProfileRenderingPages/Pages";
+import Saved from "./ProfileRenderingPages/Saved";
+import Taged from "./ProfileRenderingPages/Taged";
 /**
  * JSX Component for the Profile page.
  * 
@@ -183,17 +187,17 @@ function Profile() {
         {selectedTab === 'posts' ? (
           <div>
             {/* Your Posts Component or JSX here */}
-            Posts
+            <Pages/>
           </div>
           ) : selectedTab === 'saved' ? (
             <div>
               {/* Your Saved Component or JSX here */}
-              Saved
+              <Saved/>
             </div>
           ) : selectedTab === 'tagged' ? (
             <div>
               {/* Your Tagged Component or JSX here */}
-              Tagged
+              <Taged/>
             </div>
           ) : null}
 
