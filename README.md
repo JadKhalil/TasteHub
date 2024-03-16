@@ -2,22 +2,22 @@
 ENSF 401 App Project
 
 ### Things Left To Do
-- Create a get_following_post lambda function
-    - This lambda function should find a list of users that the current user follows and get all of their posts (May be an expensive operation)
-- Create a get_user_profile lambda function
-    - This one should be fairly straightforward
-- Include these new lambda functions in terraform
+- Users should be able to update their bio and their profile page (Should be connected to backend using create_user_profile)
 - Create New Post should be moved elsewhere so that it is not in the Profile Page. Instead, there should be a sticky footer at the bottom of the page at all times with a 'create new post' button.
-    - When the button is clicked, an overlay should pop up to the CreatePostOverlay.js
-- Implement comment section (Lambda functions are implemented but front end is not)
-    - Take a look at how liking post was implemented to get a general idea
 - User profile for other users should also be available
     - Should be able to navigate to their page by clicking on their username on their post
     - Use get_personal_posts lambda function and pass in the user email of the other users
-- Implement follow functionality
-    - Should be able to follow and unfollow users (by calling follow_user and unfollow_user lambda functions)
-    - Should be able to see a list of following and followers
-- Users should be able to update their bio and their profile page (Should be connected to backend using create_user_profile)
+- ~~Create a get_following_post lambda function~~
+    - ~~This lambda function should find a list of users that the current user follows and get all of their posts (May be an expensive operation)~~
+- ~~Create a get_user_profile lambda function~~
+    - ~~This one should be fairly straightforward~~
+- ~~Include these new lambda functions in terraform~~
+    - When the button is clicked, an overlay should pop up to the CreatePostOverlay.js
+- ~~Implement comment section (Lambda functions are implemented but front end is not)~~
+    - ~~Take a look at how liking post was implemented to get a general idea~~
+- ~~Implement follow functionality~~
+    - ~~Should be able to follow and unfollow users (by calling follow_user and unfollow_user lambda functions)~~
+    - ~~Should be able to see a list of following and followers~~
 
 ##### Bonus things
 Do these when the main functionality is finished
