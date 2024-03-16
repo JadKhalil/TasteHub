@@ -3,7 +3,7 @@
     flex-direction: column;
     height: 100%;
     overflow: auto;
-    width: 100%;
+    width: 80%;
     align-items: center;
     justify-content: center;
     padding: 10px;
@@ -12,7 +12,7 @@
 .profileHeader-container {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     flex: 1;
     padding: 24px;
     width: 50%;
@@ -40,8 +40,6 @@
     width: 175px;
     height: 175px;
     border-radius: 50%;
-
-
     border: 1px solid black;
 }
 
@@ -50,7 +48,7 @@
     display: flex;
     flex-direction: row;
     flex: 1;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 
 .name-container {
@@ -60,8 +58,9 @@
     flex: 1;
 }
 
+.logoutprofile-div,
 .editprofile-div {
-    flex: 1;
+    flex: 2;
     justify-content: flex-start;
 }
 
@@ -76,11 +75,11 @@
 }
 
 .profilefollowers {
-    flex: 1;
+    flex: 2;
 }
 
 .profilefollowing {
-    flex: 1;
+    flex: 2;
 }
 
 
@@ -89,6 +88,7 @@
     height: 50%;
     justify-content: flex-start;
     align-items: flex-start;
+
 }
 
 
