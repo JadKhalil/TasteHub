@@ -185,13 +185,13 @@ function Profile() {
       <ProfileTabs selected={selectedTab} onSelect={setSelectedTab} />
 
       <div className="profilePosts-container">
-        <div className="posts-container">
+        {/* <div className="posts-container">
           
         </div>
 
         <div className="createposts-overlay-container">
           <CreatePostOverlay/>
-        </div>
+        </div> */}
 
       </div>
       
