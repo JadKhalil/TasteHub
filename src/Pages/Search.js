@@ -197,6 +197,7 @@ function Search() {
             return (<PostElement 
                     postObject={post} 
                     userEmail={user?.email} 
+                    userName={user?.name}
                     isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
                     isGridLayout={true}
                     deletePost={deletePost}
