@@ -66,6 +66,7 @@ def lambda_handler(event, context):
     
     try:
         users_table.put_item(Item={'userEmail': userEmail,
+                            'userName': userName,
                             'postID': postID,
                             'category': category,
                             'datePosted': datePosted,
