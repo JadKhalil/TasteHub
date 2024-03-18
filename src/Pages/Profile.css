@@ -169,7 +169,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 20%;
+    height: 15%;
 }
 
 .profilePostsCameraIcon {
@@ -195,7 +195,17 @@
 .profileShareRecepiePrompt-div {
     display: flex;
     justify-content: center;
+    padding-top: 14px;
 
 }
 
-.profileShareRecepiePrompt-button {}
+.profileShareRecepiePrompt-button {
+    border: none;
+    background-color: white;
+    color: blue;
+    cursor: pointer;
+}
+
+.profileShareRecepiePrompt-button:hover {
+    background-color: white;
+}
