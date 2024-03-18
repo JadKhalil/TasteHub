@@ -3,13 +3,307 @@
     flex-direction: column;
     height: 100%;
     overflow: auto;
-    width: 100%;
+    width: 80%;
     align-items: center;
-    position: relative;
+    justify-content: center;
+    padding: 10px;
 }
+
+.profileHeader-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex: 1;
+    padding: 24px;
+    width: 50%;
+    border-bottom: 1px solid gray;
+
+}
+
+.profileImg {
+    display: flex;
+    flex: 1;
+}
+
+.profileName-bio-container {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+}
+
+.profileImg {
+    display: flex;
+    align-items: flex-start;
+}
+
+.imgprofile-container {
+    width: 175px;
+    height: 175px;
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
+
+.profileFollower-container {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.name-container {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 20px;
+    flex: 2;
+}
+
+.logoutprofile-div,
+.editprofile-div {
+    flex: 2;
+    justify-content: flex-start;
+}
+
+.logoutprofile-div {
+    flex: 3;
+}
+
+.Follwer-FollowingDisplay {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+.profilePosts {
+    flex: 2;
+}
+
+.profilefollowers {
+    flex: 2;
+}
+
+.profilefollowing {
+    flex: 3;
+}
+
+
+.bio-information-container {
+    display: flex;
+    height: 50%;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+}
+
+.profilePosts-container {
+    display: flex;
+    justify-content: center;
+    flex: 8;
+    width: 50%;
+}
+
 
 .profile-grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     overflow: auto;
+}
+
+.profile-tabs-container {
+    display: flex;
+    justify-content: center;
+
+}
+
+.profile-tab {
+    margin: 0 16px;
+    padding-top: 8px;
+    cursor: pointer;
+}
+
+.profile-tab.active {
+    font-weight: bold;
+    border-top: 1px solid black;
+    /* Adjust padding to compensate for the border */
+}
+
+
+/*CSS for Posts Page---------------  */
+
+.ProfilePosts-Container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* CSS for Posts creation PopUp-------- */
+.create-post-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.create-post-popup {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
+    transition: all 0.3s ease-in-out;
+}
+
+.createpostFormContainer form {
+    display: flex;
+    flex-direction: column;
+}
+
+.create-post-image-upload-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.imageUploads {
+    border: none;
+    width: calc(100% - 120px);
+    margin-left: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.create-post-recipeName-container input,
+.create-post-prepTime-container input,
+.create-post-description-container input,
+.create-post-category-container input {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.create-post-submit-button-container input {
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.create-post-submit-button-container input:hover {
+    background-color: #0056b3;
+}
+
+/* Placeholder styles */
+::placeholder {
+    color: #888;
+}
+
+/* Focus styles */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="submit"]:focus,
+input[type="file"]:focus {
+    outline: none;
+    border: 2px solid #007bff;
+    box-shadow: 0 0 5px #007bff;
+}
+
+label[for='imageUploads'] {
+    display: none;
+}
+
+
+.createPostClose-div {
+    position: absolute;
+    top: 7px;
+    right: 3px;
+    padding: 0;
+    margin: 0;
+    z-index: 11;
+}
+
+.createPostClose-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.createPostClose-button:hover {
+    color: white;
+    background-color: transparent;
+}
+
+.createPostIcon-IOMDClose {
+    height: 32px;
+    width: 32px;
+}
+
+
+.emptyProfileContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.profilePostEmptyContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 15%;
+}
+
+.profilePostsCameraIcon {
+    width: 50px;
+    height: 50px;
+}
+
+.profileShareRecepiesContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+}
+
+.profileShareRecepies-div {
+    font-weight: bold;
+    font-size: 26px;
+    font-family: sans-serif;
+    padding-bottom: 14px;
+}
+
+.profileShareRecepiePrompt-div {
+    display: flex;
+    justify-content: center;
+    padding-top: 14px;
+
+}
+
+.profileShareRecepiePrompt-button {
+    border: none;
+    background-color: white;
+    color: blue;
+    cursor: pointer;
+}
+
+.profileShareRecepiePrompt-button:hover {
+    background-color: white;
 }

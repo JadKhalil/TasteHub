@@ -4,7 +4,11 @@ import CreatePostOverlay from "../Elements/CreatePostOverlay";
 import { useUser } from "../UserContext";
 import "./Profile.css";
 import PostElement from "../Elements/PostElement";
+import ProfileTabs from "./ProfileTabs";
 
+import Posts from "./ProfileRenderingPages/Posts";
+import Saved from "./ProfileRenderingPages/Saved";
+import Taged from "./ProfileRenderingPages/Taged";
 /**
  * JSX Component for the Profile page.
  * 
@@ -134,11 +138,82 @@ function Profile() {
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
+  
+
+  // use state for the selected Tab
+  const [selectedTab, setSelectedTab] = useState('posts');
+
   return (
     user && (
     <div className="profile-container">
-      <h1>Profile</h1>
-      <CreatePostOverlay/>
+      
+      <div className="profileHeader-container">
+        <div className="profileImg">
+          <img src="https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681-1024x1024.jpg" 
+          alt="profile-img"
+          className="imgprofile-container"/>
+        </div>
+
+        <div className="profileName-bio-container">
+          
+          <div className="profileFollower-container">
+            <div className="name-container">The rock</div>
+              <div className="editprofile-div">
+                <button className="editprofile-button">
+                  Edit profile
+                </button>
+              </div>
+
+              <div className="logoutprofile-div"> 
+                <button className="logoutprofile-button">
+                  Log Out
+                </button>
+              </div>
+            </div>  
+
+            <div className="Follwer-FollowingDisplay">
+              <div className="profilePosts">0 Posts</div>
+              <div className="profilefollowers">0 :*( Followers</div>
+              <div className="profilefollowing">100000 Following</div>
+            </div>
+
+         
+
+            <div className="bio-information-container">
+              <p>
+                Just a milf who adores the rock and 
+                sharing cooking recepies it turns me on  ;)
+              </p>
+            </div>
+        </div>
+      </div>
+
+      <ProfileTabs selected={selectedTab} onSelect={setSelectedTab} />
+
+      <div className="profilePosts-container">
+        {selectedTab === 'posts' ? (
+          <>
+            <Posts posts={personalPosts}/>
+          </>
+          ) : selectedTab === 'saved' ? (
+            <>
+              <Saved/>
+            </>
+          ) : selectedTab === 'tagged' ? (
+            <>
+              <Taged/>
+            </>
+          ) : null}
+
+      </div>
+      
+      {/* <div className="posts-container">
+          
+        </div>
+
+        <div className="createposts-overlay-container">
+          <CreatePostOverlay/>
+        </div> */}
 
       <div className="profile-grid-container" >
       {isLikedPostIDListLoaded && personalPosts.map((post)=> { 
