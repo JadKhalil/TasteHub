@@ -60,8 +60,7 @@ const CreatePostOverlay = ({setPostCreate}) => {
                 <div className="createpostFormContainer">
                     <form onSubmit={ (e) => handleSubmit(e) }>
                         <div className='create-post-image-upload-container'>
-                            
-                            {imageFile !== null && imageFile !== undefined ? <b> ({imageFile.name})</b>: ""}
+                             
                             <input
                             type="file" 
                             className='imageUploads' 
