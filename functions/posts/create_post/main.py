@@ -17,15 +17,16 @@ This function creates a new post adding the info into the Tastehub-posts table.
 The body of the POST request must be in a binary format using FormData().
 The elements in FormData must be appended in the following order:
 1. userEmail (String)
-2. postID (Unique)
-3. category (String)
-4. datePosted (String)
-5. contentImage (image)
-6. numberOfLikes (Number)
-7. numberOfComments (Number)
-8. postDescription (String)
-9. prepTime (Number)
-10. recipeName (String)
+2. userName (String)
+3. postID (Unique)
+4. category (String)
+5. datePosted (String)
+6. contentImage (image)
+7. numberOfLikes (Number)
+8. numberOfComments (Number)
+9. postDescription (String)
+10. prepTime (Number)
+11. recipeName (String)
     const promise = await fetch(
         "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws/",
         {
@@ -46,14 +47,15 @@ def lambda_handler(event, context):
     
     binary_data = [part.content for part in data.parts]
     userEmail = binary_data[0].decode()
-    postID = binary_data[1].decode()
-    category = binary_data[2].decode()
-    datePosted = binary_data[3].decode()
-    numberOfLikes = int(binary_data[5].decode('utf-8'))
-    numberOfComments = int(binary_data[6].decode('utf-8'))
-    postDescription = binary_data[7].decode()
-    prepTime = int(binary_data[8].decode('utf-8'))
-    recipeName = binary_data[9].decode()
+    userName = binary_data[1].decode()
+    postID = binary_data[2].decode()
+    category = binary_data[3].decode()
+    datePosted = binary_data[4].decode()
+    numberOfLikes = int(binary_data[6].decode('utf-8'))
+    numberOfComments = int(binary_data[7].decode('utf-8'))
+    postDescription = binary_data[8].decode()
+    prepTime = int(binary_data[9].decode('utf-8'))
+    recipeName = binary_data[10].decode()
 
     image = "contentImage.png"
     imageFile = os.path.join("/tmp", image)
