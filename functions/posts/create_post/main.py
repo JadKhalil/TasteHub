@@ -60,7 +60,7 @@ def lambda_handler(event, context):
     image = "contentImage.png"
     imageFile = os.path.join("/tmp", image)
     with open(imageFile, "wb") as file:
-        file.write(binary_data[4])
+        file.write(binary_data[5])
     
     cloudImage = upload_to_cloud(imageFile)
     
