@@ -137,27 +137,125 @@
 
 /* CSS for Posts creation PopUp-------- */
 .create-post-container {
-    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
+    z-index: 1000;
 }
 
 .create-post-popup {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 50%;
-    /* or any other size */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    position: relative;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
+    transition: all 0.3s ease-in-out;
 }
+
+.createpostFormContainer form {
+    display: flex;
+    flex-direction: column;
+}
+
+.create-post-image-upload-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.imageUploads {
+    border: none;
+    width: calc(100% - 120px);
+    margin-left: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.create-post-recipeName-container input,
+.create-post-prepTime-container input,
+.create-post-description-container input,
+.create-post-category-container input {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.create-post-submit-button-container input {
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.create-post-submit-button-container input:hover {
+    background-color: #0056b3;
+}
+
+/* Placeholder styles */
+::placeholder {
+    color: #888;
+}
+
+/* Focus styles */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="submit"]:focus,
+input[type="file"]:focus {
+    outline: none;
+    border: 2px solid #007bff;
+    box-shadow: 0 0 5px #007bff;
+}
+
+label[for='imageUploads'] {
+    display: none;
+}
+
+
+.createPostClose-div {
+    position: absolute;
+    top: 7px;
+    right: 3px;
+    padding: 0;
+    margin: 0;
+    z-index: 11;
+}
+
+.createPostClose-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.createPostClose-button:hover {
+    color: white;
+    background-color: transparent;
+}
+
+.createPostIcon-IOMDClose {
+    height: 32px;
+    width: 32px;
+}
+
 
 .emptyProfileContainer {
     display: flex;
