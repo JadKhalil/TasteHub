@@ -38,7 +38,7 @@ def lambda_handler(event, context):
             "postID": body["postID"],
             "commentID": body["commentID"],
             "userEmailOfCommenter": body["userEmailOfCommenter"],
-            "userNameOfCommenter": body["userNameofCommenter"],
+            "userNameOfCommenter": body["userNameOfCommenter"],
             "content": body["content"]
         })
 
