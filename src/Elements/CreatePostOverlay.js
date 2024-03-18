@@ -56,8 +56,10 @@ const CreatePostOverlay = ({setPostCreate}) => {
       <div className='create-post-container'>
             
             <div className="create-post-popup">
-                <div>
-                    <button onClick={onClose}>X</button>
+                <div className="createPostClose-div">
+                    <button className="createPostClose-button" 
+                        onClick={onClose}>X
+                    </button>
                 </div>
                 
                 

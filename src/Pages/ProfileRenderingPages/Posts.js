@@ -1,5 +1,6 @@
 import CreatePostOverlay from "../../Elements/CreatePostOverlay";
 import { useState } from "react";
+import { FaCamera } from "react-icons/fa";
 
 function Posts({posts}) {
     
@@ -14,11 +15,22 @@ function Posts({posts}) {
      
       return <div className="emptyProfileContainer">
 
-          <div>
-            Share Recepies
+          <div className="profilePostEmptyContainer">
+            <FaCamera className="profilePostsCameraIcon" />
           </div>
-          <div>
-            <button onClick={toggleCreatePostOverlay}>
+
+          <div className="profileShareRecepiesContainer">
+            <div className="profileShareRecepies-div">
+              Share Recepies
+            </div>
+            <div className="profileShareRecepeisInfo-div">
+              When you share photos, they will appear on your profile.
+            </div>
+            
+          </div>
+          <div className="profileShareRecepiePrompt-div">
+            <button className="profileShareRecepiePrompt-button" 
+              onClick={toggleCreatePostOverlay}>
               share your first recepie
             </button>
           </div>
