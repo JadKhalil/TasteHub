@@ -9,6 +9,7 @@ const CreatePostOverlay = () => {
     const { user } = useUser(); // Details of signed in user including their email
 
     const [email, setEmail] = useState();
+    const [userName, setUsername] = useState();
     const [recipeName, setRecipeName] = useState();
     const [imageFile, setImageFile] = useState();
     const [prepTime, setPrepTime] = useState();
@@ -19,6 +20,7 @@ const CreatePostOverlay = () => {
     e.preventDefault(); // Prevents the popup page from closing before event is handled
     const dataToSubmit = new FormData();
     dataToSubmit.append("userEmail", email);
+    dataToSubmit.append("userName", userName);
     dataToSubmit.append("postID", uuidv4());
     dataToSubmit.append("category", category);
     dataToSubmit.append("datePosted", Date.now());
@@ -43,6 +45,7 @@ const CreatePostOverlay = () => {
         // Check if user is not null before accessing email property
         if (user) {
           setEmail(user?.email);
+          setUsername(user?.name);
         }
         // The dependency array ensures that this effect runs whenever user changes
       }, [user]);
