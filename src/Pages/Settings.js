@@ -159,7 +159,7 @@ function Settings() {
     return (
       <div className="settings-edit-button-option-box">
         <button
-          className="settings-edit-button-option-submit-button"
+          className={isDarkMode ? "dark-mode-settings-edit-button-option-submit-button" : "settings-edit-button-option-submit-button"}
           onClick={() => option.optionAction()}
         >
           {option.optionName}
@@ -298,6 +298,7 @@ function Settings() {
       </div>
     );
   };
+
   const handleSelectorOptionClicked = (optionID, clickedCategory) => {
     // Update state with new settingsList
     const newSettingsList = settingsList.map((category) => {
@@ -321,12 +322,16 @@ function Settings() {
     // Update settings in localStorage after state update
     setSettingList(newSettingsList);
 
-    // Log the state of isDarkMode
+    // Update isDarkMode state based on the selected theme
     const selectedTheme = newSettingsList
       .find((category) => category.categoryName === "Colour Theme")
       ?.optionsList.find((option) => option.isSelected)?.optionName;
-    toggleDarkMode(selectedTheme === "Dark-Mode");
 
+    if (selectedTheme === "Dark-Mode") {
+      toggleDarkMode(true);
+    } else {
+      toggleDarkMode(false);
+    }
     // Update settings in localStorage after state update
     updateSettingsInLocalStorage(newSettingsList); // Pass the updated settings list to updateSettingsInLocalStorage
   };
