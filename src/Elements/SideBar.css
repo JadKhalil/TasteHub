@@ -1,11 +1,10 @@
-
 .sidebar {
   display: flex;
   flex-direction: column;
   width: 15%;
   height: 100%;
   max-height: 100%;
-  background-color: #d1d5db;
+  background-color: #ffffff;
   border-right: 2px solid #000000;
   z-index: 2;
   overflow: hidden;
@@ -20,7 +19,6 @@
   padding-top: 5px;
   padding-bottom: 20px;
   min-height: fit-content;
-  
 }
 
 .left-bar-logo-buffer {
@@ -28,7 +26,7 @@
   flex-direction: row;
   flex: 1;
   height: inherit;
-  background-color: #C0D685;
+  background-color: #c0d685;
   justify-content: center;
   align-items: center;
 }
@@ -40,7 +38,6 @@
   justify-content: center;
   align-items: center;
   min-height: fit-content;
-
 }
 
 .logo-image {
@@ -50,12 +47,10 @@
   object-fit: contain;
 }
 
-
 .sb-tools-list-bigger-box {
   display: flex;
   flex: 50;
   flex-direction: column;
-
 }
 
 .sb-tools-list-box {
@@ -65,13 +60,11 @@
   gap: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
-
 }
 
 .sb-tool-item-box {
   display: flex;
   flex-direction: row;
-
 }
 
 .sb-tool-link {
@@ -102,11 +95,6 @@
 .sb-tool-link-buffer-right {
   flex: 1;
 }
-
-
-
-
-
 
 .sb-setting-tool-box {
   display: flex;
