@@ -27,11 +27,7 @@
     flex: 1;
     flex-direction: column;
     width: 100%;
-    border-bottom-style: solid;
-    border-bottom-width: 2px;
-    border-bottom-color: black;
 
-    background-color: #f9a53f;
 }
 
 .settings-header-box {
