@@ -484,22 +484,13 @@ const PostElement = ({
           <div className="PE-comments-box">
             {comments.map((comment) => buildComment(comment))}
             <div className="PE-comment-box">
-              <div className="PE-comment-username">
-                {/* 
-                                // 8
-                                //
-                                //
-                                // This userEmail var needs to be chnaged to the userName of the Browsing user.
-                                //
-                                //
-                                //
-                            */}
+              {/* <div className="PE-comment-username">
                 {userName}:
-              </div>
+              </div> */}
               <input
                 className="PE-comment-text-input"
                 type="text"
-                placeholder="Enter a new comment here."
+                placeholder="Add a comment..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 onSubmitCapture={(e) => setNewComment("set")}
