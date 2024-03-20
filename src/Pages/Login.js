@@ -18,6 +18,26 @@ function Login() {
     }
   }, []);
 
+  const createUserProfile = async (email, newUserName, newBio, creationDate, picture) => {
+    const dataToSubmit = new FormData();
+    dataToSubmit.append("userEmail", email);
+    dataToSubmit.append("userName", newUserName);
+    dataToSubmit.append("bio", newBio);
+    dataToSubmit.append("numberOfFollowers", 0);
+    dataToSubmit.append("numberOfFollowing", 0);
+    dataToSubmit.append("creationDate", creationDate);
+    dataToSubmit.append("profile picture", picture);
+
+    const promise = await fetch(
+        "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/", // Lambda Function URL (needs to be hard coded)
+        {
+            method: "POST",
+            body: dataToSubmit,
+        }
+    );
+  }
+
+
   const loginWithGoogle = useGoogleLogin({
     onSuccess: (codeResponse) => {
       axios
@@ -32,91 +52,57 @@ function Login() {
         )
         .then((res) => {
           const { name, email, picture } = res.data; // Google login information
-          console.log(res.data);
 
-          /*
-          * get the profile from backend here (get_profile lambda url)
-          * if DNE set defaulkt values.
-          */
+          (async () => {
+            const profileRes = await fetch(
+              `https://ue2qthlxc7fiit4ocgnu7ko4d40sndti.lambda-url.ca-central-1.on.aws?userEmail=${email}`,
+              {
+                  method: "GET",
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+              }
+            )
+            const jsonRes = await profileRes.json();
+            const profileStatus = profileRes.status;
+            const userInfo = jsonRes?.userInfo?.Items[0];
+            if (profileStatus === 200) { // Profile exists
+              const existingUserData = {
+                ...userInfo
+              };
+              console.log(userInfo);
 
-          // Check if user profile exists in the database
-          axios.get(`https://ue2qthlxc7fiit4ocgnu7ko4d40sndti.lambda-url.ca-central-1.on.aws?userEmail=${email}`)
-            .then((profileRes) => { // profile exists in the database
-              const { statusCode, body } = profileRes.data;
-
-              if (statusCode === 200) {
-                // User profile exists, load profile into localStorage
-                const { bio, numberOfFollowers, numberOfFollowing, creationDate } = profileRes.data;
-                console.log(profileRes.data);
+              setUser(existingUserData);
+              login(existingUserData);
+              localStorage.setItem("user", JSON.stringify(existingUserData));
+              navigate("/");
+            }
+            else if (profileStatus === 404) { // Profile doesn't exist
+              const newUserName = name + "-" + uuidv4().slice(0, 6);
+              const newBio = "No bio yet";
+              const creationDate = Date.now();
                 
-                //replace profile picture
-                // userData.picture = picture;
-                const newUsername = name + uuidv4();
-                //add existing data
-                const existingUserData = {
-                  // "email": email,
-                  // "userName": newUserName,
-                  // "bio": newBio,
-                  // "numberOfFollowers": Number(0),
-                  // "numberOfFollowing": Number(0),
-                  // "creationDate": creationDate,
-                  // "picture": picture
-                };
+              createUserProfile(email, newUserName, newBio, creationDate, picture); // POST Request function
 
-                setUser(existingUserData);
-                login(existingUserData);
-                localStorage.setItem("user", JSON.stringify(existingUserData));
-                navigate("/");
-              }
-            })
+              const newUserData = {
+                "userEmail": email,
+                "userName": newUserName,
+                "bio": newBio,
+                "numberOfFollowers": Number(0),
+                "numberOfFollowing": Number(0),
+                "creationDate": creationDate,
+                "image": picture
+              };
 
-            .catch((profileErr) => {  // profile doesn't exist in the database (first time logging in)
-              if (profileErr.response.status === 404) { // 404 error indicates profile doesn't exist in database
-                const newUserName = name + uuidv4().slice(0, 6);
-                const newBio = "No bio yet";
-                const creationDate = Date.now();
-                  
-                (async () => {
-                  const dataToSubmit = new FormData();
-                  dataToSubmit.append("userEmail", email);
-                  dataToSubmit.append("userName", newUserName);
-                  dataToSubmit.append("bio", newBio);
-                  dataToSubmit.append("numberOfFollowers", 0);
-                  dataToSubmit.append("numberOfFollowing", 0);
-                  dataToSubmit.append("creationDate", creationDate);
-                  dataToSubmit.append("profile picture", picture);
-              
-                  const promise = await fetch(
-                      "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/", // Lambda Function URL (needs to be hard coded)
-                      {
-                          method: "POST",
-                          body: dataToSubmit,
-                      }
-                  );
-                  const jsonPromise = await promise.json(); // Used to access the body of the returned Json
-                })();
-
-                const newUserData = {
-                  "email": email,
-                  "userName": newUserName,
-                  "bio": newBio,
-                  "numberOfFollowers": Number(0),
-                  "numberOfFollowing": Number(0),
-                  "creationDate": creationDate,
-                  "picture": picture
-                };
-
-                setUser(newUserData);
-                login(newUserData);
-                localStorage.setItem("user", JSON.stringify(newUserData));
-                navigate("/");
-              }
-              else {
-                window.alert("Error with logging in");
-              }
-            });
-
-  
+              setUser(newUserData);
+              login(newUserData);
+              localStorage.setItem("user", JSON.stringify(newUserData));
+              navigate("/");
+            }
+            else { // Other error
+              window.alert("Error with logging in");
+            }
+          })()
           // Check if settings already exist in localStorage, initialize if not
           if (!localStorage.getItem("settings")) {
             const defaultSettings = {
@@ -156,7 +142,7 @@ function Login() {
           <button onClick={logOut}>Log out</button>
         </div>
       ) : (
-        <button className="startup-button" onClick={loginWithGoogle}>
+        <button className="startup-button" onClick={() => loginWithGoogle()}>
           Sign In
         </button>
       )}
