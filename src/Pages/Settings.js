@@ -11,23 +11,14 @@ function Settings() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const navigate = useNavigate();
 
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const storedSettings = localStorage.getItem("settings");
-    if (storedSettings) {
-      const settings = JSON.parse(storedSettings);
-      return settings.colourTheme === "Dark-Mode";
-    }
-    return false; // Default to light mode if no settings are found
-  });
-
-  useEffect(() => {
-    // Apply dark mode styles to the root element when isDarkMode is true
-    if (isDarkMode) {
-      document.getElementById("root").classList.add("dark-mode");
-    } else {
-      document.getElementById("root").classList.remove("dark-mode");
-    }
-  }, [isDarkMode]);
+  // const [isDarkMode, setIsDarkMode] = useState(() => {
+  //   const storedSettings = localStorage.getItem("settings");
+  //   if (storedSettings) {
+  //     const settings = JSON.parse(storedSettings);
+  //     return settings.colourTheme === "Dark-Mode";
+  //   }
+  //   return false; // Default to light mode if no settings are found
+  // });
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -46,14 +37,14 @@ function Settings() {
     navigate("/");
   };
 
-  const [setingsList, setSettingList] = useState([
+  const [settingsList, setSettingList] = useState([
     {
       categoryName: "Colour Theme",
       categoryType: "Selector",
       optionsList: [
         {
           optionName: "Light-Mode",
-          isSelected: true,
+          isSelected: false,
         },
         {
           optionName: "Dark-Mode",
@@ -96,7 +87,7 @@ function Settings() {
         },
         {
           optionName: "Carnivore",
-          isSelected: true,
+          isSelected: false,
         },
         {
           optionName: "Indian",
@@ -106,12 +97,12 @@ function Settings() {
     },
   ]);
 
-  const updateSettingsInLocalStorage = () => {
+  const updateSettingsInLocalStorage = (newSettingsList) => {
     const settings = {
-      colourTheme: setingsList
+      colourTheme: newSettingsList
         .find((category) => category.categoryName === "Colour Theme")
         ?.optionsList.find((option) => option.isSelected)?.optionName,
-      favoriteFood: setingsList
+      favoriteFood: newSettingsList
         .find((category) => category.categoryName === "Favorite Food")
         ?.optionsList.find((option) => option.isSelected)?.optionName,
     };
@@ -306,7 +297,7 @@ function Settings() {
   };
   const handleSelectorOptionClicked = (optionID, clickedCategory) => {
     // Update state with new settingsList
-    const newSettingsList = setingsList.map((category) => {
+    const newSettingsList = settingsList.map((category) => {
       if (category.categoryName === clickedCategory.categoryName) {
         // If this is the category of the clicked option, map its options
         return {
@@ -328,28 +319,45 @@ function Settings() {
     setSettingList(newSettingsList);
 
     // Log the state of isDarkMode
-    const selectedTheme = newSettingsList
-      .find((category) => category.categoryName === "Colour Theme")
-      ?.optionsList.find((option) => option.isSelected)?.optionName;
-    setIsDarkMode(selectedTheme === "Dark-Mode");
+    // const selectedTheme = newSettingsList
+    //   .find((category) => category.categoryName === "Colour Theme")
+    //   ?.optionsList.find((option) => option.isSelected)?.optionName;
+    // setIsDarkMode(selectedTheme === "Dark-Mode");
 
     // Update settings in localStorage after state update
     updateSettingsInLocalStorage(newSettingsList); // Pass the updated settings list to updateSettingsInLocalStorage
 
-    console.log("isDarkMode:", selectedTheme === "Dark-Mode");
+    // console.log("isDarkMode:", selectedTheme === "Dark-Mode");
   };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    const storedSettings = localStorage.getItem("settings");
+    const storedSettings = localStorage.getItem("settings")
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
     if (storedSettings) {
-      const settings = JSON.parse(storedSettings);
-      // Logic to initialize component state with these settings
-      // This could involve finding the corresponding options in your `setingsList`
-      // and marking them as selected based on these stored settings
+      const parsedStoredSettings = JSON.parse(storedSettings)
+      const selectedColourTheme = parsedStoredSettings.colourTheme
+      const selectedFavoriteFood = parsedStoredSettings.favoriteFood
+
+      const updatedSettingsList = settingsList.map(setting => {
+        if (setting.categoryName === "Colour Theme") {
+          setting.optionsList = setting.optionsList.map(option => ({
+            ...option,
+            isSelected: option.optionName === selectedColourTheme,
+          }));
+        } else if (setting.categoryName === "Favorite Food") {
+          setting.optionsList = setting.optionsList.map(option => ({
+            ...option,
+            isSelected: option.optionName === selectedFavoriteFood,
+          }));
+        }
+        return setting;
+      });
+
+      setSettingList(updatedSettingsList);
+      updateSettingsInLocalStorage(updatedSettingsList);
     }
   }, []);
 
@@ -364,7 +372,7 @@ function Settings() {
 
         <div className="settings-categories-big-box">
           <div className="settings-categories-box">
-            {setingsList.map(handleCategories)}
+            {settingsList.map(handleCategories)}
           </div>
         </div>
       </div>
