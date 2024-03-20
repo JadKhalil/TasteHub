@@ -5,20 +5,23 @@ import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 import axios from "axios";
 import { useUser } from "../UserContext";
 import { useNavigate } from "react-router-dom";
+import { useDarkMode } from "./DarkModeContext";
 
 function Settings() {
   const { user: contextUser, login, logout } = useUser();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const navigate = useNavigate();
 
-  // const [isDarkMode, setIsDarkMode] = useState(() => {
-  //   const storedSettings = localStorage.getItem("settings");
-  //   if (storedSettings) {
-  //     const settings = JSON.parse(storedSettings);
-  //     return settings.colourTheme === "Dark-Mode";
-  //   }
-  //   return false; // Default to light mode if no settings are found
-  // });
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
+
+  useEffect(() => {
+    // Add/remove 'dark-mode' class based on isDarkMode state
+    if (isDarkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -156,7 +159,7 @@ function Settings() {
     return (
       <div className="settings-edit-button-option-box">
         <button
-          className="settings-edit-button-option-submit-button"
+          className={isDarkMode ? "dark-mode-settings-edit-button-option-submit-button" : "settings-edit-button-option-submit-button"}
           onClick={() => option.optionAction()}
         >
           {option.optionName}
@@ -295,6 +298,7 @@ function Settings() {
       </div>
     );
   };
+
   const handleSelectorOptionClicked = (optionID, clickedCategory) => {
     // Update state with new settingsList
     const newSettingsList = settingsList.map((category) => {
@@ -318,37 +322,39 @@ function Settings() {
     // Update settings in localStorage after state update
     setSettingList(newSettingsList);
 
-    // Log the state of isDarkMode
-    // const selectedTheme = newSettingsList
-    //   .find((category) => category.categoryName === "Colour Theme")
-    //   ?.optionsList.find((option) => option.isSelected)?.optionName;
-    // setIsDarkMode(selectedTheme === "Dark-Mode");
+    // Update isDarkMode state based on the selected theme
+    const selectedTheme = newSettingsList
+      .find((category) => category.categoryName === "Colour Theme")
+      ?.optionsList.find((option) => option.isSelected)?.optionName;
 
+    if (selectedTheme === "Dark-Mode") {
+      toggleDarkMode(true);
+    } else {
+      toggleDarkMode(false);
+    }
     // Update settings in localStorage after state update
     updateSettingsInLocalStorage(newSettingsList); // Pass the updated settings list to updateSettingsInLocalStorage
-
-    // console.log("isDarkMode:", selectedTheme === "Dark-Mode");
   };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    const storedSettings = localStorage.getItem("settings")
+    const storedSettings = localStorage.getItem("settings");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
     if (storedSettings) {
-      const parsedStoredSettings = JSON.parse(storedSettings)
-      const selectedColourTheme = parsedStoredSettings.colourTheme
-      const selectedFavoriteFood = parsedStoredSettings.favoriteFood
+      const parsedStoredSettings = JSON.parse(storedSettings);
+      const selectedColourTheme = parsedStoredSettings.colourTheme;
+      const selectedFavoriteFood = parsedStoredSettings.favoriteFood;
 
-      const updatedSettingsList = settingsList.map(setting => {
+      const updatedSettingsList = settingsList.map((setting) => {
         if (setting.categoryName === "Colour Theme") {
-          setting.optionsList = setting.optionsList.map(option => ({
+          setting.optionsList = setting.optionsList.map((option) => ({
             ...option,
             isSelected: option.optionName === selectedColourTheme,
           }));
         } else if (setting.categoryName === "Favorite Food") {
-          setting.optionsList = setting.optionsList.map(option => ({
+          setting.optionsList = setting.optionsList.map((option) => ({
             ...option,
             isSelected: option.optionName === selectedFavoriteFood,
           }));

@@ -121,3 +121,11 @@
   max-width: 1000px;
   padding: 10px;
 }
+
+.white-text {
+  color: white;
+}
+
+.white-text:hover{
+  color: #f9a53f
+}

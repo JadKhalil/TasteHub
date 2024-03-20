@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./PostElement.css";
+import { useDarkMode } from "../Pages/DarkModeContext";
 
 /**
  * JSX Component for a single post.
@@ -50,7 +51,7 @@ const PostElement = ({
    * If set to false, the heart icon will be hollow and clicking it will call the 'like_post' lambda function
    */
   const [isPostLiked, setIsPostLiked] = useState(isPostLikedParam);
-
+  const { isDarkMode } = useDarkMode();
   /* This hook is boolean type that used in determining whether clicking on a heart icon likes or unlikes a post.
    * If set to true, the heart icon will be filled and clicking it will call the 'unlike_post' lambda function
    * If set to false, the heart icon will be hollow and clicking it will call the 'like_post' lambda function
@@ -384,7 +385,7 @@ const PostElement = ({
           </div>
         ) : (
           <button
-            className="PE-follow-button"
+            className={isDarkMode ? "dark-mode-follow-button" : "PE-follow-button"}
             onClick={() => handleFollows(userEmail, postObject.userEmail)}
           >
             {isPosterFollowed ? "Unfollow" : "Follow"}
@@ -405,7 +406,7 @@ const PostElement = ({
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth="1.5"
-            stroke="currentColor"
+            stroke={isDarkMode ? "black" : "currentColor"}
           >
             <path
               strokeLinecap="round"
@@ -413,7 +414,9 @@ const PostElement = ({
               d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
             />
           </svg>
-          <span>{postObject?.prepTime} MINS</span>
+          <span className={isDarkMode ? "dark-mode-time" : ""}>
+            {postObject?.prepTime} MINS
+          </span>
         </div>
         <div className="post-category-badge">
           <span>Category: {postObject?.category}</span>
