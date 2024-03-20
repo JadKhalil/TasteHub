@@ -4,6 +4,7 @@ import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 import axios from "axios";
 import { useUser } from "../UserContext";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 function Login() {
   const { user: contextUser, login, logout } = useUser();
@@ -30,8 +31,8 @@ function Login() {
           }
         )
         .then((res) => {
-          const { name, email, picture } = res.data;
-          const userData = { name, email, picture}; //init userData with only the name, email, and picture URL from google
+          const { name, email, picture } = res.data; // Google login information
+          console.log(res.data);
 
           /*
           * get the profile from backend here (get_profile lambda url)
@@ -39,46 +40,81 @@ function Login() {
           */
 
           // Check if user profile exists in the database
-          axios.get(`https://your-lambda-function-url/userProfile?userEmail=${userData.email}`) //replace lambda url
-            .then((profileRes) => {
+          axios.get(`https://ue2qthlxc7fiit4ocgnu7ko4d40sndti.lambda-url.ca-central-1.on.aws?userEmail=${email}`)
+            .then((profileRes) => { // profile exists in the database
               const { statusCode, body } = profileRes.data;
+
               if (statusCode === 200) {
                 // User profile exists, load profile into localStorage
-                const { bio, numberOfFollowers, numberOfFollowing, creationDate, picture } = profileRes.data;
+                const { bio, numberOfFollowers, numberOfFollowing, creationDate } = profileRes.data;
+                console.log(profileRes.data);
                 
                 //replace profile picture
-                userData.picture = picture;
-                
+                // userData.picture = picture;
+                const newUsername = name + uuidv4();
                 //add existing data
                 const existingUserData = {
-                  ...userData,
-                  bio,
-                  numberOfFollowers,
-                  numberOfFollowing,
-                  creationDate,
+                  // "email": email,
+                  // "userName": newUserName,
+                  // "bio": newBio,
+                  // "numberOfFollowers": Number(0),
+                  // "numberOfFollowing": Number(0),
+                  // "creationDate": creationDate,
+                  // "picture": picture
                 };
 
                 setUser(existingUserData);
                 login(existingUserData);
                 localStorage.setItem("user", JSON.stringify(existingUserData));
                 navigate("/");
-              } else if (statusCode === 404) {
-                // User profile not found, set default values and load profile into localStorage
-                const defaultUserData = {
-                  ...userData,
-                  followers: 0,
-                  following: 0,
-                  bio: "Default Bio",
-                };
-                setUser(defaultUserData);
-                login(defaultUserData);
-                localStorage.setItem("user", JSON.stringify(defaultUserData));
-                navigate("/");
-              } else {
-                console.error("Error fetching user profile:", body);
               }
             })
-            .catch((profileErr) => console.error("Error fetching user profile:", profileErr));
+
+            .catch((profileErr) => {  // profile doesn't exist in the database (first time logging in)
+              if (profileErr.response.status === 404) { // 404 error indicates profile doesn't exist in database
+                const newUserName = name + uuidv4().slice(0, 6);
+                const newBio = "No bio yet";
+                const creationDate = Date.now();
+                  
+                (async () => {
+                  const dataToSubmit = new FormData();
+                  dataToSubmit.append("userEmail", email);
+                  dataToSubmit.append("userName", newUserName);
+                  dataToSubmit.append("bio", newBio);
+                  dataToSubmit.append("numberOfFollowers", 0);
+                  dataToSubmit.append("numberOfFollowing", 0);
+                  dataToSubmit.append("creationDate", creationDate);
+                  dataToSubmit.append("profile picture", picture);
+              
+                  const promise = await fetch(
+                      "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/", // Lambda Function URL (needs to be hard coded)
+                      {
+                          method: "POST",
+                          body: dataToSubmit,
+                      }
+                  );
+                  const jsonPromise = await promise.json(); // Used to access the body of the returned Json
+                })();
+
+                const newUserData = {
+                  "email": email,
+                  "userName": newUserName,
+                  "bio": newBio,
+                  "numberOfFollowers": Number(0),
+                  "numberOfFollowing": Number(0),
+                  "creationDate": creationDate,
+                  "picture": picture
+                };
+
+                setUser(newUserData);
+                login(newUserData);
+                localStorage.setItem("user", JSON.stringify(newUserData));
+                navigate("/");
+              }
+              else {
+                window.alert("Error with logging in");
+              }
+            });
 
   
           // Check if settings already exist in localStorage, initialize if not
@@ -92,7 +128,7 @@ function Login() {
   
           navigate("/");
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err)); // Google Login error error handling
     },
     onError: (error) => console.log("Login Failed:", error),
   });

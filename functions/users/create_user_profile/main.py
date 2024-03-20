@@ -1,5 +1,3 @@
-##Copied create_comment code to use as boilerplate
-
 from requests_toolbelt.multipart import decoder
 import json
 import boto3
@@ -8,11 +6,12 @@ import time
 import hashlib
 import base64
 import os
-
+import imghdr
 
 dynamodb_resource = boto3.resource("dynamodb")
 users_table = dynamodb_resource.Table("tastehub-users")
 client = boto3.client('ssm')
+
 
 '''
 This function creates a new user adding the info into the Tastehub-users table.
@@ -20,11 +19,11 @@ The body of the POST request must be in a binary format using FormData().
 The elements in FormData must be appended in the following order:
 1. userEmail (String)
 2. userName (String)
-2. bio (String)
-3. numberOfFollowers (Number)
-4. numberOfFollowing (Number)
-5. creationDate (string)
-6. profile picture (image)
+3. bio (String)
+4. numberOfFollowers (Number)
+5. numberOfFollowing (Number)
+6. creationDate (string)
+7. profile picture (image or string of URL)
     const promise = await fetch(
         "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws/",
         {
@@ -45,27 +44,34 @@ def lambda_handler(event, context):
     
     binary_data = [part.content for part in data.parts]
     userEmail = binary_data[0].decode()
-    bio = binary_data[1].decode()
-    numberOfFollowers = binary_data[2].decode()
-    numberOfFollowing = binary_data[3].decode()
-    creationDate = binary_data[4].decode()
+    userName = binary_data[1].decode()
+    bio = binary_data[2].decode()
+    numberOfFollowers = int(binary_data[3].decode('utf-8'))
+    numberOfFollowing = int(binary_data[4].decode('utf-8'))
+    creationDate = binary_data[5].decode()
 
-    image = "profilePicture.png"
-    imageFile = os.path.join("/tmp", image)
-    with open(imageFile, "wb") as file:
-        file.write(binary_data[5])
-    
-    cloudImage = upload_to_cloud(imageFile)
+    # Check if profile picture is an image or a URL
+    if is_image(binary_data[6]): # It's an image
+        image = "profilePicture.png"
+        imageFile = os.path.join("/tmp", image)
+        with open(imageFile, "wb") as file:
+            file.write(binary_data[6])
+        
+        cloudImage = upload_to_cloud(imageFile)
+        imageURL = cloudImage["secure_url"]
+
+    else: # It's not an image, treat it as a string
+        imageURL = binary_data[6].decode()
     
     try:
         users_table.put_item(Item={'userEmail': userEmail,
+                            'userName': userName,
                             'bio': bio,
                             'numberOfFollowers': numberOfFollowers,
                             'numberOfFollowing' : numberOfFollowing,
                             'creationDate': creationDate,
-                            'image': cloudImage["secure_url"]
+                            'image': imageURL
                             })
-
         return {
             "statusCode": 200,
                 "body": json.dumps({
@@ -81,6 +87,11 @@ def lambda_handler(event, context):
             })
         }
 
+def is_image(data):
+    if imghdr.what(None, data) is not None:
+        return True
+    else:
+        return False
 
 #get ssm keys
 response = client.get_parameters_by_path(
