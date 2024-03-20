@@ -38,9 +38,47 @@ function Login() {
           * if DNE set defaulkt values.
           */
 
-          setUser(userData);
-          login(userData);
-          localStorage.setItem("user", JSON.stringify(userData));
+          // Check if user profile exists in the database
+          axios.get(`https://your-lambda-function-url/userProfile?userEmail=${userData.email}`) //replace lambda url
+            .then((profileRes) => {
+              const { statusCode, body } = profileRes.data;
+              if (statusCode === 200) {
+                // User profile exists, load profile into localStorage
+                const { bio, numberOfFollowers, numberOfFollowing, creationDate, picture } = profileRes.data;
+                
+                //add existing data
+                const existingUserData = {
+                  ...userData,
+                  bio,
+                  numberOfFollowers,
+                  numberOfFollowing,
+                  creationDate,
+                  picture,
+                };
+
+                setUser(existingUserData);
+                login(existingUserData);
+                localStorage.setItem("user", JSON.stringify(existingUserData));
+                navigate("/");
+              } else if (statusCode === 404) {
+                // User profile not found, set default values and load profile into localStorage
+                const defaultUserData = {
+                  ...userData,
+                  followers: 0,
+                  following: 0,
+                  bio: "Default Bio",
+                };
+                setUser(defaultUserData);
+                login(defaultUserData);
+                localStorage.setItem("user", JSON.stringify(defaultUserData));
+                navigate("/");
+              } else {
+                // Handle other status codes if needed
+                console.error("Error fetching user profile:", body);
+              }
+            })
+            .catch((profileErr) => console.error("Error fetching user profile:", profileErr));
+
   
           // Check if settings already exist in localStorage, initialize if not
           if (!localStorage.getItem("settings")) {
