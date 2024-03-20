@@ -30,7 +30,14 @@ function Login() {
           }
         )
         .then((res) => {
-          const userData = res.data;
+          const { name, email, picture } = res.data;
+          const userData = { name, email, picture}; //init userData with only the name, email, and picture URL from google
+
+          /*
+          * get the profile from backend here (get_profile lambda url)
+          * if DNE set defaulkt values.
+          */
+
           setUser(userData);
           login(userData);
           localStorage.setItem("user", JSON.stringify(userData));
