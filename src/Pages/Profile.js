@@ -149,15 +149,14 @@ function Profile() {
       
       <div className="profileHeader-container">
         <div className="profileImg">
-          <img src="https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681-1024x1024.jpg" 
-          alt="profile-img"
+          <img src={user.picture}
           className="imgprofile-container"/>
         </div>
 
         <div className="profileName-bio-container">
           
           <div className="profileFollower-container">
-            <div className="name-container">The rock</div>
+            <div className="name-container">{user.name}</div>
               <div className="editprofile-div">
                 <button className="editprofile-button">
                   Edit profile
@@ -172,17 +171,16 @@ function Profile() {
             </div>  
 
             <div className="Follwer-FollowingDisplay">
-              <div className="profilePosts">0 Posts</div>
-              <div className="profilefollowers">0 :*( Followers</div>
-              <div className="profilefollowing">100000 Following</div>
+              <div className="profilePosts"> Posts</div>
+              <div className="profilefollowers"> Followers</div>
+              <div className="profilefollowing"> Following</div>
             </div>
 
          
 
             <div className="bio-information-container">
               <p>
-                Just a milf who adores the rock and 
-                sharing cooking recepies it turns me on  ;)
+                Make Bio dynamic
               </p>
             </div>
         </div>

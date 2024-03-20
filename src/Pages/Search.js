@@ -1,79 +1,81 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useUser } from "../UserContext";
 import PostElement from "../Elements/PostElement";
 import "./Search.css";
+import { useDarkMode } from "./DarkModeContext";
 
 /**
  * JSX Component for the Search page.
- * 
+ *
  * Loads all posts in a grid layout. There is also a search functionality
- * 
+ *
  * @returns {JSX}
  */
 function Search() {
-  const [ allPosts, setAllPosts ] = useState([]); // list of all posts
+  const [allPosts, setAllPosts] = useState([]); // list of all posts
   const { user } = useUser(); // Details of signed in user including their email
-  const [ likedPostIDList, setLikedPostIDList ] = useState([]); // list of IDs of posts the user has liked
-  const [ followedUserEmailList, setFollowedUserEmailList ] = useState([]); // list of email of other users the user follows
+  const [likedPostIDList, setLikedPostIDList] = useState([]); // list of IDs of posts the user has liked
+  const [followedUserEmailList, setFollowedUserEmailList] = useState([]); // list of email of other users the user follows
 
-  /* 
+  const { isDarkMode } = useDarkMode();
+  /*
    * initially set to false as the list of likedPostIDs take time to load from the database.
    * This hook is here to ensure the post is loaded AFTER all the liked post IDs are found in the database.
    * Without this hook, there may be bugs where heart icon of the rendered post is hollow despite the fact that the user has previously
-   * liked the post. 
-   */ 
-  const [isLikedPostIDListLoaded, setIsLikedPostIDListLoaded ] = useState(false); 
+   * liked the post.
+   */
+  const [isLikedPostIDListLoaded, setIsLikedPostIDListLoaded] = useState(false);
 
-  /* 
+  /*
    * initially set to false as the list of followedUserEmails take time to load from the database.
    * This hook is here to ensure the post is loaded AFTER all the followed emails are found in the database.
    * Without this hook, there may be bugs where follow button of the rendered post says "follow" despite the fact that the user has previously
    * followed the user
-   */ 
-  const [isFollowedUserEmailListLoaded, setIsFollowedUserEmailListLoaded ] = useState(false); 
-  
-  const [searchFilter, setSearchFilter] = useState('recipeName'); // Filters the search result by this attribute
-  const [searchQuery, setSearchQuery] = useState(''); // Search bar entry
+   */
+  const [isFollowedUserEmailListLoaded, setIsFollowedUserEmailListLoaded] =
+    useState(false);
 
-  let filteredPosts = allPosts.filter((post) => post[searchFilter]?.toLowerCase().includes(searchQuery.toLowerCase()));
+  const [searchFilter, setSearchFilter] = useState("recipeName"); // Filters the search result by this attribute
+  const [searchQuery, setSearchQuery] = useState(""); // Search bar entry
+
+  let filteredPosts = allPosts.filter((post) =>
+    post[searchFilter]?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   /**
    * Calls the 'get_all_posts' lambda function to fetch all the posts in the application.
    * Sorts the returned data based on the date posted and fills the allPosts array with the sorted data.
    */
-  const loadAllPosts = async() => {
+  const loadAllPosts = async () => {
     const res = await fetch(
       "https://3l4lzvgaso73rkupogicrcwunm0voagl.lambda-url.ca-central-1.on.aws/", // Lambda Function URL (needs to be hard coded)
       {
         method: "GET",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
       }
     );
     console.log("load all posts request called");
     const jsonRes = await res.json();
-    if (res.status === 200)
-    {
+    if (res.status === 200) {
       // the post list items are ordered by submit time
       jsonRes?.postList?.Items?.sort((a, b) => {
-        if (a['datePosted'] > b['datePosted']) {
+        if (a["datePosted"] > b["datePosted"]) {
           return -1;
         }
-        if (a['datePosted'] < b['datePosted']) {
+        if (a["datePosted"] < b["datePosted"]) {
           return 1;
         }
         return 0;
       });
 
       setAllPosts([...jsonRes?.postList?.Items]);
-    }
-    else
-    {
+    } else {
       window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
     }
-  }
+  };
 
   /**
    * Calls the 'get_user_liked_posts' lambda function to fetch the IDs of all the posts the user has previously liked.
@@ -84,57 +86,51 @@ function Search() {
     const res = await fetch(
       `https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${user.email}`, // Lambda Function URL (needs to be hard coded)
       {
-          method: "GET",
-          headers: {
-              "Content-Type": "application/json"
-          },
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
     console.log("load liked postid request called");
     const jsonRes = await res.json();
-    if (res.status === 200)
-    {
+    if (res.status === 200) {
       setLikedPostIDList([...jsonRes?.likeList?.Items]);
       setIsLikedPostIDListLoaded(true);
-    }
-    else
-    {
+    } else {
       window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
     }
-  }
+  };
 
   /**
    * Calls the 'get_following' lambda function to fetch the emails of all the users the user has previously followed.
    * Fills the followedUserEmailList with the returned data.
    * Sets the isFollowedUserEmailListLoaded hook to true.
    */
-    const loadListOfFollowing = async () => {
-      const res = await fetch(
-          `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/?userEmail=${user.email}`,
-          {
-              method: "GET",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-          }
-      );
-      console.log("load list of following request called");
-      const jsonRes = await res.json();
-      if (res.status === 200)
+  const loadListOfFollowing = async () => {
+    const res = await fetch(
+      `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/?userEmail=${user.email}`,
       {
-        setFollowedUserEmailList([...jsonRes?.followList?.Items]);
-        setIsFollowedUserEmailListLoaded(true);
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-      else
-      {
-        window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
-      }
-    };
+    );
+    console.log("load list of following request called");
+    const jsonRes = await res.json();
+    if (res.status === 200) {
+      setFollowedUserEmailList([...jsonRes?.followList?.Items]);
+      setIsFollowedUserEmailListLoaded(true);
+    } else {
+      window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
+    }
+  };
 
   /**
    * Calls the 'delete_post' lambda function to remove the post from the database.
    * Removes the deleted post from allPosts list
-   * 
+   *
    * @param {String} postID           postID of the post
    * @param {String} posterUserEmail  userEmail of the poster
    */
@@ -145,8 +141,8 @@ function Search() {
         {
           method: "DELETE",
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         }
       );
       console.log("delete post request called");
@@ -174,38 +170,57 @@ function Search() {
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
-
   return (
     user && (
-    <div className="search-container">
-      <div className="search-header-container">
-        <h1>Global</h1>
-        <div className="search-bar-container">
-          <select id="search-filter" value={searchFilter} onChange={(e) => setSearchFilter(e.target.value)}>
-            <option value="recipeName">Recipe Name</option>
-            <option value="category">Category</option>
-            <option value="userEmail">User Email</option>
-          </select>
-          <input type="text" className="search-bar" placeholder="Search recipes..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)}></input>
+      <div className="search-container">
+        <div className="search-header-container">
+          <h1>Search</h1>
+          <div className="search-bar-container">
+            <select
+              id="search-filter"
+              value={searchFilter}
+              onChange={(e) => setSearchFilter(e.target.value)}
+            >
+              <option value="recipeName">Recipe Name</option>
+              <option value="category">Category</option>
+              <option value="userEmail">User Email</option>
+            </select>
+            <input
+              type="text"
+              className="search-bar"
+              placeholder="Search recipes..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            ></input>
+          </div>
+        </div>
+
+        <div className="search-grid-container">
+          {isLikedPostIDListLoaded &&
+            isFollowedUserEmailListLoaded &&
+            filteredPosts.map((post) => {
+              // Posts are rendered only after the likedPostIDList is loaded to ensure the heart icon is filled/empty depending on
+              // whether the user has previous liked the post
+              return (
+                <PostElement
+                  postObject={post}
+                  userEmail={user?.email}
+                  userName={user?.name}
+                  isPostLikedParam={likedPostIDList.some(
+                    (likedPost) => likedPost.postID === post?.postID
+                  )}
+                  isGridLayout={true}
+                  deletePost={deletePost}
+                  isPosterFollowedParam={followedUserEmailList.some(
+                    (followed) =>
+                      followed.userEmailOfFollowee === post?.userEmail
+                  )}
+                  key={post?.postID}
+                />
+              );
+            })}
         </div>
       </div>
-
-      <div className="search-grid-container" >
-        {isLikedPostIDListLoaded && isFollowedUserEmailListLoaded && filteredPosts.map((post)=> {
-            // Posts are rendered only after the likedPostIDList is loaded to ensure the heart icon is filled/empty depending on
-            // whether the user has previous liked the post
-            return (<PostElement 
-                    postObject={post} 
-                    userEmail={user?.email} 
-                    userName={user?.name}
-                    isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
-                    isGridLayout={true}
-                    deletePost={deletePost}
-                    isPosterFollowedParam={followedUserEmailList.some(followed => followed.userEmailOfFollowee === post?.userEmail)}
-                    key={post?.postID}/>)
-        })}
-      </div>
-    </div>
     )
   );
 }

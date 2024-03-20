@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./Layout.js";
-import Global from "./Pages/Global.js";
-import Catered from "./Pages/Catered.js";
-import Profile from "./Pages/Profile.js";
-import Search from "./Pages/Search.js";
-import Settings from "./Pages/Settings.js";
-import axios from "axios";
-import LoginStartup from "./Pages/LoginStartup.js";
-import { UserProvider } from "./UserContext";
-
-import Login from "./Pages/Login.js";
-import { GoogleLogin } from "@react-oauth/google";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './Layout.js';
+import Catered from './Pages/Catered.js';
+import Profile from './Pages/Profile.js';
+import Search from './Pages/Search.js';
+import Settings from './Pages/Settings.js';
+import axios from 'axios';
+import LoginStartup from './Pages/LoginStartup.js';
+import { UserProvider } from './UserContext';
+import Login from './Pages/Login.js';
+import { GoogleLogin } from '@react-oauth/google';
+import Global from './Pages/Global.js';
+import { DarkModeProvider } from './Pages/DarkModeContext'; 
 
 function App() {
-
   return (
-      <BrowserRouter>
-        <UserProvider>
+    <BrowserRouter>
+      <UserProvider>
+        <DarkModeProvider> 
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route path="global" element={<Global />}></Route>
@@ -29,8 +29,10 @@ function App() {
               <Route path="/" element={<LoginStartup />} />
             </Route>
           </Routes>
-        </UserProvider>
-      </BrowserRouter>
+        </DarkModeProvider>
+      </UserProvider>
+    </BrowserRouter>
   );
 }
+
 export default App;
