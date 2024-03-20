@@ -19,6 +19,7 @@ This function creates a new user adding the info into the Tastehub-users table.
 The body of the POST request must be in a binary format using FormData().
 The elements in FormData must be appended in the following order:
 1. userEmail (String)
+2. userName (String)
 2. bio (String)
 3. numberOfFollowers (Number)
 4. numberOfFollowing (Number)

@@ -46,6 +46,9 @@ function Login() {
                 // User profile exists, load profile into localStorage
                 const { bio, numberOfFollowers, numberOfFollowing, creationDate, picture } = profileRes.data;
                 
+                //replace profile picture
+                userData.picture = picture;
+                
                 //add existing data
                 const existingUserData = {
                   ...userData,
@@ -53,7 +56,6 @@ function Login() {
                   numberOfFollowers,
                   numberOfFollowing,
                   creationDate,
-                  picture,
                 };
 
                 setUser(existingUserData);
@@ -73,7 +75,6 @@ function Login() {
                 localStorage.setItem("user", JSON.stringify(defaultUserData));
                 navigate("/");
               } else {
-                // Handle other status codes if needed
                 console.error("Error fetching user profile:", body);
               }
             })
