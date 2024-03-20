@@ -1,0 +1,22 @@
+.create-post-button {
+  background-color: #007bff; /* Button background color */
+  color: white; /* Button text color */
+  border: none; /* Remove button border */
+  padding: 10px; /* Padding around the button text/icon */
+  border-radius: 50%; /* Make the button circular */
+  cursor: pointer; /* Show pointer cursor on hover */
+  display: flex; /* Use flex layout */
+  width: 75px;
+  height: 75px;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+.create-post-button:hover {
+  background-color: #0056b3; /* Darker background color on hover */
+}
+
+.create-post-icon {
+  margin-right: 5px; /* Space between icon and text */
+}

@@ -179,7 +179,7 @@ function Search() {
     user && (
     <div className="search-container">
       <div className="search-header-container">
-        <h1>Global</h1>
+        <h1>Search</h1>
         <div className="search-bar-container">
           <select id="search-filter" value={searchFilter} onChange={(e) => setSearchFilter(e.target.value)}>
             <option value="recipeName">Recipe Name</option>
