@@ -283,6 +283,14 @@
   cursor: pointer;
 }
 
+.darkMode-delete-comment {
+  background-color: inherit;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
+  border: 0px;
+  cursor: pointer;
+  color: white;
+}
 .dark-mode-time {
   color: black;
 }
