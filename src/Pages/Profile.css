@@ -28,6 +28,7 @@
   justify-content: space-evenly;
   flex-direction: column;
   flex: 2;
+  gap: 2px;
 
 }
 
@@ -47,15 +48,19 @@
   display: flex;
   flex-direction: row;
   width: 75%;
-  flex-grow: 1;
-  align-items: center;
+  gap: 10px;
+  align-items: flex-end;
+
+
 }
 
 .name-container {
   display: flex;
-  width: 50%;
+  width: auto;
   justify-content: flex-start;
   font-size: 20px;
+  align-items: flex-end;
+  margin-right: 14px;
 }
 
 .logoutprofile-div,
@@ -64,7 +69,7 @@
   height: 100%;
   width: 25%;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .editprofile-button,
@@ -73,8 +78,25 @@
   border: none;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  border-radius: 6px;
+
+
+
 }
 
+.editprofile-button:hover,
+.logoutprofile-button:hover {
+  background-color: #f9a53f;
+
+  background-size: 50.5% calc(var(--_p, 0%) / 2 + 0.5%);
+  transition:
+    background-size 0.4s,
+    background-position 0s 0.4s;
+  --_p: 100%;
+}
 
 
 .Follwer-FollowingDisplay {
@@ -264,10 +286,12 @@ label[for="imageUploads"] {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
 }
 
 .profilePostEmptyContainer {
   display: flex;
+
   justify-content: center;
   align-items: center;
   height: 15%;
