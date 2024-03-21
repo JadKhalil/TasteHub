@@ -309,41 +309,50 @@ function Profile() {
           ) : null}
 
       
+      <div>
+        <div>
+          {<CreateButton></CreateButton>}
+        </div>
+        <div className="profile-grid-container" >
       
-
-      <div className="profile-grid-container" >
+        
       {isLikedPostIDListLoaded && personalPosts.map((post)=> { 
-              // Posts are rendered only after the likedPostIDList and listOfFollowedEmails are loaded to ensure 
-              // the heart icon is filled/empty depending on whether the user has previous liked the post
-              // and to ensure the follow/unfollow button is shown depending on whether the user has previously followed the user
-                return (
-                  <>
+            // Posts are rendered only after the likedPostIDList and listOfFollowedEmails are loaded to ensure 
+            // the heart icon is filled/empty depending on whether the user has previous liked the post
+            // and to ensure the follow/unfollow button is shown depending on whether the user has previously followed the user
+              return (
+                <>
+                  <div>
                     <div>
-                      <div>
-                        {<CreateButton></CreateButton>}
-                      </div>
-                      <div>
-                      <PostElement 
-                    postObject={post} 
-                    userEmail={user?.userEmail}
-                    userName={user?.userName} 
-                    isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
-                    isGridLayout={true}
-                    deletePost={deletePost}
-                    isPosterFollowedParam={false}
-                    key={post?.postID}
-                    />
-                      </div>
+                      
                     </div>
-
-                    
-                  </>
+                      <div>
+                        <PostElement 
+                        postObject={post} 
+                        userEmail={user?.userEmail}
+                        userName={user?.userName} 
+                        isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
+                        isGridLayout={true}
+                        deletePost={deletePost}
+                        isPosterFollowedParam={false}
+                        key={post?.postID}
+                        />
+                      </div>
+                  </div>
 
                   
-                  
-                )
+                </>
+
+                
+                
+              )
       })}
+    </div>
+
       </div>
+
+
+     
     </div>
     )
   );
