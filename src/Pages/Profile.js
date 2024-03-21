@@ -20,13 +20,15 @@ import CreateButton from "./CreateButton";
  */
 function Profile() {
   const [ personalPosts, setPersonalPosts ] = useState([]); // list of all personal posts
-  const { user } = useUser(); // Details of signed in user including their email
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user"))); // current loged-in user
+  const { user: contextUser, login, logout } = useUser();
   const [ likedPostIDList, setLikedPostIDList ] = useState([]); // list of IDs of posts the user has liked
-
-  const [Followers, setFollowers] = useState([]); // list of all Followers
-  const [Following, setFollowing] = useState([]); // lost of all Following
-
   const [isEditMode, setIsEditMode] = useState(false); // use State for edit mode
+
+  // use state for the selected Tab
+  const [selectedTab, setSelectedTab] = useState('posts');
+  const navigate = useNavigate();
+
   
 
   // basic function calls when we are checking button click
@@ -35,9 +37,6 @@ function Profile() {
   }
   
   
-  
-  
-
   /* 
    * initially set to false as the list of likedPostIDs take time to load from the database.
    * This hook is here to ensure the post is loaded AFTER all the liked post IDs are found in the database.
@@ -146,84 +145,56 @@ function Profile() {
     };
 
 
-    const getFollowers = async() => {
-      try {
-        // Make sure to use template literals correctly to inject userEmail
-        const res = await fetch(
-          `https://kmjp6z5oboueqdiz5yaolqkm3a0lulye.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            }
-        );
-  
-        if (res.status === 200) {
-            const followers = await res.json(); 
-            console.log("successfully retrieved followers");
-            setFollowers([...followers?.followList?.Items]); // Update followers, fallback to empty array if undefined
-        } else {
-            // Handle other statuses or set followers to empty if the request fails
-            console.error("Failed to fetch followers", res.status);
-            setFollowers([]);
+
+
+    /**
+     * Calls the 'get_user_profile' lambda function to get the post from the database.
+     * Fetches the user profile from the database
+     */
+    const loadUserInfo = async () => {
+      const res = await fetch(
+        `https://ue2qthlxc7fiit4ocgnu7ko4d40sndti.lambda-url.ca-central-1.on.aws?userEmail=${user.userEmail}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
         }
-    } catch (error) {
-        // Handle any errors that occurred during the fetch operation
-        console.error("Error fetching followers:", error);
-        setFollowers([]);
+      );
+      const jsonRes = await res.json();
+      if (res.status === 200)
+      {
+        const userInfo = jsonRes?.userInfo?.Items[0];
+        const existingUserData = {
+          ...userInfo
+        };
+  
+        setUser(existingUserData);
+        localStorage.setItem("user", JSON.stringify(existingUserData));
+      }
+      else
+      {
+        window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
+      }
+
     }
-  
-  
-    };
-  
-    const getFollowing = async() => {
-      try {
-        // Make sure to use template literals correctly to inject userEmail
-        const res = await fetch(
-          `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            }
-        );
-  
-        if (res.status === 200) {
-            const following = await res.json(); 
-            console.log("successfully retrieved following");
-            setFollowing([...following?.followList?.Items]); // Update followers, fallback to empty array if undefined
-        } else {
-            // Handle other statuses or set followers to empty if the request fails
-            console.error("Failed to fetch following", res.status);
-            setFollowing([]);
-        }
-    } catch (error) {
-        // Handle any errors that occurred during the fetch operation
-        console.error("Error fetching following:", error);
-        setFollowing([]);
-    }
-    };
 
 
-
-  // When the user data is fetched, the loadLikedPostIDList, loadListOfFollowing, and loadPersonalPosts functions are called
+  // When the user data is fetched, the loadLikedPostIDList, loadPersonalPosts functions are called
   // This is to ensure that the posts are rendered after all the liked post is returned
   useEffect(() => {
     if (user) {
       loadLikedPostIDList();
       loadPersonalPosts();
-      getFollowers();
-      getFollowing();
     }
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
-  const { user: contextUser, login, logout } = useUser();
-
-  const navigate = useNavigate();
-  const [Curruser, setUser] = useState(JSON.parse(localStorage.getItem("user"))); // current loged-in user
+  // When the page is refreshed, the loadUserInfo functions are called
+  // This is to ensure that the most updated user information is fetched upon refresh
+  useEffect(()=> {
+    loadUserInfo();
+  }, []) // The dependency array ensures that this effect runs whenever the page refreshes
 
   const logOut = () => {
     googleLogout();
@@ -234,11 +205,6 @@ function Profile() {
     setUser(null);
     navigate("/");
   };
-
-
-
-  // use state for the selected Tab
-  const [selectedTab, setSelectedTab] = useState('posts');
 
   return (
     user && (
