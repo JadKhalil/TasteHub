@@ -171,16 +171,16 @@ function Profile() {
             </div>  
 
             <div className="Follwer-FollowingDisplay">
-              <div className="profilePosts"> Posts</div>
-              <div className="profilefollowers"> Followers</div>
-              <div className="profilefollowing"> Following</div>
+              <div className="profilePosts">{user.numberOfPosts} Posts</div>
+              <div className="profilefollowers">{user.numberOfFollowers} Followers</div>
+              <div className="profilefollowing">{user.numberOfFollowing} Following</div>
             </div>
 
          
 
             <div className="bio-information-container">
               <p>
-                Make Bio dynamic
+                {user.bio}
               </p>
             </div>
         </div>
