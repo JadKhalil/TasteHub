@@ -15,9 +15,11 @@ const CreatePostOverlay = ({ setPostCreate }) => {
   const [prepTime, setPrepTime] = useState();
   const [description, setDescription] = useState();
   const [category, setCategory] = useState();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     // Add lambda url
+    setIsSubmitting(true);
     e.preventDefault(); // Prevents the popup page from closing before event is handled
     const dataToSubmit = new FormData();
     dataToSubmit.append("userEmail", email);
@@ -32,14 +34,20 @@ const CreatePostOverlay = ({ setPostCreate }) => {
     dataToSubmit.append("prepTime", prepTime);
     dataToSubmit.append("recipeName", recipeName);
 
-    const promise = await fetch(
-      "https://w6twud32h2wkjxtnjdml6vlbq40hrtgx.lambda-url.ca-central-1.on.aws/", // Lambda Function URL (needs to be hard coded)
-      {
-        method: "POST",
-        body: dataToSubmit,
+    try {
+      const response = await fetch(
+        "https://w6twud32h2wkjxtnjdml6vlbq40hrtgx.lambda-url.ca-central-1.on.aws/",
+        {
+          method: "POST",
+          body: dataToSubmit,
+        }
+      );
+      if (response.ok) {
+        setPostCreate(false); // Close the overlay
       }
-    );
-    const jsonPromise = await promise.json(); // Used to access the body of the returned Json
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   useEffect(() => {
@@ -105,7 +113,12 @@ const CreatePostOverlay = ({ setPostCreate }) => {
                 />
               </div>
               <div className="create-post-submit-button-container">
-                <input type="submit" id="submit-button" value="Create Post" />
+                <input
+                  type="submit"
+                  id="submit-button"
+                  value="Create Post"
+                  disabled={isSubmitting}
+                />
               </div>
             </form>
             <div className="createPostClose-div">
