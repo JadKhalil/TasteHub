@@ -239,6 +239,16 @@
   border: 0px;
 }
 
+.darkMode-comment-input {
+  margin-top: 0.4rem;
+  padding: 5px;
+  background-color: inherit;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
+  border: 0px;
+  color: white;
+}
+
 .PE-comment-text-submit-button {
   margin-top: 0.4rem;
   background-color: inherit;
@@ -246,6 +256,16 @@
   box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
   border: 0px;
   cursor: pointer;
+}
+
+.darkMode-submit-comment {
+  margin-top: 0.4rem;
+  background-color: inherit;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
+  border: 0px;
+  cursor: pointer;
+  color: white;
 }
 
 .PE-comment-delete-box {

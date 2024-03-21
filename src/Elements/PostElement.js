@@ -493,7 +493,7 @@ const PostElement = ({
                 {userName}:
               </div> */}
               <input
-                className="PE-comment-text-input"
+                className={isDarkMode ? "darkMode-comment-input" : "PE-comment-text-input"}
                 type="text"
                 placeholder="Add a comment..."
                 value={newComment}
@@ -502,7 +502,7 @@ const PostElement = ({
               />
               {newComment !== "" ? (
                 <button
-                  className="PE-comment-text-submit-button"
+                  className={isDarkMode? "darkMode-submit-comment": "PE-comment-text-submit-button"}
                   onClick={() => handleAddComment()}
                 >
                   Post New Comment

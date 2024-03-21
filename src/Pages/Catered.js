@@ -171,7 +171,7 @@ function Catered() {
                 <CreateButton></CreateButton>
               </div>
               <h1 className="global-header-label-h1">Catered</h1>
-              <div className="emptyspace">
+              <div className="addPostButton">
                 <CreateButton></CreateButton>
               </div>
             </div>
