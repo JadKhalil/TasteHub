@@ -62,7 +62,7 @@ function Settings() {
         {
           optionType: "EditText",
           optionName: "Name",
-          optionValue: user.name,
+          optionValue: user.userName,
           optionNewValue: "",
         },
         {

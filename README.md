@@ -41,6 +41,7 @@ Do these when the main functionality is finished
 - lambda_url_get_following = "https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/"
 - lambda_url_get_likes_on_post = "https://jvvn5kge6vo2kd5ovsafif2fyi0mfusn.lambda-url.ca-central-1.on.aws/"
 - lambda_url_get_personal_posts = "https://2pkenopomdasergcizbgniu25y0prrhp.lambda-url.ca-central-1.on.aws/"
+- lambda_url_get_user_profile = "https://ue2qthlxc7fiit4ocgnu7ko4d40sndti.lambda-url.ca-central-1.on.aws/"
 - lambda_url_get_users_liked_posts = "https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws/"
 - lambda_url_like_post = "https://en46iryruu4einvaoz24oq5lie0ifwvy.lambda-url.ca-central-1.on.aws/"
 - lambda_url_unfollow_user = "https://jphbbhraofx2bnza766vsdujtq0bfdla.lambda-url.ca-central-1.on.aws/"

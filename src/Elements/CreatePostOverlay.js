@@ -45,8 +45,8 @@ const CreatePostOverlay = ({setPostCreate}) => {
     useEffect(() => {
         // Check if user is not null before accessing email property
         if (user) {
-          setEmail(user?.email);
-          setUsername(user?.name);
+          setEmail(user?.userEmail);
+          setUsername(user?.userName);
         }
         // The dependency array ensures that this effect runs whenever user changes
       }, [user]);

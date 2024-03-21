@@ -84,7 +84,7 @@ function Search() {
    */
   const loadLikedPostIDList = async () => {
     const res = await fetch(
-      `https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${user.email}`, // Lambda Function URL (needs to be hard coded)
+      `https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${user.userEmail}`, // Lambda Function URL (needs to be hard coded)
       {
         method: "GET",
         headers: {
@@ -107,9 +107,9 @@ function Search() {
    * Fills the followedUserEmailList with the returned data.
    * Sets the isFollowedUserEmailListLoaded hook to true.
    */
-  const loadListOfFollowing = async () => {
-    const res = await fetch(
-      `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/?userEmail=${user.email}`,
+    const loadListOfFollowing = async () => {
+      const res = await fetch(
+          `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/?userEmail=${user.userEmail}`,
       {
         method: "GET",
         headers: {
@@ -195,31 +195,20 @@ function Search() {
           </div>
         </div>
 
-        <div className="search-grid-container">
-          {isLikedPostIDListLoaded &&
-            isFollowedUserEmailListLoaded &&
-            filteredPosts.map((post) => {
-              // Posts are rendered only after the likedPostIDList is loaded to ensure the heart icon is filled/empty depending on
-              // whether the user has previous liked the post
-              return (
-                <PostElement
-                  postObject={post}
-                  userEmail={user?.email}
-                  userName={user?.name}
-                  isPostLikedParam={likedPostIDList.some(
-                    (likedPost) => likedPost.postID === post?.postID
-                  )}
-                  isGridLayout={true}
-                  deletePost={deletePost}
-                  isPosterFollowedParam={followedUserEmailList.some(
-                    (followed) =>
-                      followed.userEmailOfFollowee === post?.userEmail
-                  )}
-                  key={post?.postID}
-                />
-              );
-            })}
-        </div>
+      <div className="search-grid-container" >
+        {isLikedPostIDListLoaded && isFollowedUserEmailListLoaded && filteredPosts.map((post)=> {
+            // Posts are rendered only after the likedPostIDList is loaded to ensure the heart icon is filled/empty depending on
+            // whether the user has previous liked the post
+            return (<PostElement 
+                    postObject={post} 
+                    userEmail={user?.userEmail} 
+                    userName={user?.userName}
+                    isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
+                    isGridLayout={true}
+                    deletePost={deletePost}
+                    isPosterFollowedParam={followedUserEmailList.some(followed => followed.userEmailOfFollowee === post?.userEmail)}
+                    key={post?.postID}/>)
+        })}
       </div>
     )
   );
