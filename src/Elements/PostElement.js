@@ -91,9 +91,7 @@ const PostElement = ({
         }
       );
       console.log("follow request called");
-      if (res.ok) {
-        window.alert(`Followed ${userEmailOfFollowee} successfully`);
-      } else {
+      if (!res.ok) {
         // Error handling for unsuccessful deletion
         window.alert(`Failed to follow ${userEmailOfFollowee}`);
       }
@@ -118,9 +116,7 @@ const PostElement = ({
         }
       );
       console.log("unfollow request called");
-      if (res.ok) {
-        window.alert(`Unfollowed ${userEmailOfFollowee} successfully`);
-      } else {
+      if (!res.ok) {
         // Error handling for unsuccessful deletion
         window.alert(`Failed to unfollow ${userEmailOfFollowee}`);
       }
