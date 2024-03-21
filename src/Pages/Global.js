@@ -3,75 +3,71 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PostElement from "../Elements/PostElement";
 import { useUser } from "../UserContext";
 import "./Global.css";
+import CreateButton from "./CreateButton";
 
 /**
  * JSX Component for the global page.
- * 
+ *
  * Loads all posts in a scrollable layout
- * 
+ *
  * @returns {JSX}
  */
 function Global() {
-  const [ allPosts, setAllPosts ] = useState([]); // list of all posts
+  const [allPosts, setAllPosts] = useState([]); // list of all posts
   const { user } = useUser(); // Details of signed in user including their email
-  const [ likedPostIDList, setLikedPostIDList ] = useState([]); // list of IDs of posts the user has liked
-  const [ followedUserEmailList, setFollowedUserEmailList ] = useState([]); // list of email of other users the user follows
+  const [likedPostIDList, setLikedPostIDList] = useState([]); // list of IDs of posts the user has liked
+  const [followedUserEmailList, setFollowedUserEmailList] = useState([]); // list of email of other users the user follows
 
-  /* 
+  /*
    * initially set to false as the list of likedPostIDs take time to load from the database.
    * This hook is here to ensure the post is loaded AFTER all the liked post IDs are found in the database.
    * Without this hook, there may be bugs where heart icon of the rendered post is hollow despite the fact that the user has previously
-   * liked the post. 
-   */ 
-  const [isLikedPostIDListLoaded, setIsLikedPostIDListLoaded ] = useState(false); 
+   * liked the post.
+   */
+  const [isLikedPostIDListLoaded, setIsLikedPostIDListLoaded] = useState(false);
 
-  /* 
+  /*
    * initially set to false as the list of followedUserEmails take time to load from the database.
    * This hook is here to ensure the post is loaded AFTER all the followed emails are found in the database.
    * Without this hook, there may be bugs where follow button of the rendered post says "follow" despite the fact that the user has previously
    * followed the user
-   */ 
-  const [isFollowedUserEmailListLoaded, setIsFollowedUserEmailListLoaded ] = useState(false); 
+   */
+  const [isFollowedUserEmailListLoaded, setIsFollowedUserEmailListLoaded] =
+    useState(false);
 
-  
-  
   /**
    * Calls the 'get_all_posts' lambda function to fetch all the posts in the application.
    * Sorts the returned data based on the date posted and fills the allPosts array with the sorted data.
    */
-  const loadAllPosts = async() => {
+  const loadAllPosts = async () => {
     const res = await fetch(
       "https://3l4lzvgaso73rkupogicrcwunm0voagl.lambda-url.ca-central-1.on.aws/", // Lambda Function URL (needs to be hard coded)
       {
         method: "GET",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
       }
     );
     console.log("load all posts request called");
     const jsonRes = await res.json();
-    if (res.status === 200)
-    {
+    if (res.status === 200) {
       // the post list items are ordered by submit time
       jsonRes?.postList?.Items?.sort((a, b) => {
-        if (a['datePosted'] > b['datePosted']) {
+        if (a["datePosted"] > b["datePosted"]) {
           return -1;
         }
-        if (a['datePosted'] < b['datePosted']) {
+        if (a["datePosted"] < b["datePosted"]) {
           return 1;
         }
         return 0;
       });
 
       setAllPosts([...jsonRes?.postList?.Items]);
-    }
-    else
-    {
+    } else {
       window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
     }
-  }
-
+  };
 
   /**
    * Calls the 'get_user_liked_posts' lambda function to fetch the IDs of all the posts the user has previously liked.
@@ -82,24 +78,21 @@ function Global() {
     const res = await fetch(
       `https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${user.userEmail}`, // Lambda Function URL (needs to be hard coded)
       {
-          method: "GET",
-          headers: {
-              "Content-Type": "application/json"
-          },
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
     console.log("load liked post id request called");
     const jsonRes = await res.json();
-    if (res.status === 200)
-    {
+    if (res.status === 200) {
       setLikedPostIDList([...jsonRes?.likeList?.Items]);
       setIsLikedPostIDListLoaded(true);
-    }
-    else
-    {
+    } else {
       window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
     }
-  }
+  };
 
   /**
    * Calls the 'get_following' lambda function to fetch the emails of all the users the user has previously followed.
@@ -108,23 +101,20 @@ function Global() {
    */
   const loadListOfFollowing = async () => {
     const res = await fetch(
-        `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/?userEmail=${user.userEmail}`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            },
-        }
+      `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/?userEmail=${user.userEmail}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     console.log("load list of following request called");
     const jsonRes = await res.json();
-    if (res.status === 200)
-    {
+    if (res.status === 200) {
       setFollowedUserEmailList([...jsonRes?.followList?.Items]);
       setIsFollowedUserEmailListLoaded(true);
-    }
-    else
-    {
+    } else {
       window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
     }
   };
@@ -132,7 +122,7 @@ function Global() {
   /**
    * Calls the 'delete_post' lambda function to remove the post from the database.
    * Removes the deleted post from allPosts list
-   * 
+   *
    * @param {String} postID           postID of the post
    * @param {String} posterUserEmail  userEmail of the poster
    */
@@ -143,8 +133,8 @@ function Global() {
         {
           method: "DELETE",
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         }
       );
       console.log("delete request called");
@@ -174,39 +164,50 @@ function Global() {
 
   return (
     user && (
-    <div className="global-big-box">
-      <div className="global-box">
+      <div className="global-big-box">
+        <div className="global-box">
+          <div className="global-header-big-box">
+            <div className="global-header-box">
+              <div className="emptyspace">
+                <CreateButton></CreateButton>
+              </div>
+              <h1 className="global-header-label-h1">Global</h1>
+              <div className="addPostButton">
+                <CreateButton></CreateButton>
+              </div>
+            </div>
+          </div>
 
-        <div className="global-header-big-box">
-          <div className="global-header-box">
-            <h1 className="global-header-label-h1">Global</h1>
+          <div className="global-post-list-big-box">
+            <div className="global-post-list-box">
+              {isLikedPostIDListLoaded &&
+                isFollowedUserEmailListLoaded &&
+                allPosts.map((post) => {
+                  // Posts are rendered only after the likedPostIDList and followedUserEmailList are loaded to ensure
+                  // the heart icon is filled/empty depending on whether the user has previous liked the post
+                  // and to ensure the follow/unfollow button is shown depending on whether the user has previously followed the user
+                  return (
+                    <PostElement
+                      postObject={post}
+                      userEmail={user?.userEmail}
+                      userName={user?.userName}
+                      isPostLikedParam={likedPostIDList.some(
+                        (likedPost) => likedPost.postID === post?.postID
+                      )}
+                      isGridLayout={false}
+                      deletePost={deletePost}
+                      isPosterFollowedParam={followedUserEmailList.some(
+                        (followed) =>
+                          followed.userEmailOfFollowee === post?.userEmail
+                      )}
+                      key={post?.postID}
+                    />
+                  );
+                })}
+            </div>
           </div>
         </div>
-
-        <div className="global-post-list-big-box">
-          <div className="global-post-list-box">
-            {isLikedPostIDListLoaded && isFollowedUserEmailListLoaded && allPosts.map((post)=> { 
-              // Posts are rendered only after the likedPostIDList and followedUserEmailList are loaded to ensure 
-              // the heart icon is filled/empty depending on whether the user has previous liked the post
-              // and to ensure the follow/unfollow button is shown depending on whether the user has previously followed the user
-                return (
-                  <PostElement 
-                    postObject={post} 
-                    userEmail={user?.userEmail} 
-                    userName={user?.userName}
-                    isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
-                    isGridLayout={false}
-                    deletePost={deletePost}
-                    isPosterFollowedParam={followedUserEmailList.some(followed => followed.userEmailOfFollowee === post?.userEmail)}
-                    key={post?.postID}
-                  />
-                )
-            })}
-          </div>
-        </div>
-
       </div>
-    </div>
     )
   );
 }
