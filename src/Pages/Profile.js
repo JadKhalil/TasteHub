@@ -5,10 +5,11 @@ import { useUser } from "../UserContext";
 import "./Profile.css";
 import PostElement from "../Elements/PostElement";
 import ProfileTabs from "./ProfileTabs";
-
+import { useNavigate } from "react-router-dom";
 import Posts from "./ProfileRenderingPages/Posts";
 import Saved from "./ProfileRenderingPages/Saved";
 import Taged from "./ProfileRenderingPages/Taged";
+import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 /**
  * JSX Component for the Profile page.
  * 
@@ -20,6 +21,9 @@ function Profile() {
   const [ personalPosts, setPersonalPosts ] = useState([]); // list of all personal posts
   const { user } = useUser(); // Details of signed in user including their email
   const [ likedPostIDList, setLikedPostIDList ] = useState([]); // list of IDs of posts the user has liked
+
+  const [Followers, setFollowers] = useState([]); // list of all Followers
+  const [Following, setFollowing] = useState([]); // lost of all Following
 
   /* 
    * initially set to false as the list of likedPostIDs take time to load from the database.
@@ -128,17 +132,97 @@ function Profile() {
       }
     };
 
+
+    const getFollowers = async() => {
+      try {
+        // Make sure to use template literals correctly to inject userEmail
+        const res = await fetch(
+          `https://kmjp6z5oboueqdiz5yaolqkm3a0lulye.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }
+        );
+  
+        if (res.status === 200) {
+            const followers = await res.json(); 
+            console.log("successfully retrieved followers");
+            setFollowers([...followers?.followList?.Items]); // Update followers, fallback to empty array if undefined
+        } else {
+            // Handle other statuses or set followers to empty if the request fails
+            console.error("Failed to fetch followers", res.status);
+            setFollowers([]);
+        }
+    } catch (error) {
+        // Handle any errors that occurred during the fetch operation
+        console.error("Error fetching followers:", error);
+        setFollowers([]);
+    }
+  
+  
+    };
+  
+    const getFollowing = async() => {
+      try {
+        // Make sure to use template literals correctly to inject userEmail
+        const res = await fetch(
+          `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }
+        );
+  
+        if (res.status === 200) {
+            const following = await res.json(); 
+            console.log("successfully retrieved following");
+            setFollowing([...following?.followList?.Items]); // Update followers, fallback to empty array if undefined
+        } else {
+            // Handle other statuses or set followers to empty if the request fails
+            console.error("Failed to fetch following", res.status);
+            setFollowing([]);
+        }
+    } catch (error) {
+        // Handle any errors that occurred during the fetch operation
+        console.error("Error fetching following:", error);
+        setFollowing([]);
+    }
+    };
+
+
+
   // When the user data is fetched, the loadLikedPostIDList, loadListOfFollowing, and loadPersonalPosts functions are called
   // This is to ensure that the posts are rendered after all the liked post is returned
   useEffect(() => {
     if (user) {
       loadLikedPostIDList();
       loadPersonalPosts();
+      getFollowers();
+      getFollowing();
     }
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
-  
+  const { user: contextUser, login, logout } = useUser();
+
+  const navigate = useNavigate();
+  const [Curruser, setUser] = useState(JSON.parse(localStorage.getItem("user"))); // current loged-in user
+
+  const logOut = () => {
+    googleLogout();
+    localStorage.removeItem("user");
+    // Remove the settings from localStorage upon logout
+    localStorage.removeItem("settings");
+    logout();
+    setUser(null);
+    navigate("/");
+  };
+
+
 
   // use state for the selected Tab
   const [selectedTab, setSelectedTab] = useState('posts');
@@ -164,23 +248,24 @@ function Profile() {
               </div>
 
               <div className="logoutprofile-div"> 
-                <button className="logoutprofile-button">
+                <button className="logoutprofile-button"
+                onClick={logOut}>
                   Log Out
                 </button>
               </div>
             </div>  
 
             <div className="Follwer-FollowingDisplay">
-              <div className="profilePosts"> Posts</div>
-              <div className="profilefollowers"> Followers</div>
-              <div className="profilefollowing"> Following</div>
+            <div className="profilePosts"> <b>{personalPosts.length}</b> Posts</div>
+              <div className="profilefollowers"><b>{Followers.length}</b> Followers</div>
+              <div className="profilefollowing"> <b>{Following.length}</b> Following</div>
             </div>
 
          
 
             <div className="bio-information-container">
               <p>
-                Make Bio dynamic
+                {user.bio}
               </p>
             </div>
         </div>
@@ -205,13 +290,6 @@ function Profile() {
 
       </div>
       
-      {/* <div className="posts-container">
-          
-        </div>
-
-        <div className="createposts-overlay-container">
-          <CreatePostOverlay/>
-        </div> */}
 
       <div className="profile-grid-container" >
       {isLikedPostIDListLoaded && personalPosts.map((post)=> { 
