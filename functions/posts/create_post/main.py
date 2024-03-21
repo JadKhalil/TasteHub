@@ -9,11 +9,13 @@ import os
 
 
 dynamodb_resource = boto3.resource("dynamodb")
-users_table = dynamodb_resource.Table("tastehub-posts")
+posts_table = dynamodb_resource.Table("tastehub-posts")
+users_table = dynamodb_resource.Table("tastehub-users")
 client = boto3.client('ssm')
 
 '''
-This function creates a new post adding the info into the Tastehub-posts table.
+This function creates a new post adding the post info into the Tastehub-posts table,
+and increments the numberOfPosts attribute in user table.
 The body of the POST request must be in a binary format using FormData().
 The elements in FormData must be appended in the following order:
 1. userEmail (String)
@@ -65,7 +67,7 @@ def lambda_handler(event, context):
     cloudImage = upload_to_cloud(imageFile)
     
     try:
-        users_table.put_item(Item={'userEmail': userEmail,
+        posts_table.put_item(Item={'userEmail': userEmail,
                             'userName': userName,
                             'postID': postID,
                             'category': category,
@@ -77,6 +79,14 @@ def lambda_handler(event, context):
                             'recipeName':recipeName,
                             'imageLink': cloudImage["secure_url"]
                             })
+        
+        users_table.update_item(Key={
+                "userEmail": userEmail
+            },
+            UpdateExpression="SET numberOfPosts = numberOfPosts + :value",
+            ExpressionAttributeValues={":value": 1},
+            ReturnValues="UPDATED_NEW"
+        )
 
         return {
             "statusCode": 200,
