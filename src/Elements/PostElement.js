@@ -214,7 +214,7 @@ const PostElement = ({
           <div className="PE-comment-delete-box">
             <button
               onClick={() => handleRemoveComment(comment)}
-              className="PE-comment-delete-button"
+              className={isDarkMode? "darkMode-delete-comment": "PE-comment-delete-button"}
             >
               Delete
             </button>
