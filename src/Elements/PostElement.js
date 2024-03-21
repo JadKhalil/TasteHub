@@ -20,7 +20,7 @@ import { useDarkMode } from "../Pages/DarkModeContext";
  * @param {String} userEmail            Email of the user browsing the post, not the user who posted this recipe. It's an important distinction
  *                                      userEmail parameter is needed to like and comment on the post.
  *
- * @param {String} usernName             User name of the user browsing the post, similar to userEmail.
+ * @param {String} userName             User name of the user browsing the post, similar to userEmail.
  *
  * @param {Boolean} isPostLikedParam    True or false depending on whether the user liked the post or not.
  *
@@ -104,6 +104,8 @@ const PostElement = ({
   };
 
   const unfollow = async (userEmailOfFollower, userEmailOfFollowee) => {
+    console.log(userEmailOfFollower);
+    console.log(userEmailOfFollowee);
     setIsPosterFollowed(false);
     try {
       const res = await fetch(
@@ -212,7 +214,7 @@ const PostElement = ({
           <div className="PE-comment-delete-box">
             <button
               onClick={() => handleRemoveComment(comment)}
-              className="PE-comment-delete-button"
+              className={isDarkMode? "darkMode-delete-comment": "PE-comment-delete-button"}
             >
               Delete
             </button>
@@ -491,7 +493,7 @@ const PostElement = ({
                 {userName}:
               </div> */}
               <input
-                className="PE-comment-text-input"
+                className={isDarkMode ? "darkMode-comment-input" : "PE-comment-text-input"}
                 type="text"
                 placeholder="Add a comment..."
                 value={newComment}
@@ -500,7 +502,7 @@ const PostElement = ({
               />
               {newComment !== "" ? (
                 <button
-                  className="PE-comment-text-submit-button"
+                  className={isDarkMode? "darkMode-submit-comment": "PE-comment-text-submit-button"}
                   onClick={() => handleAddComment()}
                 >
                   Post New Comment

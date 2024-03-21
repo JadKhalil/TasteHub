@@ -24,6 +24,7 @@ The elements in FormData must be appended in the following order:
 5. numberOfFollowing (Number)
 6. creationDate (string)
 7. profile picture (image or string of URL)
+8. numberOfPosts (Number)
     const promise = await fetch(
         "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws/",
         {
@@ -49,6 +50,7 @@ def lambda_handler(event, context):
     numberOfFollowers = int(binary_data[3].decode('utf-8'))
     numberOfFollowing = int(binary_data[4].decode('utf-8'))
     creationDate = binary_data[5].decode()
+    numberOfPosts = int(binary_data[7].decode('utf-8'))
 
     # Check if profile picture is an image or a URL
     if is_image(binary_data[6]): # It's an image
@@ -70,7 +72,8 @@ def lambda_handler(event, context):
                             'numberOfFollowers': numberOfFollowers,
                             'numberOfFollowing' : numberOfFollowing,
                             'creationDate': creationDate,
-                            'image': imageURL
+                            'image': imageURL,
+                            'numberOfPosts': numberOfPosts
                             })
         return {
             "statusCode": 200,

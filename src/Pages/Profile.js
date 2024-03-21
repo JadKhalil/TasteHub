@@ -273,10 +273,9 @@ function Profile() {
             </div>  
 
             <div className="Follwer-FollowingDisplay">
-            <div className="profilePosts"> <b>{personalPosts.length}</b> Posts</div>
-              <div className="profilefollowers"><b>{Followers.length}</b> Followers</div>
-              <div className="profilefollowing"> <b>{Following.length}</b> Following</div>
-            </div>
+            <div className="profilePosts">{user.numberOfPosts} Posts</div>
+              <div className="profilefollowers">{user.numberOfFollowers} Followers</div>
+              <div className="profilefollowing">{user.numberOfFollowing} Following</div>            </div>
 
          
 

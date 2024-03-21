@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreatePostOverlay from "./../Elements/CreatePostOverlay";
-import { FaPlus } from "react-icons/fa";
-import "./CreateButton.css";
+import "./CreateButton.css"; // Import the CSS file
 
 function CreateButton() {
   const [showPostCreate, setPostCreate] = useState(false);
@@ -13,8 +12,8 @@ function CreateButton() {
 
   return (
     <>
-      <button className="create-post-button" onClick={toggleCreatePostOverlay}>
-        <FaPlus className="create-post-icon" />
+      <button className="add-btn" onClick={toggleCreatePostOverlay}>
+        +
       </button>
       {showPostCreate && <CreatePostOverlay setPostCreate={setPostCreate} />}
     </>

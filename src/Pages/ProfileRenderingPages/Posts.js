@@ -1,7 +1,6 @@
 import CreatePostOverlay from "../../Elements/CreatePostOverlay";
 import { useState } from "react";
 import { FaCamera } from "react-icons/fa";
-import CreateButton from "../CreateButton";
 
 function Posts({ posts }) {
   const [showPostCreate, setPostCreate] = useState(false);
@@ -32,7 +31,6 @@ function Posts({ posts }) {
           </button>
         </div>
 
-        
       </div>
     );
   }
