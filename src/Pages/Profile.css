@@ -283,6 +283,11 @@ label[for="imageUploads"] {
   width: 32px;
 }
 
+.profile-tab-container {
+  display: flex;
+  height: 100%;
+}
+
 .emptyProfileContainer {
   display: flex;
   flex-direction: column;
