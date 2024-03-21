@@ -47,8 +47,18 @@
 
 .global-header-box {
   display: flex;
-  flex: 1;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.emptyspace {
+  margin-left: 3em;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.addPostButton {
+  margin-right: 3em;
 }
 
 .global-header-label-h1 {
