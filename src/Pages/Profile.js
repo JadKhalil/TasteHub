@@ -35,7 +35,7 @@ function Profile() {
    */
   const loadPersonalPosts = async() => {
     const res = await fetch(
-      `https://2pkenopomdasergcizbgniu25y0prrhp.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`, // Lambda Function URL (needs to be hard coded)
+      `https://2pkenopomdasergcizbgniu25y0prrhp.lambda-url.ca-central-1.on.aws?userEmail=${user.userEmail}`, // Lambda Function URL (needs to be hard coded)
       {
         method: "GET",
         headers: {
@@ -73,7 +73,7 @@ function Profile() {
    */
   const loadLikedPostIDList = async () => {
     const res = await fetch(
-      `https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${user.email}`, // Lambda Function URL (needs to be hard coded)
+      `https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${user.userEmail}`, // Lambda Function URL (needs to be hard coded)
       {
           method: "GET",
           headers: {
@@ -149,14 +149,14 @@ function Profile() {
       
       <div className="profileHeader-container">
         <div className="profileImg">
-          <img src={user.picture}
+          <img src={user.image}
           className="imgprofile-container"/>
         </div>
 
         <div className="profileName-bio-container">
           
           <div className="profileFollower-container">
-            <div className="name-container">{user.name}</div>
+            <div className="name-container">{user.userName}</div>
               <div className="editprofile-div">
                 <button className="editprofile-button">
                   Edit profile
@@ -221,8 +221,8 @@ function Profile() {
                 return (
                   <PostElement 
                     postObject={post} 
-                    userEmail={user?.email}
-                    userName={user?.name} 
+                    userEmail={user?.userEmail}
+                    userName={user?.userName} 
                     isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
                     isGridLayout={true}
                     deletePost={deletePost}

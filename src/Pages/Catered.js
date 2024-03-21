@@ -39,7 +39,7 @@ function Catered() {
    */
   const loadCateredPosts = async () => {
     const res = await fetch(
-      `https://ncvpqlzqzobltjs6xbdwjtw2iy0whsun.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`, // Lambda Function URL (needs to be hard coded)
+      `https://ncvpqlzqzobltjs6xbdwjtw2iy0whsun.lambda-url.ca-central-1.on.aws?userEmail=${user.userEmail}`, // Lambda Function URL (needs to be hard coded)
       {
         method: "GET",
         headers: {
@@ -76,7 +76,7 @@ function Catered() {
    */
   const loadLikedPostIDList = async () => {
     const res = await fetch(
-      `https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${user.email}`, // Lambda Function URL (needs to be hard coded)
+      `https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${user.userEmail}`, // Lambda Function URL (needs to be hard coded)
       {
           method: "GET",
           headers: {
@@ -104,7 +104,7 @@ function Catered() {
    */
   const loadListOfFollowing = async () => {
     const res = await fetch(
-        `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/?userEmail=${user.email}`,
+        `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/?userEmail=${user.userEmail}`,
         {
             method: "GET",
             headers: {
@@ -187,8 +187,8 @@ function Catered() {
                 return (
                   <PostElement 
                     postObject={post} 
-                    userEmail={user?.email}
-                    userName={user?.name} 
+                    userEmail={user?.userEmail}
+                    userName={user?.userName} 
                     isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
                     isGridLayout={false}
                     deletePost={deletePost}
