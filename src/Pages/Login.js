@@ -26,7 +26,8 @@ function Login() {
     dataToSubmit.append("numberOfFollowers", 0);
     dataToSubmit.append("numberOfFollowing", 0);
     dataToSubmit.append("creationDate", creationDate);
-    dataToSubmit.append("profile picture", picture);
+    dataToSubmit.append("image", picture);
+    dataToSubmit.append("numberOfPosts", 0);
 
     const promise = await fetch(
         "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/", // Lambda Function URL (needs to be hard coded)
@@ -90,7 +91,8 @@ function Login() {
                 "numberOfFollowers": Number(0),
                 "numberOfFollowing": Number(0),
                 "creationDate": creationDate,
-                "image": picture
+                "image": picture,
+                "numberOfPosts": Number(0)
               };
 
               setUser(newUserData);
