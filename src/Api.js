@@ -189,3 +189,75 @@ export const loadPersonalPosts = async (userEmail) => {
     window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
   }
 }
+
+/**
+ * Calls the 'get_user_profile' lambda function to get the post from the database.
+ * Fetches the user profile from the database and returns it
+ * @param {String} userEmail    Email of the user
+ * @return {Object}             Returns an object of user information and the status code
+ */
+export const loadUserInfo = async (userEmail) => {
+  const res = await fetch(
+    `https://ue2qthlxc7fiit4ocgnu7ko4d40sndti.lambda-url.ca-central-1.on.aws?userEmail=${userEmail}`,
+    {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+    }
+  );
+  const jsonRes = await res.json();
+
+  if (res.status === 200) // If query is successful
+  {
+    const userInfo = jsonRes?.userInfo?.Items[0];
+    const returnVal =  { 
+      userInfo, // Return user information object
+      "status": res.status
+    };
+    console.log(returnVal);
+    return returnVal;
+  }
+  else // If user info is not in the database or query is unsuccessful
+  {
+    const returnVal =  { 
+      "userInfo": {}, // Return empty object
+      "status": res.status
+    };
+    console.log(returnVal);
+    return returnVal;
+  }
+
+}
+
+/**
+ * Calls the 'create_user_profile' lambda function to get the post from the database.
+ * Creates a new user profile in the database
+ * @param {String} userEmail          Email of the user
+ * @param {String} userName           username of the user
+ * @param {String} bio                bio of the user
+ * @param {Number} numberOfFollowers  number of followers
+ * @param {Number} numberOfFollowing  number of following
+ * @param {String} creationDate       The date and time the profile was created in a millisecond timestamp format i.e. Date.now()
+ * @param {Number} numberOfPosts      number of posts the user uploaded
+ * @param {String || file} picture    Picture file or the image url
+ */
+export const createUserProfile = async (email, userName, bio, numberOfFollowers, numberOfFollowing, creationDate, picture, numberOfPosts) => {
+  const dataToSubmit = new FormData();
+  dataToSubmit.append("userEmail", email);
+  dataToSubmit.append("userName", userName);
+  dataToSubmit.append("bio", bio);
+  dataToSubmit.append("numberOfFollowers", Number(numberOfFollowers));
+  dataToSubmit.append("numberOfFollowing", Number(numberOfFollowing));
+  dataToSubmit.append("creationDate", creationDate);
+  dataToSubmit.append("image", picture);
+  dataToSubmit.append("numberOfPosts", Number(numberOfPosts));
+
+  const promise = await fetch(
+      "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/", // Lambda Function URL (needs to be hard coded)
+      {
+          method: "POST",
+          body: dataToSubmit,
+      }
+  );
+}

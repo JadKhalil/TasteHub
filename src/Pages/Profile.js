@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from "react";
 import { useUser } from "../UserContext";
-import {loadPersonalPosts, deletePost, loadLikedPostIDList} from "../Api";
+import {loadPersonalPosts, deletePost, loadLikedPostIDList, loadUserInfo} from "../Api";
 import "./Profile.css";
 import PostElement from "../Elements/PostElement";
 import ProfileTabs from "./ProfileTabs";
@@ -48,40 +48,6 @@ function Profile() {
   }
 
 
-
-    /**
-     * Calls the 'get_user_profile' lambda function to get the post from the database.
-     * Fetches the user profile from the database
-     */
-    const loadUserInfo = async () => {
-      const res = await fetch(
-        `https://ue2qthlxc7fiit4ocgnu7ko4d40sndti.lambda-url.ca-central-1.on.aws?userEmail=${user.userEmail}`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            },
-        }
-      );
-      const jsonRes = await res.json();
-      if (res.status === 200)
-      {
-        const userInfo = jsonRes?.userInfo?.Items[0];
-        const existingUserData = {
-          ...userInfo
-        };
-  
-        setUser(existingUserData);
-        localStorage.setItem("user", JSON.stringify(existingUserData));
-      }
-      else
-      {
-        window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
-      }
-
-    }
-
-
   // When the user data is fetched, the loadLikedPostIDList, loadListOfFollowing, and loadPersonalPosts functions are called
   // This is to ensure that the posts are rendered after all the liked post is returned
   useEffect(() => {
@@ -100,10 +66,18 @@ function Profile() {
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
-  // When the page is refreshed, the loadUserInfo functions are called
+  // When the page is refreshed, the loadUserInfo function is called
   // This is to ensure that the most updated user information is fetched upon refresh
   useEffect(()=> {
-    loadUserInfo();
+    const fetchData = async () => {
+      console.log(user);
+      const returnData = await loadUserInfo(user.userEmail);
+      console.log(returnData.userInfo);
+      setUser(returnData.userInfo);
+      localStorage.setItem("user", JSON.stringify(returnData.userInfo));
+    };
+  
+    fetchData();
   }, []) // The dependency array ensures that this effect runs whenever the page refreshes
 
   const logOut = () => {

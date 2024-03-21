@@ -1,6 +1,7 @@
 // Login.js
 import React, { useState, useEffect } from "react";
 import { useGoogleLogin, googleLogout } from "@react-oauth/google";
+import { createUserProfile, loadUserInfo } from "../Api";
 import axios from "axios";
 import { useUser } from "../UserContext";
 import { useNavigate } from "react-router-dom";
@@ -18,27 +19,6 @@ function Login() {
     }
   }, []);
 
-  const createUserProfile = async (email, newUserName, newBio, creationDate, picture) => {
-    const dataToSubmit = new FormData();
-    dataToSubmit.append("userEmail", email);
-    dataToSubmit.append("userName", newUserName);
-    dataToSubmit.append("bio", newBio);
-    dataToSubmit.append("numberOfFollowers", 0);
-    dataToSubmit.append("numberOfFollowing", 0);
-    dataToSubmit.append("creationDate", creationDate);
-    dataToSubmit.append("image", picture);
-    dataToSubmit.append("numberOfPosts", 0);
-
-    const promise = await fetch(
-        "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/", // Lambda Function URL (needs to be hard coded)
-        {
-            method: "POST",
-            body: dataToSubmit,
-        }
-    );
-  }
-
-
   const loginWithGoogle = useGoogleLogin({
     onSuccess: (codeResponse) => {
       axios
@@ -54,56 +34,44 @@ function Login() {
         .then((res) => {
           const { name, email, picture } = res.data; // Google login information
 
-          (async () => {
-            const profileRes = await fetch(
-              `https://ue2qthlxc7fiit4ocgnu7ko4d40sndti.lambda-url.ca-central-1.on.aws?userEmail=${email}`,
-              {
-                  method: "GET",
-                  headers: {
-                      "Content-Type": "application/json"
-                  },
+          (async() => {
+            const returnData = await loadUserInfo(email);
+              if (returnData.status === 200) {
+                const existingUserData = {
+                  ...returnData.userInfo
+                };
+                setUser(existingUserData);
+                login(existingUserData);
+                localStorage.setItem("user", JSON.stringify(existingUserData));
+                navigate("/");
               }
-            )
-            const jsonRes = await profileRes.json();
-            const profileStatus = profileRes.status;
-            const userInfo = jsonRes?.userInfo?.Items[0];
-            if (profileStatus === 200) { // Profile exists
-              const existingUserData = {
-                ...userInfo
-              };
-
-              setUser(existingUserData);
-              login(existingUserData);
-              localStorage.setItem("user", JSON.stringify(existingUserData));
-              navigate("/");
-            }
-            else if (profileStatus === 404) { // Profile doesn't exist
-              const newUserName = name + "-" + uuidv4().slice(0, 6);
-              const newBio = "No bio yet";
-              const creationDate = Date.now();
-                
-              createUserProfile(email, newUserName, newBio, creationDate, picture); // POST Request function
-
-              const newUserData = {
-                "userEmail": email,
-                "userName": newUserName,
-                "bio": newBio,
-                "numberOfFollowers": Number(0),
-                "numberOfFollowing": Number(0),
-                "creationDate": creationDate,
-                "image": picture,
-                "numberOfPosts": Number(0)
-              };
-
-              setUser(newUserData);
-              login(newUserData);
-              localStorage.setItem("user", JSON.stringify(newUserData));
-              navigate("/");
-            }
-            else { // Other error
-              window.alert("Error with logging in");
-            }
-          })()
+              else if (returnData.status === 404) { // Profile doesn't exist
+                const newUserName = name + "-" + uuidv4().slice(0, 6);
+                const newBio = "No bio yet";
+                const creationDate = Date.now();
+                  
+                createUserProfile(email, newUserName, newBio, 0, 0, creationDate, picture, 0); // POST Request function
+  
+                const newUserData = {
+                  "userEmail": email,
+                  "userName": newUserName,
+                  "bio": newBio,
+                  "numberOfFollowers": Number(0),
+                  "numberOfFollowing": Number(0),
+                  "creationDate": creationDate,
+                  "image": picture,
+                  "numberOfPosts": Number(0)
+                };
+  
+                setUser(newUserData);
+                login(newUserData);
+                localStorage.setItem("user", JSON.stringify(newUserData));
+                navigate("/");
+              }
+              else {
+                window.alert("Error with logging in");
+              }
+          })();
           // Check if settings already exist in localStorage, initialize if not
           if (!localStorage.getItem("settings")) {
             const defaultSettings = {
