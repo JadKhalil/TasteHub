@@ -96,8 +96,9 @@ const CreatePostOverlay = ({ setPostCreate }) => {
                 />
               </div>
               <div className="create-post-description-container">
-                <input
-                  type="text"
+                <textarea
+                  style={{resize: "none"}}
+                  rows="10" cols="50"
                   placeholder="Description"
                   onChange={(e) => setDescription(e.target.value)}
                   required
