@@ -183,7 +183,7 @@ function Search() {
             >
               <option value="recipeName">Recipe Name</option>
               <option value="category">Category</option>
-              <option value="userEmail">User Email</option>
+              <option value="userName">Username</option>
             </select>
             <input
               type="text"
