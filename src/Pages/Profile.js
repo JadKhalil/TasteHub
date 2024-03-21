@@ -5,10 +5,12 @@ import { useUser } from "../UserContext";
 import "./Profile.css";
 import PostElement from "../Elements/PostElement";
 import ProfileTabs from "./ProfileTabs";
-
+import { useNavigate } from "react-router-dom";
 import Posts from "./ProfileRenderingPages/Posts";
 import Saved from "./ProfileRenderingPages/Saved";
 import Taged from "./ProfileRenderingPages/Taged";
+import { useGoogleLogin, googleLogout } from "@react-oauth/google";
+import CreateButton from "./CreateButton";
 /**
  * JSX Component for the Profile page.
  * 
@@ -20,6 +22,21 @@ function Profile() {
   const [ personalPosts, setPersonalPosts ] = useState([]); // list of all personal posts
   const { user } = useUser(); // Details of signed in user including their email
   const [ likedPostIDList, setLikedPostIDList ] = useState([]); // list of IDs of posts the user has liked
+
+  const [Followers, setFollowers] = useState([]); // list of all Followers
+  const [Following, setFollowing] = useState([]); // lost of all Following
+
+  const [isEditMode, setIsEditMode] = useState(false); // use State for edit mode
+  
+
+  // basic function calls when we are checking button click
+  const toggleEditMode = () => {
+    navigate('/settings');
+  }
+  
+  
+  
+  
 
   /* 
    * initially set to false as the list of likedPostIDs take time to load from the database.
@@ -128,17 +145,97 @@ function Profile() {
       }
     };
 
+
+    const getFollowers = async() => {
+      try {
+        // Make sure to use template literals correctly to inject userEmail
+        const res = await fetch(
+          `https://kmjp6z5oboueqdiz5yaolqkm3a0lulye.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }
+        );
+  
+        if (res.status === 200) {
+            const followers = await res.json(); 
+            console.log("successfully retrieved followers");
+            setFollowers([...followers?.followList?.Items]); // Update followers, fallback to empty array if undefined
+        } else {
+            // Handle other statuses or set followers to empty if the request fails
+            console.error("Failed to fetch followers", res.status);
+            setFollowers([]);
+        }
+    } catch (error) {
+        // Handle any errors that occurred during the fetch operation
+        console.error("Error fetching followers:", error);
+        setFollowers([]);
+    }
+  
+  
+    };
+  
+    const getFollowing = async() => {
+      try {
+        // Make sure to use template literals correctly to inject userEmail
+        const res = await fetch(
+          `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws?userEmail=${user.email}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }
+        );
+  
+        if (res.status === 200) {
+            const following = await res.json(); 
+            console.log("successfully retrieved following");
+            setFollowing([...following?.followList?.Items]); // Update followers, fallback to empty array if undefined
+        } else {
+            // Handle other statuses or set followers to empty if the request fails
+            console.error("Failed to fetch following", res.status);
+            setFollowing([]);
+        }
+    } catch (error) {
+        // Handle any errors that occurred during the fetch operation
+        console.error("Error fetching following:", error);
+        setFollowing([]);
+    }
+    };
+
+
+
   // When the user data is fetched, the loadLikedPostIDList, loadListOfFollowing, and loadPersonalPosts functions are called
   // This is to ensure that the posts are rendered after all the liked post is returned
   useEffect(() => {
     if (user) {
       loadLikedPostIDList();
       loadPersonalPosts();
+      getFollowers();
+      getFollowing();
     }
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
-  
+  const { user: contextUser, login, logout } = useUser();
+
+  const navigate = useNavigate();
+  const [Curruser, setUser] = useState(JSON.parse(localStorage.getItem("user"))); // current loged-in user
+
+  const logOut = () => {
+    googleLogout();
+    localStorage.removeItem("user");
+    // Remove the settings from localStorage upon logout
+    localStorage.removeItem("settings");
+    logout();
+    setUser(null);
+    navigate("/");
+  };
+
+
 
   // use state for the selected Tab
   const [selectedTab, setSelectedTab] = useState('posts');
@@ -148,33 +245,37 @@ function Profile() {
     <div className="profile-container">
       
       <div className="profileHeader-container">
+        
+        
         <div className="profileImg">
           <img src={user.image}
           className="imgprofile-container"/>
         </div>
 
+        
         <div className="profileName-bio-container">
           
           <div className="profileFollower-container">
             <div className="name-container">{user.userName}</div>
               <div className="editprofile-div">
-                <button className="editprofile-button">
+                <button className="editprofile-button"
+                  onClick={toggleEditMode}>
                   Edit profile
                 </button>
               </div>
 
               <div className="logoutprofile-div"> 
-                <button className="logoutprofile-button">
+                <button className="logoutprofile-button"
+                onClick={logOut}>
                   Log Out
                 </button>
               </div>
             </div>  
 
             <div className="Follwer-FollowingDisplay">
-              <div className="profilePosts">{user.numberOfPosts} Posts</div>
+            <div className="profilePosts">{user.numberOfPosts} Posts</div>
               <div className="profilefollowers">{user.numberOfFollowers} Followers</div>
-              <div className="profilefollowing">{user.numberOfFollowing} Following</div>
-            </div>
+              <div className="profilefollowing">{user.numberOfFollowing} Following</div>            </div>
 
          
 
@@ -183,12 +284,16 @@ function Profile() {
                 {user.bio}
               </p>
             </div>
+
+            
+
         </div>
+
+      
+
       </div>
 
       <ProfileTabs selected={selectedTab} onSelect={setSelectedTab} />
-
-      <div className="profilePosts-container">
         {selectedTab === 'posts' ? (
           <>
             <Posts posts={personalPosts}/>
@@ -203,15 +308,8 @@ function Profile() {
             </>
           ) : null}
 
-      </div>
       
-      {/* <div className="posts-container">
-          
-        </div>
-
-        <div className="createposts-overlay-container">
-          <CreatePostOverlay/>
-        </div> */}
+      
 
       <div className="profile-grid-container" >
       {isLikedPostIDListLoaded && personalPosts.map((post)=> { 
@@ -219,7 +317,13 @@ function Profile() {
               // the heart icon is filled/empty depending on whether the user has previous liked the post
               // and to ensure the follow/unfollow button is shown depending on whether the user has previously followed the user
                 return (
-                  <PostElement 
+                  <>
+                    <div>
+                      <div>
+                        {<CreateButton></CreateButton>}
+                      </div>
+                      <div>
+                      <PostElement 
                     postObject={post} 
                     userEmail={user?.userEmail}
                     userName={user?.userName} 
@@ -228,7 +332,15 @@ function Profile() {
                     deletePost={deletePost}
                     isPosterFollowedParam={false}
                     key={post?.postID}
-                  />
+                    />
+                      </div>
+                    </div>
+
+                    
+                  </>
+
+                  
+                  
                 )
       })}
       </div>

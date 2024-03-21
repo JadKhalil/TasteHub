@@ -66,6 +66,19 @@ function Settings() {
           optionNewValue: "",
         },
         {
+          optionType: "EditText",
+          optionName: "Name",
+          optionValue: user.userName,
+          optionNewValue: "",
+        },
+        {
+          optionType: "EditText",
+          optionName: "Bio",
+          optionValue: user.bio,
+          optionNewValue: "",
+        },
+
+        {
           optionType: "EditButton",
           optionName: "LogOut",
           optionAction: () => logOut(),

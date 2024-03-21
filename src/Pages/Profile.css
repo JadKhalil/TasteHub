@@ -5,17 +5,18 @@
   overflow: auto;
   width: 100%;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .profileHeader-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  flex: 1;
+
   padding: 24px;
   width: 50%;
   border-bottom: 1px solid gray;
+
 }
 
 .profileImg {
@@ -25,8 +26,11 @@
 
 .profileName-bio-container {
   display: flex;
+  justify-content: space-evenly;
   flex-direction: column;
   flex: 2;
+  gap: 2px;
+
 }
 
 .profileImg {
@@ -44,31 +48,63 @@
 .profileFollower-container {
   display: flex;
   flex-direction: row;
-  flex: 1;
-  justify-content: space-between;
+  width: 75%;
+  gap: 10px;
+  align-items: flex-end;
+
+
 }
 
 .name-container {
   display: flex;
+  width: auto;
   justify-content: flex-start;
   font-size: 20px;
-  flex: 2;
+  align-items: flex-end;
+  margin-right: 14px;
 }
 
 .logoutprofile-div,
 .editprofile-div {
-  flex: 2;
+  display: flex;
+  height: 100%;
+  width: 25%;
   justify-content: flex-start;
+  align-items: flex-end;
 }
 
-.logoutprofile-div {
-  flex: 3;
+.editprofile-button,
+.logoutprofile-button {
+  display: flex;
+  border: none;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  border-radius: 6px;
+
+
+
 }
+
+.editprofile-button:hover,
+.logoutprofile-button:hover {
+  background-color: #f9a53f;
+
+  background-size: 50.5% calc(var(--_p, 0%) / 2 + 0.5%);
+  transition:
+    background-size 0.4s,
+    background-position 0s 0.4s;
+  --_p: 100%;
+}
+
 
 .Follwer-FollowingDisplay {
   display: flex;
   flex-direction: row;
-  flex: 1;
+  align-items: center;
+  width: 75%;
 }
 
 .profilePosts {
@@ -251,10 +287,12 @@ label[for="imageUploads"] {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
 }
 
 .profilePostEmptyContainer {
   display: flex;
+
   justify-content: center;
   align-items: center;
   height: 15%;
