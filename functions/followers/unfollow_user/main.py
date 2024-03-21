@@ -45,7 +45,7 @@ def lambda_handler(event, context):
             Key={
                 "userEmail": queryParameters["userEmailOfFollower"],
             },
-            UpdateExpression="SET numberOfFollowing = numberOfFollowing :value",
+            UpdateExpression="SET numberOfFollowing = numberOfFollowing + :value",
             ExpressionAttributeValues={":value": -1},
             ReturnValues="UPDATED_NEW"
         )

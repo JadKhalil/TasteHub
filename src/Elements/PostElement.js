@@ -20,7 +20,7 @@ import { useDarkMode } from "../Pages/DarkModeContext";
  * @param {String} userEmail            Email of the user browsing the post, not the user who posted this recipe. It's an important distinction
  *                                      userEmail parameter is needed to like and comment on the post.
  *
- * @param {String} usernName             User name of the user browsing the post, similar to userEmail.
+ * @param {String} userName             User name of the user browsing the post, similar to userEmail.
  *
  * @param {Boolean} isPostLikedParam    True or false depending on whether the user liked the post or not.
  *
@@ -104,6 +104,8 @@ const PostElement = ({
   };
 
   const unfollow = async (userEmailOfFollower, userEmailOfFollowee) => {
+    console.log(userEmailOfFollower);
+    console.log(userEmailOfFollowee);
     setIsPosterFollowed(false);
     try {
       const res = await fetch(
