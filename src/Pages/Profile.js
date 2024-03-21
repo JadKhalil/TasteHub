@@ -10,6 +10,7 @@ import Posts from "./ProfileRenderingPages/Posts";
 import Saved from "./ProfileRenderingPages/Saved";
 import Taged from "./ProfileRenderingPages/Taged";
 import { useGoogleLogin, googleLogout } from "@react-oauth/google";
+import CreateButton from "./CreateButton";
 /**
  * JSX Component for the Profile page.
  * 
@@ -294,10 +295,6 @@ function Profile() {
       </div>
 
       <ProfileTabs selected={selectedTab} onSelect={setSelectedTab} />
-
-      
-
-      
         {selectedTab === 'posts' ? (
           <>
             <Posts posts={personalPosts}/>
@@ -321,7 +318,13 @@ function Profile() {
               // the heart icon is filled/empty depending on whether the user has previous liked the post
               // and to ensure the follow/unfollow button is shown depending on whether the user has previously followed the user
                 return (
-                  <PostElement 
+                  <>
+                    <div>
+                      <div>
+                        {<CreateButton></CreateButton>}
+                      </div>
+                      <div>
+                      <PostElement 
                     postObject={post} 
                     userEmail={user?.userEmail}
                     userName={user?.userName} 
@@ -330,7 +333,15 @@ function Profile() {
                     deletePost={deletePost}
                     isPosterFollowedParam={false}
                     key={post?.postID}
-                  />
+                    />
+                      </div>
+                    </div>
+
+                    
+                  </>
+
+                  
+                  
                 )
       })}
       </div>

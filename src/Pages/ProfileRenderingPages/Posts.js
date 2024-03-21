@@ -32,8 +32,7 @@ function Posts({ posts }) {
           </button>
         </div>
 
-        {showPostCreate && <CreatePostOverlay setPostCreate={setPostCreate} />}
-        {<CreateButton></CreateButton>}
+        
       </div>
     );
   }
