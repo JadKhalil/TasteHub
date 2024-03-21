@@ -194,21 +194,22 @@ function Search() {
             ></input>
           </div>
         </div>
-
-      <div className="search-grid-container" >
-        {isLikedPostIDListLoaded && isFollowedUserEmailListLoaded && filteredPosts.map((post)=> {
-            // Posts are rendered only after the likedPostIDList is loaded to ensure the heart icon is filled/empty depending on
-            // whether the user has previous liked the post
-            return (<PostElement 
-                    postObject={post} 
-                    userEmail={user?.userEmail} 
-                    userName={user?.userName}
-                    isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
-                    isGridLayout={true}
-                    deletePost={deletePost}
-                    isPosterFollowedParam={followedUserEmailList.some(followed => followed.userEmailOfFollowee === post?.userEmail)}
-                    key={post?.postID}/>)
-        })}
+      
+        <div className="search-grid-container" >
+          {isLikedPostIDListLoaded && isFollowedUserEmailListLoaded && filteredPosts.map((post)=> {
+              // Posts are rendered only after the likedPostIDList is loaded to ensure the heart icon is filled/empty depending on
+              // whether the user has previous liked the post
+              return (<PostElement 
+                      postObject={post} 
+                      userEmail={user?.userEmail} 
+                      userName={user?.userName}
+                      isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
+                      isGridLayout={true}
+                      deletePost={deletePost}
+                      isPosterFollowedParam={followedUserEmailList.some(followed => followed.userEmailOfFollowee === post?.userEmail)}
+                      key={post?.postID}/>)
+          })}
+        </div>
       </div>
     )
   );
