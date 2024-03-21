@@ -6,6 +6,7 @@ import time
 import hashlib
 import base64
 import os
+from boto3.dynamodb.conditions import Key
 
 
 dynamodb_resource = boto3.resource("dynamodb")
@@ -79,7 +80,6 @@ def lambda_handler(event, context):
                             'recipeName':recipeName,
                             'imageLink': cloudImage["secure_url"]
                             })
-        
         users_table.update_item(Key={
                 "userEmail": userEmail
             },
