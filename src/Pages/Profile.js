@@ -25,6 +25,18 @@ function Profile() {
   const [Followers, setFollowers] = useState([]); // list of all Followers
   const [Following, setFollowing] = useState([]); // lost of all Following
 
+  const [isEditMode, setIsEditMode] = useState(false); // use State for edit mode
+  
+
+  // basic function calls when we are checking button click
+  const toggleEditMode = () => {
+    navigate('/settings');
+  }
+  
+  
+  
+  
+
   /* 
    * initially set to false as the list of likedPostIDs take time to load from the database.
    * This hook is here to ensure the post is loaded AFTER all the liked post IDs are found in the database.
@@ -232,17 +244,21 @@ function Profile() {
     <div className="profile-container">
       
       <div className="profileHeader-container">
+        
+        
         <div className="profileImg">
           <img src={user.image}
           className="imgprofile-container"/>
         </div>
 
+        
         <div className="profileName-bio-container">
           
           <div className="profileFollower-container">
             <div className="name-container">{user.userName}</div>
               <div className="editprofile-div">
-                <button className="editprofile-button">
+                <button className="editprofile-button"
+                  onClick={toggleEditMode}>
                   Edit profile
                 </button>
               </div>
@@ -268,10 +284,18 @@ function Profile() {
                 {user.bio}
               </p>
             </div>
+
+            
+
         </div>
+
+      
+
       </div>
 
       <ProfileTabs selected={selectedTab} onSelect={setSelectedTab} />
+
+      
 
       <div className="profilePosts-container">
         {selectedTab === 'posts' ? (

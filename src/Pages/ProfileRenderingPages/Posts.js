@@ -32,8 +32,6 @@ function Posts({ posts }) {
           </button>
         </div>
 
-        {showPostCreate && <CreatePostOverlay setPostCreate={setPostCreate} />}
-        {<CreateButton></CreateButton>}
       </div>
     );
   }
@@ -41,6 +39,10 @@ function Posts({ posts }) {
   // If there are posts, map through them and render accordingly
   return (
     <div className="profile-posts-container">
+      <div>
+      {showPostCreate && <CreatePostOverlay setPostCreate={setPostCreate} />}
+        {<CreateButton></CreateButton>}
+      </div>
       {posts.map((post) => (
         <div key={post.id} className="post">
           {/* Replace the contents below with the actual data you want to display */}
