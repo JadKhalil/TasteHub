@@ -70,7 +70,6 @@ function Login() {
               const existingUserData = {
                 ...userInfo
               };
-              console.log(userInfo);
 
               setUser(existingUserData);
               login(existingUserData);
