@@ -5,17 +5,18 @@
   overflow: auto;
   width: 100%;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .profileHeader-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  flex: 1;
+
   padding: 24px;
   width: 50%;
   border-bottom: 1px solid gray;
+
 }
 
 .profileImg {

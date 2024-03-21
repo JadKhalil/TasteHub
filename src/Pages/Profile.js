@@ -297,7 +297,7 @@ function Profile() {
 
       
 
-      <div className="profilePosts-container">
+      
         {selectedTab === 'posts' ? (
           <>
             <Posts posts={personalPosts}/>
@@ -312,7 +312,7 @@ function Profile() {
             </>
           ) : null}
 
-      </div>
+      
       
 
       <div className="profile-grid-container" >

@@ -32,26 +32,15 @@ function Posts({ posts }) {
           </button>
         </div>
 
+        {showPostCreate && <CreatePostOverlay setPostCreate={setPostCreate} />}
+        {<CreateButton></CreateButton>}
       </div>
     );
   }
 
   // If there are posts, map through them and render accordingly
   return (
-    <div className="profile-posts-container">
-      <div>
-      {showPostCreate && <CreatePostOverlay setPostCreate={setPostCreate} />}
-        {<CreateButton></CreateButton>}
-      </div>
-      {posts.map((post) => (
-        <div key={post.id} className="post">
-          {/* Replace the contents below with the actual data you want to display */}
-          <h3>{post.title}</h3>
-          <p>{post.content}</p>
-          {/* If you have images or other content, render them here */}
-        </div>
-      ))}
-    </div>
+    <></>
   );
 }
 
