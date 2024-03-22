@@ -3,7 +3,7 @@ import {loadAllPosts, deletePost, loadLikedPostIDList, loadListOfFollowing} from
 import { useUser } from "../UserContext";
 import PostElement from "../Elements/PostElement";
 import "./Search.css";
-import { useDarkMode } from "./DarkModeContext";
+import { useDarkMode } from "../DarkModeContext";
 
 /**
  * JSX Component for the Search page.

@@ -5,7 +5,7 @@ import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 import axios from "axios";
 import { useUser } from "../UserContext";
 import { useNavigate } from "react-router-dom";
-import { useDarkMode } from "./DarkModeContext";
+import { useDarkMode } from "../DarkModeContext";
 
 function Settings() {
   const { user: contextUser, login, logout } = useUser();

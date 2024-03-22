@@ -2,7 +2,7 @@ import React from "react";
 import "./SideBar.css";
 import { Link } from "react-router-dom";
 import TH_img_01 from "./../images/TH_img_01.png";
-import { useDarkMode } from "../Pages/DarkModeContext";
+import { useDarkMode } from "../DarkModeContext";
 
 function SideBar() {
   const { isDarkMode } = useDarkMode();
