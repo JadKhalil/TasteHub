@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Settings.css";
 import Login from "./Login";
 import { useGoogleLogin, googleLogout } from "@react-oauth/google";
@@ -6,6 +6,8 @@ import axios from "axios";
 import { useUser } from "../UserContext";
 import { useNavigate } from "react-router-dom";
 import { useDarkMode } from "./DarkModeContext";
+import Popup from 'reactjs-popup';
+import { FileInput, Label } from 'flowbite-react';
 
 function Settings() {
   const { user: contextUser, login, logout } = useUser();
@@ -60,12 +62,18 @@ function Settings() {
       categoryType: "Edit",
       optionsList: [
         {
-          optionType: "EditText",
-          optionName: "Bio",
-          optionValue: user.bio,
+          optionType: "EditPicture",
+          optionName: "Profile Picture",
+          optionValue: user?.image,
           optionNewValue: "",
         },
-
+        {
+          optionType: "EditText",
+          optionName: "Bio",
+          optionValue: user?.bio,
+          optionNewValue: "",
+          optionAction: () => {},
+        },
         {
           optionType: "EditButton",
           optionName: "LogOut",
@@ -114,6 +122,10 @@ function Settings() {
     localStorage.setItem("settings", JSON.stringify(settings));
   };
 
+  // useEffect(() => {
+  //   updateSettingsInLocalStorage(settingsList)
+  // }, []);
+
   const handleCategories = (category) => {
     return (
       <div className="settings-category-big-box">
@@ -153,7 +165,40 @@ function Settings() {
       return <>{handleEditTextOptions(option, category)}</>;
     } else if (option.optionType === "EditButton") {
       return <>{handleEditButtonOptions(option, category)}</>;
+    } else if (option.optionType === "EditPicture") {
+      return <>{handleEditPictureOptions(option, category)}</>;
     }
+  };
+
+  const handleEditPictureOptions = (option, category) => {
+    return (
+      <div className="settings-edit-picture-option-box">
+        <span className="settings-edit-picture-option-span">
+          {`${option.optionName}:`}
+        </span>
+          <Popup trigger=
+              {
+                <button 
+                  className={isDarkMode ? "dark-mode-settings-edit-picture-option-button" : "settings-edit-picture-option-button"}
+                >
+                  <img 
+                    src={option.optionValue} 
+                    className={isDarkMode ? "dark-mode-settings-edit-picture-option-image" : "settings-edit-picture-option-image"}
+                  />
+                </button>
+              }
+              position="right center">
+              <label for="file-uplaude-settings-profile-pic"><strong>{'Choose a file: '}</strong></label>
+              <input
+                  type="file"
+                  id='file-uplaude-settings-profile-pic'
+                  className={isDarkMode ? "dark-mode-settings-edit-picture-option-file" : "settings-edit-picture-option-file"}
+                  onChange={() => {}}
+                  accept=".png, .jpg, .jpeg, img"
+              />
+          </Popup>
+      </div>
+    );
   };
 
   const handleEditButtonOptions = (option, category) => {
@@ -193,12 +238,7 @@ function Settings() {
           {option.optionNewValue !== "" ? (
             <button
               className="settings-edit-text-option-submit-button"
-              onClick={() =>
-                handleOnSubmitEditTextOptions(
-                  category.categoryName,
-                  option.optionName
-                )
-              }
+              onClick={() => option.optionAction()}
             >
               Submit
             </button>
@@ -238,48 +278,6 @@ function Settings() {
     );
   };
 
-  const handleOnSubmitEditTextOptions = (categoryName, optionName) => {
-    setSettingList((currentSettingsList) =>
-      currentSettingsList.map((category) => {
-        // Find the matching category
-        if (category.categoryName === categoryName) {
-          return {
-            ...category,
-            optionsList: category.optionsList.map((option) => {
-              // Find the matching option and update its optionValue
-              if (
-                option.optionName === optionName &&
-                option.optionName === "Name"
-              ) {
-                // Retrieve the user object from localStorage
-                const storedUser = JSON.parse(localStorage.getItem("user"));
-
-                // Update the user object with the new name
-                const updatedUser = {
-                  ...storedUser,
-                  name: option.optionNewValue,
-                };
-
-                // Save the updated user object back to localStorage
-                localStorage.setItem("user", JSON.stringify(updatedUser));
-
-                // Update the user state to reflect the changes in the UI
-                setUser(updatedUser);
-
-                return {
-                  ...option,
-                  optionValue: option.optionNewValue,
-                  optionNewValue: "", // Optionally reset optionNewValue
-                };
-              }
-              return option;
-            }),
-          };
-        }
-        return category;
-      })
-    );
-  };
 
   const handleSelectorOptions = (option, category) => {
     const optionID = `${category.categoryName} : ${option.optionName}`;

@@ -242,3 +242,61 @@ button:active {
   color: #fff;
   border-width: 0.5px;
 }
+
+
+.settings-edit-picture-option-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+
+  background-color: inherit;
+}
+
+.settings-edit-picture-option-span {
+  /* padding-bottom: 10px; */
+}
+
+.settings-edit-picture-option-image, 
+.dark-mode-settings-edit-picture-option-image {
+  border-radius: 50%;
+  border: 2px solid #000000;
+  width: 40px;
+
+}
+
+.dark-mode-settings-edit-picture-option-image {
+  border-color: white;
+}
+
+
+.settings-edit-picture-option-button,
+.dark-mode-settings-edit-picture-option-button {
+  padding: 5px;
+  padding-bottom: 2px;
+  margin: 0px;
+  border-radius: 50%;
+  border: 0px;
+  background-color: inherit;
+}
+
+.settings-edit-picture-option-button:hover {
+  background-color: #ddd;
+}
+.dark-mode-settings-edit-picture-option-button:hover {
+  background-color: #666;
+}
+
+/* .settings-edit-picture-option-file,
+.dark-mode-settings-edit-picture-option-file {
+  flex: 1;
+  background-color: inherit;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
+  border: 0px;
+  cursor: pointer;
+  padding: 5px;
+} */
+
