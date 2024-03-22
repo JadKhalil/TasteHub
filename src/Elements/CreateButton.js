@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CreatePostOverlay from "./../Elements/CreatePostOverlay";
+import CreatePostOverlay from "./CreatePostOverlay";
 import "./CreateButton.css"; // Import the CSS file
 
 function CreateButton() {

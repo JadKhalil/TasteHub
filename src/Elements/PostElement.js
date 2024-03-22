@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./PostElement.css";
-import { useDarkMode } from "../Pages/DarkModeContext";
+import { useDarkMode } from "../DarkModeContext";
 
 /**
  * JSX Component for a single post.
