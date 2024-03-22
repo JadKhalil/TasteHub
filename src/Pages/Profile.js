@@ -9,7 +9,7 @@ import Posts from "./ProfileRenderingPages/Posts";
 import Saved from "./ProfileRenderingPages/Saved";
 import Taged from "./ProfileRenderingPages/Taged";
 import { useGoogleLogin, googleLogout } from "@react-oauth/google";
-import CreateButton from "./CreateButton";
+import CreateButton from "../Elements/CreateButton";
 
 
 /**

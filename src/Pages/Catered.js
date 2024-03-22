@@ -3,7 +3,7 @@ import {loadCateredPosts, deletePost, loadLikedPostIDList, loadListOfFollowing} 
 import PostElement from "../Elements/PostElement";
 import { useUser } from "../UserContext";
 import "./Global.css";
-import CreateButton from "./CreateButton";
+import CreateButton from "../Elements/CreateButton";
 
 /**
  * JSX Component for the global page.
