@@ -1,35 +1,6 @@
 # TasteHub
 ENSF 401 App Project
 
-### Things Left To Do
-- Users should be able to update their bio and their profile picture (Should be connected to backend using create_user_profile)
-- Get rid of tagged section on profile
-
-##### Bonus things
-Do these when the main functionality is finished
-- For backend, check if you can remove images from Cloudinary using lambda functions for DELETE operations (Handy for delete_post)
-- Users should be able to edit their posts
-    - create_post lambda function can be used to edit as long as the post ID is preserved. Any entries with non-unique post IDs are overwritten. (Becomes an update operation)
-
-
-### Lambda function URLS
-- lambda_url_create_comment = "https://lnuwf7hmrat6ugtrnz7psympzq0zjlcx.lambda-url.ca-central-1.on.aws/"
-- lambda_url_create_post = "https://w6twud32h2wkjxtnjdml6vlbq40hrtgx.lambda-url.ca-central-1.on.aws/"
-- lambda_url_create_user_profile = "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/"
-- lambda_url_delete_comment = "https://arocnlgm5i7sjrxb34mimhvfmm0nxfft.lambda-url.ca-central-1.on.aws/"
-- lambda_url_delete_post = "https://fbn3kgu4tkf52n3vkqw27qhx4m0xdyob.lambda-url.ca-central-1.on.aws/"
-- lambda_url_follow_user = "https://rl4au3ybjajtx62g23eyzmiuce0ifzkc.lambda-url.ca-central-1.on.aws/"
-- lambda_url_get_all_posts https://3l4lzvgaso73rkupogicrcwunm0voagl.lambda-url.ca-central-1.on.aws/
-- lambda_url_get_comments_on_post = "https://nenqkh35mmdevuny2x7gbozquu0cquyy.lambda-url.ca-central-1.on.aws/"
-- lambda_url_get_followers = "https://kmjp6z5oboueqdiz5yaolqkm3a0lulye.lambda-url.ca-central-1.on.aws/"
-- lambda_url_get_following = "https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/"
-- lambda_url_get_likes_on_post = "https://jvvn5kge6vo2kd5ovsafif2fyi0mfusn.lambda-url.ca-central-1.on.aws/"
-- lambda_url_get_personal_posts = "https://2pkenopomdasergcizbgniu25y0prrhp.lambda-url.ca-central-1.on.aws/"
-- lambda_url_get_user_profile = "https://ue2qthlxc7fiit4ocgnu7ko4d40sndti.lambda-url.ca-central-1.on.aws/"
-- lambda_url_get_users_liked_posts = "https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws/"
-- lambda_url_like_post = "https://en46iryruu4einvaoz24oq5lie0ifwvy.lambda-url.ca-central-1.on.aws/"
-- lambda_url_unfollow_user = "https://jphbbhraofx2bnza766vsdujtq0bfdla.lambda-url.ca-central-1.on.aws/"
-- lambda_url_unlike_post = "https://bvraqaptwxnnop2ruzr26h5ppe0wtrxi.lambda-url.ca-central-1.on.aws/"
 
 ### Things to know for backend development
 ###### Some things needs to be hard coded if you want to deploy a backend on YOUR AWS account.
@@ -72,4 +43,3 @@ Do these when the main functionality is finished
 ### Start the project
 - `git clone https://github.com/JadKhalil/TasteHub`
 - `npm install` to install all dependencies
-- Please don't push to main branch. Pull requests only :)
