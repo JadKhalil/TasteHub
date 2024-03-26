@@ -239,8 +239,8 @@ export const loadUserInfo = async (userEmail) => {
  * @param {Number} numberOfFollowers  number of followers
  * @param {Number} numberOfFollowing  number of following
  * @param {String} creationDate       The date and time the profile was created in a millisecond timestamp format i.e. Date.now()
- * @param {Number} numberOfPosts      number of posts the user uploaded
  * @param {String || file} picture    Picture file or the image url
+ * @param {Number} numberOfPosts      number of posts the user uploaded
  */
 export const createUserProfile = async (email, userName, bio, numberOfFollowers, numberOfFollowing, creationDate, picture, numberOfPosts) => {
   const dataToSubmit = new FormData();
