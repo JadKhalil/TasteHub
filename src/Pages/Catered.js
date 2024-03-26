@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {loadCateredPosts, deletePost, loadLikedPostIDList, loadListOfFollowing} from "../Api";
 import PostElement from "../Elements/PostElement";
 import { useUser } from "../UserContext";
 import "./Global.css";
-import CreateButton from "./CreateButton";
+import CreateButton from "../Elements/CreateButton";
 
 /**
  * JSX Component for the global page.
@@ -32,132 +32,29 @@ function Catered() {
    * Without this hook, there may be bugs where follow button of the rendered post says "follow" despite the fact that the user has previously
    * followed the user
    */
-  const [isFollowedUserEmailListLoaded, setIsFollowedUserEmailListLoaded] =
-    useState(false);
+  const [isFollowedUserEmailListLoaded, setIsFollowedUserEmailListLoaded] = useState(false);
 
-  /**
-   * Calls the 'get_following_posts' lambda function to fetch all the posts from followed users.
-   * Sorts the returned data based on the date posted and fills the allPosts array with the sorted data.
-   */
-  const loadCateredPosts = async () => {
-    const res = await fetch(
-      `https://ncvpqlzqzobltjs6xbdwjtw2iy0whsun.lambda-url.ca-central-1.on.aws?userEmail=${user.userEmail}`, // Lambda Function URL (needs to be hard coded)
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    console.log("load catered posts requst called");
-    const jsonRes = await res.json();
-    if (res.status === 200) {
-      // the post list items are ordered by submit time
-      jsonRes?.postList?.Items?.sort((a, b) => {
-        if (a["datePosted"] > b["datePosted"]) {
-          return -1;
-        }
-        if (a["datePosted"] < b["datePosted"]) {
-          return 1;
-        }
-        return 0;
-      });
-      setCateredPosts([...jsonRes?.postList?.Items]);
-    } else {
-      window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
-    }
-  };
 
-  /**
-   * Calls the 'get_user_liked_posts' lambda function to fetch the IDs of all the posts the user has previously liked.
-   * Fills the likedPostIDList with the returned data.
-   * Sets the isLikedPostIDListLoaded hook to true.
-   */
-  const loadLikedPostIDList = async () => {
-    const res = await fetch(
-      `https://fmepbkghyequf22cdhtoerx7ui0gtimv.lambda-url.ca-central-1.on.aws?userEmailOfLiker=${user.userEmail}`, // Lambda Function URL (needs to be hard coded)
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const jsonRes = await res.json();
-    console.log("load liked post id requst called");
-    if (res.status === 200) {
-      setLikedPostIDList([...jsonRes?.likeList?.Items]);
-      setIsLikedPostIDListLoaded(true);
-    } else {
-      window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
-    }
-  };
-
-  /**
-   * Calls the 'get_following' lambda function to fetch the emails of all the users the user has previously followed.
-   * Fills the listOfFollowedEmails with the returned data.
-   * Sets the isListOfFollowedEmailsLoaded hook to true.
-   */
-  const loadListOfFollowing = async () => {
-    const res = await fetch(
-      `https://wzw3w4ygt7nrso37nmtlul6fpi0hrmbe.lambda-url.ca-central-1.on.aws/?userEmail=${user.userEmail}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const jsonRes = await res.json();
-    console.log("load list of following requst called");
-    if (res.status === 200) {
-      setFollowedUserEmailList([...jsonRes?.followList?.Items]);
-      setIsFollowedUserEmailListLoaded(true);
-    } else {
-      window.alert(`Error! status ${res.status}\n${jsonRes["message"]}`);
-    }
-  };
-
-  /**
-   * Calls the 'delete_post' lambda function to remove the post from the database.
-   * Removes the deleted post from allPosts list
-   *
-   * @param {String} postID           postID of the post
-   * @param {String} posterUserEmail  userEmail of the poster
-   */
-  const deletePost = async (postID, posterUserEmail) => {
-    try {
-      const response = await fetch(
-        `https://fbn3kgu4tkf52n3vkqw27qhx4m0xdyob.lambda-url.ca-central-1.on.aws?postID=${postID}&userEmail=${posterUserEmail}`, // Lambda Function URL (needs to be hard coded)
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log("delete posts requst called");
-      if (response.ok) {
-        window.alert("Post deleted successfully");
-        loadCateredPosts(); // API Get Request
-      } else {
-        // Error handling for unsuccessful deletion
-        window.alert("Failed to delete post");
-      }
-    } catch (error) {
-      console.error("Error deleting post:", error);
-      window.alert("An error occurred while deleting the post");
-    }
-  };
-
-  // When the user data is fetched, the likedPostIDList, loadListOfFollowing, and loadCateredPosts functions are called
+  // When the user data is fetched, the loadLikedPostIDList, loadListOfFollowing, and loadCateredPosts functions are called
   // This is to ensure that the posts are rendered after all the liked post is returned
   useEffect(() => {
-    if (user) {
-      loadLikedPostIDList();
-      loadListOfFollowing();
-      loadCateredPosts();
-    }
+    const fetchData = async () => {
+      if (user) {
+        const likedPostArray = await loadLikedPostIDList(user.userEmail);
+        const followingArray = await loadListOfFollowing(user.userEmail);
+        const postsArray = await loadCateredPosts(user.userEmail);
+        console.log(postsArray);
+        console.log(followingArray);
+        setCateredPosts(postsArray);
+        setLikedPostIDList(likedPostArray);
+        setIsLikedPostIDListLoaded(true);
+        setFollowedUserEmailList(followingArray);
+        setIsFollowedUserEmailListLoaded(true);
+      }
+    };
+  
+    fetchData();
+
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 

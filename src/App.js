@@ -11,7 +11,7 @@ import { UserProvider } from './UserContext';
 import Login from './Pages/Login.js';
 import { GoogleLogin } from '@react-oauth/google';
 import Global from './Pages/Global.js';
-import { DarkModeProvider } from './Pages/DarkModeContext'; 
+import { DarkModeProvider } from './DarkModeContext'; 
 
 function App() {
   return (
