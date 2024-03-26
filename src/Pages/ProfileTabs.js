@@ -8,16 +8,10 @@ const ProfileTabs = ({ selected, onSelect }) => {
         POSTS
       </div>
       <div 
-        className={`profile-tab ${selected === 'saved' ? 'active' : ''}`}
-        onClick={() => onSelect('saved')}
+        className={`profile-tab ${selected === 'liked' ? 'active' : ''}`}
+        onClick={() => onSelect('liked')}
       >
-        SAVED
-      </div>
-      <div 
-        className={`profile-tab ${selected === 'tagged' ? 'active' : ''}`}
-        onClick={() => onSelect('tagged')}
-      >
-        TAGGED
+        FAVS
       </div>
     </div>
   );

@@ -6,8 +6,7 @@ import PostElement from "../Elements/PostElement";
 import ProfileTabs from "./ProfileTabs";
 import { useNavigate } from "react-router-dom";
 import Posts from "./ProfileRenderingPages/Posts";
-import Saved from "./ProfileRenderingPages/Saved";
-import Taged from "./ProfileRenderingPages/Taged";
+import Liked from "./ProfileRenderingPages/Liked";
 import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 import CreateButton from "../Elements/CreateButton";
 
@@ -24,6 +23,9 @@ function Profile() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user"))); // current loged-in user
   const { user: contextUser, login, logout } = useUser();
   const [ likedPostIDList, setLikedPostIDList ] = useState([]); // list of IDs of posts the user has liked
+
+  const [Followers, setFollowers] = useState([]); // list of all Followers
+  const [Following, setFollowing] = useState([]); // lost of all Following
 
   /* 
    * initially set to false as the list of likedPostIDs take time to load from the database.
@@ -143,63 +145,17 @@ function Profile() {
 
       </div>
 
+      
+
       <ProfileTabs selected={selectedTab} onSelect={setSelectedTab} />
-        {selectedTab === 'posts' ? (
-          <>
-            <Posts posts={personalPosts}/>
-          </>
-          ) : selectedTab === 'saved' ? (
-            <>
-              <Saved/>
-            </>
-          ) : selectedTab === 'tagged' ? (
-            <>
-              <Taged/>
-            </>
-          ) : null}
-
-      
-      <div>
-        <div>
-          {<CreateButton></CreateButton>}
-        </div>
-        <div className="profile-grid-container" >
-      
-        
-      {isLikedPostIDListLoaded && personalPosts.map((post)=> { 
-            // Posts are rendered only after the likedPostIDList and listOfFollowedEmails are loaded to ensure 
-            // the heart icon is filled/empty depending on whether the user has previous liked the post
-            // and to ensure the follow/unfollow button is shown depending on whether the user has previously followed the user
-              return (
-                <>
-                  <div>
-                    <div>
-                      
-                    </div>
-                      <div>
-                        <PostElement 
-                        postObject={post} 
-                        userEmail={user?.userEmail}
-                        userName={user?.userName} 
-                        isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
-                        isGridLayout={true}
-                        deletePost={deletePost}
-                        isPosterFollowedParam={false}
-                        key={post?.postID}
-                        />
-                      </div>
-                  </div>
-
-                  
-                </>
-
-                
-                
-              )
-      })}
-    </div>
-
+      <div className="profile-tab-container">
+        {isLikedPostIDListLoaded && selectedTab === 'posts' && <Posts isLikedPostIDListLoaded={isLikedPostIDListLoaded} />}
+        {isLikedPostIDListLoaded && selectedTab === 'liked' && <Liked />}
       </div>
+      
+
+      
+      
 
 
      
