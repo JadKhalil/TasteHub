@@ -138,7 +138,7 @@ def lambda_handler(event, context):
                 "statusCode": 200,
                     "body": json.dumps({
                         "message": "success",
-                        "url": cloudinary_public_id
+                        "deleted cloudinary public id": cloudinary_public_id
                     })
             }
         else:
