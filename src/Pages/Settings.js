@@ -88,9 +88,8 @@ function Settings() {
     formData.append("numberOfFollowers", user.numberOfFollowers); // Replace with actual count
     formData.append("numberOfFollowing", user.numberOfFollowing); // Replace with actual count
     formData.append("creationDate", user.creationDate); // Format as string if necessary
-    formData.append("profilePicture", newProfile || "defaultURL");
+    formData.append("profilePicture", newProfile);
     formData.append("numberOfPosts", user.numberOfPosts); // Replace with actual count
-  
     try {
       const response = await fetch(
         "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/",
