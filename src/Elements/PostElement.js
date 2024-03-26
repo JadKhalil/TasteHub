@@ -91,7 +91,6 @@ const PostElement = ({
           }),
         }
       );
-      console.log("follow request called");
       if (!res.ok) {
         // Error handling for unsuccessful deletion
         window.alert(`Failed to follow ${userEmailOfFollowee}`);
@@ -103,8 +102,6 @@ const PostElement = ({
   };
 
   const unfollow = async (userEmailOfFollower, userEmailOfFollowee) => {
-    console.log(userEmailOfFollower);
-    console.log(userEmailOfFollowee);
     setIsPosterFollowed(false);
     try {
       const res = await fetch(
@@ -116,7 +113,6 @@ const PostElement = ({
           },
         }
       );
-      console.log("unfollow request called");
       if (!res.ok) {
         // Error handling for unsuccessful deletion
         window.alert(`Failed to unfollow ${userEmailOfFollowee}`);
@@ -141,7 +137,6 @@ const PostElement = ({
       content: newComment,
       userEmailOfPoster: postObject?.userEmail,
     };
-    console.log(newCommentObject);
     setComments([...comments, newCommentObject]);
     const res = await fetch(
       "https://lnuwf7hmrat6ugtrnz7psympzq0zjlcx.lambda-url.ca-central-1.on.aws/",
@@ -154,7 +149,6 @@ const PostElement = ({
       }
     );
     setNewComment(""); // resets the new comment state to be empty after adding comment
-    console.log("add comment request called");
   };
 
   /**
@@ -179,7 +173,6 @@ const PostElement = ({
         },
       }
     );
-    console.log("remove comment request called");
   };
 
   /**
@@ -267,7 +260,6 @@ const PostElement = ({
         }),
       }
     );
-    console.log("like post request called");
   };
 
   /**
@@ -287,7 +279,6 @@ const PostElement = ({
         },
       }
     );
-    console.log("unlike post request called");
   };
 
   /**
@@ -304,7 +295,6 @@ const PostElement = ({
         },
       }
     );
-    console.log("get comments request called");
     const jsonRes = await res.json();
     if (res.status === 200) {
       setComments([...jsonRes?.commentList?.Items]);

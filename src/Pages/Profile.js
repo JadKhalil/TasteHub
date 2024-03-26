@@ -46,12 +46,35 @@ function Profile() {
   const handlePostDelete = (deletedPostId) => {
     // Update local state to remove the deleted post
     setPersonalPosts((prevPosts)=> prevPosts.filter(post => post.postID !== deletedPostId));
+
+    const userWithUpdatedNumberOfPosts = {
+      bio: user.bio,
+      creationDate: user.creationDate,
+      image: user.image,
+      numberOfFollowers: user.numberOfFollowers,
+      numberOfFollowing: user.numberOfFollowing,
+      numberOfPosts: Number(user.numberOfPosts) - 1,
+      userEmail: user.userEmail,
+      userName: user.userName
+    }
+    setUser(userWithUpdatedNumberOfPosts);
   };
 
   const handlePostCreation = (newPostObject) => {
     setPersonalPosts([newPostObject, ...personalPosts]); // Update local state to add the new post
-  }
+    const userWithUpdatedNumberOfPosts = {
+      bio: user.bio,
+      creationDate: user.creationDate,
+      image: user.image,
+      numberOfFollowers: user.numberOfFollowers,
+      numberOfFollowing: user.numberOfFollowing,
+      numberOfPosts: Number(user.numberOfPosts) + 1,
+      userEmail: user.userEmail,
+      userName: user.userName
+    }
 
+    setUser(userWithUpdatedNumberOfPosts);
+  }
   // When the user data is fetched, the loadLikedPostIDList, loadListOfFollowing, and loadPersonalPosts functions are called
   // This is to ensure that the posts are rendered after all the liked post is returned
   useEffect(() => {
