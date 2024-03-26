@@ -8,11 +8,13 @@ dynamodb_resource = boto3.resource("dynamodb")
 likes_table = dynamodb_resource.Table("tastehub-likes")
 posts_table = dynamodb_resource.Table("tastehub-posts")
 comments_table = dynamodb_resource.Table("tastehub-comments")
+users_table = dynamodb_resource.Table("tastehub-users")
 
 '''
 This function deletes a post from the posts table,
 removes all rows for the post in the comments table,
-and removes all rows for the post in the likes table
+removes all rows for the post in the likes table,
+and decrements the numberOfPosts attribute in user table
 Requires: userEmail (String), postID (String)
 
 Use the following format:
@@ -63,6 +65,14 @@ def lambda_handler(event, context):
                 "userEmail": queryParameters["userEmail"],
                 "postID": queryParameters["postID"]
         })
+
+        users_table.update_item(Key={
+                "userEmail": queryParameters["userEmail"]
+            },
+            UpdateExpression="SET numberOfPosts = numberOfPosts + :value",
+            ExpressionAttributeValues={":value": -1},
+            ReturnValues="UPDATED_NEW"
+        )
 
         return {
             "statusCode": 200,

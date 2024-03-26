@@ -24,6 +24,7 @@ const res = await fetch(
                 "postID": String,
                 "commentID": String,
                 "userEmailOfCommenter": String,
+                "userNameOfCommenter": String,
                 "content": String,
                 "userEmailOfPoster": String
             })
@@ -37,6 +38,7 @@ def lambda_handler(event, context):
             "postID": body["postID"],
             "commentID": body["commentID"],
             "userEmailOfCommenter": body["userEmailOfCommenter"],
+            "userNameOfCommenter": body["userNameOfCommenter"],
             "content": body["content"]
         })
 

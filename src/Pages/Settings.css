@@ -1,260 +1,302 @@
-
-
-
 .settings-big-box {
-    display: flex;
+  display: flex;
 
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 
-    background-color: inherit;
-
+  background-color: inherit;
 }
-
 
 .settings-box {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    width: 100%;
+  width: 100%;
 
-    background-color: inherit;
+  background-color: inherit;
 }
 
-
 .settings-header-big-box {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    width: 100%;
-    border-bottom-style: solid;
-    border-bottom-width: 2px;
-    border-bottom-color: black;
-
-    background-color: #f9a53f;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
 }
 
 .settings-header-box {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    
-    background-color: inherit;
-}
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 
+  background-color: inherit;
+}
 
 .settings-header-label-h1 {
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-categories-big-box {
-    display: flex;
-    flex: 10;
-    flex-direction: column;
-    width: 100%;
-    position: relative;
-    overflow: hidden;
+  display: flex;
+  flex: 10;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
 
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-categories-box {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow-y: auto;
-    scroll-snap-type: y mandatory;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 20px;
-    padding: 20px;
-    scroll-padding-top: 40px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 20px;
+  scroll-padding-top: 40px;
 
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-category-big-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-category-box {
-    display: flex;
-    flex-direction: column;
-    min-width: 300px;
-    width: 60%;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  width: 60%;
 
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-category-title-box {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-category-title-h4 {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-options-box {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 
-    margin-left: 30px;
+  margin-left: 30px;
 
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-selector-option-box {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-selector-option,
 .active-settings-selector-option {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    padding: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
 
-    font-size: 1rem;
+  font-size: 1rem;
 
-    border-radius: 10px;
-    background-color: inherit;
+  border-radius: 10px;
+  background-color: inherit;
 }
 
-
 .settings-selector-option:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .settings-selector-option:active {
-    background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
 }
-
 
 .active-settings-selector-option {
-    background-color: rgb(255, 231, 180);
+  background-color: rgb(255, 231, 180);
 }
 
-
 .active-settings-selector-option:hover {
-    background-color: rgba(255, 231, 180, 0.5);
+  background-color: rgba(255, 231, 180, 0.5);
 }
 
 .active-settings-selector-option:active {
-    background-color: rgb(238, 216, 169);
+  background-color: rgb(238, 216, 169);
 }
-
 
 .settings-edit-text-option-box {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    padding: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
 
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-edit-text-option {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-edit-text-option-textBox-box {
-    display: flex;
-    flex: 1;
-    gap: 10px;
-    flex-direction: row;
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  flex-direction: row;
 
-    background-color: inherit;
+  background-color: inherit;
 }
-
 
 .settings-edit-text-option-textBox {
-    flex: 1;
-    padding: 5px;
-    background-color: inherit;
-    border-radius: 10px;
-    box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
-    border: 0px;
-
+  flex: 1;
+  padding: 5px;
+  background-color: inherit;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
+  border: 0px;
 }
-
 
 .settings-edit-text-option-submit-button {
-    background-color: inherit;
-    border-radius: 10px;
-    box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
-    border: 0px;
-    cursor: pointer;
-    padding: 5px;
+  background-color: inherit;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
+  border: 0px;
+  cursor: pointer;
+  padding: 5px;
 }
-
 
 .settings-edit-button-option-box {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    padding: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
 
-    background-color: inherit;
+  background-color: inherit;
 }
 
-
 .settings-edit-button-option-submit-button {
-    flex: 1;
-    background-color: inherit;
-    border-radius: 10px;
-    box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
-    border: 0px;
-    cursor: pointer;
-    padding: 5px;
+  flex: 1;
+  background-color: inherit;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
+  border: 0px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.dark-mode-settings-edit-button-option-submit-button {
+  flex: 1;
+  background-color: inherit;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
+  border: 0px;
+  cursor: pointer;
+  padding: 5px;
 }
 
 button:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 button:active {
-    background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
 }
+
+.dark-mode {
+  background-color: #000000;
+  color: #fff;
+  border-width: 0.5px;
+}
+
+
+.settings-edit-picture-option-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+
+  background-color: inherit;
+}
+
+.settings-edit-picture-option-span {
+  /* padding-bottom: 10px; */
+}
+
+.settings-edit-picture-option-image, 
+.dark-mode-settings-edit-picture-option-image {
+  border-radius: 50%;
+  border: 2px solid #000000;
+  width: 40px;
+
+}
+
+.dark-mode-settings-edit-picture-option-image {
+  border-color: white;
+}
+
+
+.settings-edit-picture-option-button,
+.dark-mode-settings-edit-picture-option-button {
+  padding: 5px;
+  padding-bottom: 2px;
+  margin: 0px;
+  border-radius: 50%;
+  border: 0px;
+  background-color: inherit;
+}
+
+.settings-edit-picture-option-button:hover {
+  background-color: #ddd;
+}
+.dark-mode-settings-edit-picture-option-button:hover {
+  background-color: #666;
+}
+
+/* .settings-edit-picture-option-file,
+.dark-mode-settings-edit-picture-option-file {
+  flex: 1;
+  background-color: inherit;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px 2px rgb(224, 224, 224);
+  border: 0px;
+  cursor: pointer;
+  padding: 5px;
+} */
 

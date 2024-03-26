@@ -17,7 +17,7 @@ body {
 }
 
 .startup-screen {
-  margin:auto;
+  margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -109,4 +109,25 @@ body {
   background-color: #21921921; /* Color of the separator line */
   text-align: center; /* Center the text within the separator */
   margin: 10px 0; /* Add some space above and below the separator */
+}
+
+.create-post-popup {
+  position: relative;
+}
+
+.createPostClose-div {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+}
+
+.createPostClose-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.createPostClose-button :hover {
+  color: rgb(185, 29, 29);
 }
