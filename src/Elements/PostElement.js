@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./PostElement.css";
 import { useDarkMode } from "../DarkModeContext";
+import {deletePost} from "../Api";
 
 /**
  * JSX Component for a single post.
@@ -26,8 +27,6 @@ import { useDarkMode } from "../DarkModeContext";
  *
  * @param {Boolean} isGridLayout        True or false depending on which page the post element is rendered.
  *                                      This parameter is used to change the styling of the returned JSX element.
- * @param {function} deletePost         deletePost lambda function passed as a prop. It is in this form
- *                                      const deletePost = async (postID, posterUserEmail) => { ... }
  * @param {Boolean} isPosterFollowedParam True or false depending on whether the user liked the post or not.
  * @returns {JSX}
  */
@@ -37,7 +36,6 @@ const PostElement = ({
   userName,
   isPostLikedParam,
   isGridLayout,
-  deletePost,
   isPosterFollowedParam,
 }) => {
   const [showComments, setShowComments] = useState(false); // Boolean for showing comments when comment button is clicked

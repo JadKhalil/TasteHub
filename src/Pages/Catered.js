@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {loadCateredPosts, deletePost, loadLikedPostIDList, loadListOfFollowing} from "../Api";
+import {loadCateredPosts, loadLikedPostIDList, loadListOfFollowing} from "../Api";
 import PostElement from "../Elements/PostElement";
 import { useUser } from "../UserContext";
 import "./Global.css";
@@ -88,7 +88,6 @@ function Catered() {
                         (likedPost) => likedPost.postID === post?.postID
                       )}
                       isGridLayout={false}
-                      deletePost={deletePost}
                       isPosterFollowedParam={followedUserEmailList.some(
                         (followed) =>
                           followed.userEmailOfFollowee === post?.userEmail

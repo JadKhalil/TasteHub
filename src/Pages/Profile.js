@@ -1,9 +1,8 @@
 import React, { useState, useEffect} from "react";
 import { useUser } from "../UserContext";
-import {loadPersonalPosts, deletePost, loadLikedPostIDList, loadUserInfo} from "../Api";
+import {loadPersonalPosts, loadLikedPostIDList, loadUserInfo} from "../Api";
 import "./Profile.css";
 import PostElement from "../Elements/PostElement";
-import ProfileTabs from "./ProfileTabs";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin, googleLogout } from "@react-oauth/google";
 import CreateButton from "../Elements/CreateButton";
@@ -128,57 +127,48 @@ function Profile() {
         </div>
       </div>
       <div className="profile-tab-container">
-      <div>
-      {personalPosts.length === 0 ? (
-        <div className="emptyProfileContainer">
-          <div className="profilePostEmptyContainer">
-            <FaCamera className="profilePostsCameraIcon" />
-          </div>
-          <div className="profileShareRecepiesContainer">
-            <div className="profileShareRecepies-div">Share Recipes</div>
-            <div className="profileShareRecepiesInfo-div">
-              When you share photos, they will appear on your profile.
+        <div>
+        {personalPosts.length === 0 ? (
+          <div className="emptyProfileContainer">
+            <div className="profilePostEmptyContainer">
+              <FaCamera className="profilePostsCameraIcon" />
+            </div>
+            <div className="profileShareRecepiesContainer">
+              <div className="profileShareRecepies-div">Share Recipes</div>
+              <div className="profileShareRecepiesInfo-div">
+                When you share photos, they will appear on your profile.
+              </div>
+            </div>
+            <div className="profileShareRecepiePrompt-div">
+              <button
+                className="profileShareRecepiePrompt-button"
+                onClick={toggleCreatePostOverlay}
+              >
+                Share your first recipe
+              </button>
+            {showPostCreate && <CreatePostOverlay setPostCreate={setPostCreate} />}
             </div>
           </div>
-          <div className="profileShareRecepiePrompt-div">
-            <button
-              className="profileShareRecepiePrompt-button"
-              onClick={toggleCreatePostOverlay}
-            >
-              Share your first recipe
-            </button>
-          {showPostCreate && <CreatePostOverlay setPostCreate={setPostCreate} />}
-          </div>
+        ) : (
+          <>
+            <CreateButton />
+            <div className="profile-grid-container">
+              {isLikedPostIDListLoaded && personalPosts.map((post) => (
+                <div key={post?.postID}>
+                  <PostElement 
+                    postObject={post} 
+                    userEmail={user?.userEmail}
+                    userName={user?.userName} 
+                    isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
+                    isGridLayout={true}
+                    isPosterFollowedParam={false}
+                  />
+                </div>
+              ))}
+            </div>
+          </>)}
         </div>
-      ) : (
-        <>
-          <CreateButton />
-          <div className="profile-grid-container">
-            {isLikedPostIDListLoaded && personalPosts.map((post) => (
-              <div key={post?.postID}>
-                <PostElement 
-                  postObject={post} 
-                  userEmail={user?.userEmail}
-                  userName={user?.userName} 
-                  isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
-                  isGridLayout={true}
-                  deletePost={deletePost}
-                  isPosterFollowedParam={false}
-                />
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-    </div>
-      
-
-      
-      
-
-
-     
+      </div>
     </div>
     )
   );

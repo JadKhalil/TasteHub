@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PostElement from "../Elements/PostElement";
-import {loadAllPosts, deletePost, loadLikedPostIDList, loadListOfFollowing} from "../Api";
+import {loadAllPosts, loadLikedPostIDList, loadListOfFollowing} from "../Api";
 import { useUser } from "../UserContext";
 import "./Global.css";
 import CreateButton from "../Elements/CreateButton";
@@ -88,7 +88,6 @@ function Global() {
                         (likedPost) => likedPost.postID === post?.postID
                       )}
                       isGridLayout={false}
-                      deletePost={deletePost}
                       isPosterFollowedParam={followedUserEmailList.some(
                         (followed) =>
                           followed.userEmailOfFollowee === post?.userEmail

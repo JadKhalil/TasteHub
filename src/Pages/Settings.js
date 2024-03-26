@@ -258,7 +258,7 @@ function Settings() {
                 </button>
               }
               position="right center">
-              <label for="file-uplaude-settings-profile-pic"><strong>{'Choose a file: '}</strong></label>
+              <label htmlFor="file-uplaude-settings-profile-pic"><strong>{'Choose a file: '}</strong></label>
               <input
                   type="file"
                   id='file-uplaude-settings-profile-pic'

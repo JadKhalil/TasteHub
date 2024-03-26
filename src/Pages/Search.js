@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {loadAllPosts, deletePost, loadLikedPostIDList, loadListOfFollowing} from "../Api";
+import {loadAllPosts, loadLikedPostIDList, loadListOfFollowing} from "../Api";
 import { useUser } from "../UserContext";
 import PostElement from "../Elements/PostElement";
 import "./Search.css";
@@ -101,7 +101,6 @@ function Search() {
                       userName={user?.userName}
                       isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
                       isGridLayout={true}
-                      deletePost={deletePost}
                       isPosterFollowedParam={followedUserEmailList.some(followed => followed.userEmailOfFollowee === post?.userEmail)}
                       key={post?.postID}/>)
           })}
