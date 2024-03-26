@@ -43,8 +43,6 @@ function Catered() {
         const likedPostArray = await loadLikedPostIDList(user.userEmail);
         const followingArray = await loadListOfFollowing(user.userEmail);
         const postsArray = await loadCateredPosts(user.userEmail);
-        console.log(postsArray);
-        console.log(followingArray);
         setCateredPosts(postsArray);
         setLikedPostIDList(likedPostArray);
         setIsLikedPostIDListLoaded(true);

@@ -65,7 +65,6 @@ function Settings() {
   
       const data = await response.json();
       if (response.ok) {
-        console.log("Bio update successful:", data);
         // Update local user state if necessary
         setUser((currentUser) => ({ ...currentUser, bio: newBio }));
       } else {
@@ -78,8 +77,6 @@ function Settings() {
 
   const updateUserProfilePic = async (newProfile) => {
     const formData = new FormData();
-
-    console.log(newProfile);
 
     // Append user details in the specified order as expected by your backend.
     formData.append("userEmail", user.userEmail); // Replace with actual email from user state/context
@@ -103,7 +100,6 @@ function Settings() {
   
       const data = await response.json();
       if (response.ok) {
-        console.log("Profile update successful:", data);
         // Update the local user state with the new profile picture URL
         // Assuming the backend returns the URL of the uploaded image
         setUser((currentUser) => ({ ...currentUser, image: data.imageUrl }));

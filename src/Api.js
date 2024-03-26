@@ -16,7 +16,6 @@ export const deletePost = async (postID, posterUserEmail) => {
         },
       }
     );
-    console.log("delete post request called");
     if (response.ok) {
       window.alert("Post deleted successfully");
     } else {
@@ -24,7 +23,6 @@ export const deletePost = async (postID, posterUserEmail) => {
       window.alert("Failed to delete post");
     }
   } catch (error) {
-    console.error("Error deleting post:", error);
     window.alert("An error occurred while deleting the post");
   }
 };
@@ -44,7 +42,6 @@ export const deletePost = async (postID, posterUserEmail) => {
       },
     }
   );
-  console.log("load all posts request called");
   const jsonRes = await res.json();
   if (res.status === 200) {
     // the post list items are ordered by submit time
@@ -80,7 +77,6 @@ export const loadLikedPostIDList = async (userEmail) => {
       },
     }
   );
-  console.log("load liked post id request called");
   const jsonRes = await res.json();
   if (res.status === 200) {
     return [...jsonRes?.likeList?.Items];
@@ -105,7 +101,6 @@ export const loadListOfFollowing = async (userEmail) => {
       },
     }
   );
-  console.log("load list of following request called");
   const jsonRes = await res.json();
   if (res.status === 200) {
     return [...jsonRes?.followList?.Items];
@@ -131,7 +126,6 @@ export const loadCateredPosts = async (userEmail) => {
      },
    }
  );
- console.log("load catered posts requst called");
  const jsonRes = await res.json();
  if (res.status === 200) {
    // the post list items are ordered by submit time
@@ -167,7 +161,6 @@ export const loadPersonalPosts = async (userEmail) => {
       },
     }
   );
-  console.log("load personal posts request called");
   const jsonRes = await res.json();
   if (res.status === 200)
   {
@@ -215,7 +208,6 @@ export const loadUserInfo = async (userEmail) => {
       userInfo, // Return user information object
       "status": res.status
     };
-    console.log(returnVal);
     return returnVal;
   }
   else // If user info is not in the database or query is unsuccessful
@@ -224,7 +216,6 @@ export const loadUserInfo = async (userEmail) => {
       "userInfo": {}, // Return empty object
       "status": res.status
     };
-    console.log(returnVal);
     return returnVal;
   }
 

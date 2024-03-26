@@ -73,9 +73,7 @@ function Profile() {
   // This is to ensure that the most updated user information is fetched upon refresh
   useEffect(()=> {
     const fetchData = async () => {
-      console.log(user);
       const returnData = await loadUserInfo(user.userEmail);
-      console.log(returnData.userInfo);
       setUser(returnData.userInfo);
       localStorage.setItem("user", JSON.stringify(returnData.userInfo));
     };
