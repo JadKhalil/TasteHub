@@ -26,7 +26,7 @@ The elements in FormData must be appended in the following order:
 7. profile picture (image or string of URL)
 8. numberOfPosts (Number)
     const promise = await fetch(
-        "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws/",
+        "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/",
         {
             method: "POST",
             body: formData,
@@ -117,8 +117,8 @@ url for the image that needs to be put into DynamoDB we can use: res["secure_url
 '''
 
 def upload_to_cloud(filename, resource_type='image'):
-    api_key = "535718123262293" #Jacob's = 535718123262293, Eddie's = 783689415177585
-    cloud_name = "drua7mqfb" #Jacob's = drua7mqfb, Eddie's = dh28kj5kr
+    api_key = "783689415177585" #Jacob's = 535718123262293, Eddie's = 783689415177585
+    cloud_name = "dh28kj5kr" #Jacob's = drua7mqfb, Eddie's = dh28kj5kr
     api_secret = get_keys("/tastehub/cloudinary-key")
     timestamp = int(time.time())
 

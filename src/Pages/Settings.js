@@ -42,6 +42,79 @@ function Settings() {
     navigate("/");
   };
 
+  const updateUserBio = async (newBio) => {
+    const formData = new FormData();
+  
+    formData.append("userEmail", user.userEmail); // Replace with actual email from user state/context
+    formData.append("userName", user.userName); // Replace with actual name
+    formData.append("bio", newBio);
+    formData.append("numberOfFollowers", user.numberOfFollowers); // Replace with actual count
+    formData.append("numberOfFollowing", user.numberOfFollowing); // Replace with actual count
+    formData.append("creationDate", user.creationDate); // Format as string if necessary
+    formData.append("profilePicture", user.image || "defaultURL");
+    formData.append("numberOfPosts", user.numberOfPosts); // Replace with actual count
+  
+    try {
+      const response = await fetch(
+        "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/", // Replace with your actual Lambda URL
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+  
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Bio update successful:", data);
+        // Update local user state if necessary
+        setUser((currentUser) => ({ ...currentUser, bio: newBio }));
+      } else {
+        throw new Error(data.message || "Failed to update bio");
+      }
+    } catch (error) {
+      console.error("Error updating bio:", error);
+    }
+  };
+
+  const updateUserProfilePic = async (newProfile) => {
+    const formData = new FormData();
+
+    console.log(newProfile);
+
+    // Append user details in the specified order as expected by your backend.
+    formData.append("userEmail", user.userEmail); // Replace with actual email from user state/context
+    formData.append("userName", user.userName); // Replace with actual name
+    formData.append("bio", user.bio);
+    formData.append("numberOfFollowers", user.numberOfFollowers); // Replace with actual count
+    formData.append("numberOfFollowing", user.numberOfFollowing); // Replace with actual count
+    formData.append("creationDate", user.creationDate); // Format as string if necessary
+    formData.append("profilePicture", newProfile);
+    formData.append("numberOfPosts", user.numberOfPosts); // Replace with actual count
+    try {
+      const response = await fetch(
+        "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/",
+        {
+          method: "POST",
+          body: formData,
+          // Headers are not set because the fetch API automatically sets the Content-Type
+          // to 'multipart/form-data' with the correct 'boundary' when dealing with FormData
+        }
+      );
+  
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Profile update successful:", data);
+        // Update the local user state with the new profile picture URL
+        // Assuming the backend returns the URL of the uploaded image
+        setUser((currentUser) => ({ ...currentUser, image: data.imageUrl }));
+      } else {
+        throw new Error(data.message || "Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  }
+
   const [settingsList, setSettingList] = useState([
     {
       categoryName: "Colour Theme",
@@ -66,13 +139,14 @@ function Settings() {
           optionName: "Profile Picture",
           optionValue: user?.image,
           optionNewValue: "",
+          optionAction: updateUserProfilePic
         },
         {
           optionType: "EditText",
           optionName: "Bio",
           optionValue: user?.bio,
           optionNewValue: "",
-          optionAction: () => {},
+          optionAction: updateUserBio,
         },
         {
           optionType: "EditButton",
@@ -193,7 +267,11 @@ function Settings() {
                   type="file"
                   id='file-uplaude-settings-profile-pic'
                   className={isDarkMode ? "dark-mode-settings-edit-picture-option-file" : "settings-edit-picture-option-file"}
-                  onChange={() => {}}
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      updateUserProfilePic(e.target.files[0]);
+                    }
+                  }}
                   accept=".png, .jpg, .jpeg, img"
               />
           </Popup>
@@ -238,7 +316,7 @@ function Settings() {
           {option.optionNewValue !== "" ? (
             <button
               className="settings-edit-text-option-submit-button"
-              onClick={() => option.optionAction()}
+              onClick={() => option.optionAction(option.optionNewValue)}
             >
               Submit
             </button>
