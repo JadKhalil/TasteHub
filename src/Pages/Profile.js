@@ -150,7 +150,7 @@ function Profile() {
       <ProfileTabs selected={selectedTab} onSelect={setSelectedTab} />
       <div className="profile-tab-container">
         {isLikedPostIDListLoaded && selectedTab === 'posts' && <Posts isLikedPostIDListLoaded={isLikedPostIDListLoaded} />}
-        {isLikedPostIDListLoaded && selectedTab === 'liked' && <Liked />}
+        {isLikedPostIDListLoaded && selectedTab === 'liked' && <Liked likedPostIDList={likedPostIDList}/>}
       </div>
       
 

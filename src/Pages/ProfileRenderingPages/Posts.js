@@ -126,6 +126,7 @@ function Posts({isLikedPostIDListLoaded}) {
         <>
           <CreateButton />
           <div className="profile-grid-container">
+            {console.log(personalPosts)}
             {personalPosts.map((post) => (
               <div key={post?.postID}>
                 <PostElement 

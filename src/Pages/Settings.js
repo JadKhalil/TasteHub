@@ -45,14 +45,14 @@ function Settings() {
   const updateUserBio = async (newBio) => {
     const formData = new FormData();
   
-    formData.append("userEmail", user.email); // Replace with actual email from user state/context
-    formData.append("userName", user.name); // Replace with actual name
+    formData.append("userEmail", user.userEmail); // Replace with actual email from user state/context
+    formData.append("userName", user.userName); // Replace with actual name
     formData.append("bio", newBio);
-    formData.append("numberOfFollowers", user.followers); // Replace with actual count
-    formData.append("numberOfFollowing", user.following); // Replace with actual count
+    formData.append("numberOfFollowers", user.numberOfFollowers); // Replace with actual count
+    formData.append("numberOfFollowing", user.numberOfFollowing); // Replace with actual count
     formData.append("creationDate", user.creationDate); // Format as string if necessary
-    formData.append("profilePicture", user.profilePicture || "defaultURL");
-    formData.append("numberOfPosts", user.posts); // Replace with actual count
+    formData.append("profilePicture", user.image || "defaultURL");
+    formData.append("numberOfPosts", user.numberOfPosts); // Replace with actual count
   
     try {
       const response = await fetch(
@@ -82,15 +82,14 @@ function Settings() {
     console.log(newProfile);
 
     // Append user details in the specified order as expected by your backend.
-    formData.append("userEmail", user.email);
-    formData.append("userName", user.name);
+    formData.append("userEmail", user.userEmail); // Replace with actual email from user state/context
+    formData.append("userName", user.userName); // Replace with actual name
     formData.append("bio", user.bio);
-    formData.append("numberOfFollowers", user.followers); 
-    formData.append("numberOfFollowing", user.following);
-    formData.append("creationDate", user.creationDate);
-    // For profile picture, you're appending the file itself
-    formData.append("profilePicture", newProfile);
-    formData.append("numberOfPosts", user.posts);
+    formData.append("numberOfFollowers", user.numberOfFollowers); // Replace with actual count
+    formData.append("numberOfFollowing", user.numberOfFollowing); // Replace with actual count
+    formData.append("creationDate", user.creationDate); // Format as string if necessary
+    formData.append("profilePicture", newProfile || "defaultURL");
+    formData.append("numberOfPosts", user.numberOfPosts); // Replace with actual count
   
     try {
       const response = await fetch(
