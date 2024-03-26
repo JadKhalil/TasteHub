@@ -1,13 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import "./Settings.css";
-import Login from "./Login";
 import { useGoogleLogin, googleLogout } from "@react-oauth/google";
-import axios from "axios";
 import { useUser } from "../UserContext";
 import { useNavigate } from "react-router-dom";
 import { useDarkMode } from "../DarkModeContext";
 import Popup from 'reactjs-popup';
-import { FileInput, Label } from 'flowbite-react';
 
 function Settings() {
   const { user: contextUser, login, logout } = useUser();
