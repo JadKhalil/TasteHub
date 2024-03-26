@@ -48,6 +48,10 @@ function Profile() {
     setPersonalPosts((prevPosts)=> prevPosts.filter(post => post.postID !== deletedPostId));
   };
 
+  const handlePostCreation = (newPostObject) => {
+    setPersonalPosts([newPostObject, ...personalPosts]); // Update local state to add the new post
+  }
+
   // When the user data is fetched, the loadLikedPostIDList, loadListOfFollowing, and loadPersonalPosts functions are called
   // This is to ensure that the posts are rendered after all the liked post is returned
   useEffect(() => {
@@ -144,12 +148,12 @@ function Profile() {
               >
                 Share your first recipe
               </button>
-            {showPostCreate && <CreatePostOverlay setPostCreate={setPostCreate} />}
+            {showPostCreate && <CreatePostOverlay setPostCreate={setPostCreate} renderNewPost={handlePostCreation}/>}
             </div>
           </div>
         ) : (
           <>
-            <CreateButton />
+            <CreateButton renderNewPost={handlePostCreation}/>
             <div className="profile-grid-container">
               {isLikedPostIDListLoaded && personalPosts.map((post) => (
                   <PostElement 

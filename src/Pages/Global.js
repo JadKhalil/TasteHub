@@ -60,6 +60,10 @@ function Global() {
     setAllPosts((prevPosts)=> prevPosts.filter(post => post.postID !== deletedPostId));
   };
 
+  const handlePostCreation = (newPostObject) => {
+    setAllPosts([newPostObject, ...allPosts]); // Update local state to add the new post
+  }
+
   return (
     user && (
       <div className="global-big-box">
@@ -67,11 +71,11 @@ function Global() {
           <div className="global-header-big-box">
             <div className="global-header-box">
               <div className="emptyspace">
-                <CreateButton></CreateButton>
+                <CreateButton renderNewPost={handlePostCreation}/>
               </div>
               <h1 className="global-header-label-h1">Global</h1>
               <div className="addPostButton">
-                <CreateButton></CreateButton>
+                <CreateButton renderNewPost={handlePostCreation}/>
               </div>
             </div>
           </div>

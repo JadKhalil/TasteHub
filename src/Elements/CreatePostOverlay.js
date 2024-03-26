@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useUser } from "../UserContext";
 import { IoMdClose } from "react-icons/io";
 
-const CreatePostOverlay = ({ setPostCreate }) => {
+const CreatePostOverlay = ({ setPostCreate, renderNewPost }) => {
   const { user } = useUser(); // Details of signed in user including their email
 
   const [email, setEmail] = useState();
@@ -41,7 +41,9 @@ const CreatePostOverlay = ({ setPostCreate }) => {
           body: dataToSubmit,
         }
       );
+      const responseBody = await response.json();
       if (response.ok) {
+        renderNewPost(responseBody.newPost); // Render the new post on front end
         setPostCreate(false); // Close the overlay
       }
     } catch (error) {

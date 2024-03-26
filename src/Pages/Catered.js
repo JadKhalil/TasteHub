@@ -68,11 +68,11 @@ function Catered() {
           <div className="global-header-big-box">
             <div className="global-header-box">
               <div className="emptyspace">
-                <CreateButton></CreateButton>
+                <CreateButton/>
               </div>
               <h1 className="global-header-label-h1">Catered</h1>
               <div className="addPostButton">
-                <CreateButton></CreateButton>
+                <CreateButton/>
               </div>
             </div>
           </div>

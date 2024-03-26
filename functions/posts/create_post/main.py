@@ -67,19 +67,21 @@ def lambda_handler(event, context):
     
     cloudImage = upload_to_cloud(imageFile)
     
+    newPost = {
+        'userEmail': userEmail,
+        'userName': userName,
+        'postID': postID,
+        'category': category,
+        'datePosted': datePosted,
+        'numberOfLikes': numberOfLikes,
+        'numberOfComments' : numberOfComments,
+        'postDescription': postDescription,
+        'prepTime': prepTime,
+        'recipeName':recipeName,
+        'imageLink': cloudImage["secure_url"]
+    }
     try:
-        posts_table.put_item(Item={'userEmail': userEmail,
-                            'userName': userName,
-                            'postID': postID,
-                            'category': category,
-                            'datePosted': datePosted,
-                            'numberOfLikes': numberOfLikes,
-                            'numberOfComments' : numberOfComments,
-                            'postDescription': postDescription,
-                            'prepTime': prepTime,
-                            'recipeName':recipeName,
-                            'imageLink': cloudImage["secure_url"]
-                            })
+        posts_table.put_item(Item=newPost)
         users_table.update_item(Key={
                 "userEmail": userEmail
             },
@@ -91,7 +93,8 @@ def lambda_handler(event, context):
         return {
             "statusCode": 200,
                 "body": json.dumps({
-                    "message": "success"
+                    "message": "success",
+                    "newPost": newPost
                 })
         }
     except Exception as exp:
