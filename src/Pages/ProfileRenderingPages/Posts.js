@@ -1,7 +1,7 @@
 import CreatePostOverlay from "../../Elements/CreatePostOverlay";
 import { useState, useEffect } from "react";
 import { FaCamera } from "react-icons/fa";
-import CreateButton from "./../CreateButton";
+import CreateButton from "../../Elements/CreateButton";
 import { useUser } from "../../UserContext";
 import PostElement from "../../Elements/PostElement";
 import "../Profile.css";
