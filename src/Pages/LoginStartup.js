@@ -24,8 +24,6 @@ function LoginStartup() {
         <div className="row-container">
           <div className="row">{!user && <Login />}</div>
           <div className="row separator"></div>
-          <div className="row">OR</div>
-          <div className="row">Sign Up</div>
         </div>
 
         {user && <SideBar />}
