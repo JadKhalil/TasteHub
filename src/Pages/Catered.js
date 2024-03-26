@@ -56,6 +56,11 @@ function Catered() {
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
+  const handlePostDelete = (deletedPostId) => {
+    // Update local state to remove the deleted post
+    setCateredPosts((prevPosts)=> prevPosts.filter(post => post.postID !== deletedPostId));
+  };
+
   return (
     user && (
       <div className="global-big-box">
@@ -92,6 +97,7 @@ function Catered() {
                         (followed) =>
                           followed.userEmailOfFollowee === post?.userEmail
                       )}
+                      onDelete={handlePostDelete}
                       key={post?.postID}
                     />
                   );

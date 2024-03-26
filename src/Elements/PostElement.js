@@ -28,6 +28,8 @@ import {deletePost} from "../Api";
  * @param {Boolean} isGridLayout        True or false depending on which page the post element is rendered.
  *                                      This parameter is used to change the styling of the returned JSX element.
  * @param {Boolean} isPosterFollowedParam True or false depending on whether the user liked the post or not.
+ * 
+ * @param {function} onDelete           Function that is passed from the page the post element is rendered form. It is used to notify that the post has been deleted
  * @returns {JSX}
  */
 const PostElement = ({
@@ -37,6 +39,7 @@ const PostElement = ({
   isPostLikedParam,
   isGridLayout,
   isPosterFollowedParam,
+  onDelete
 }) => {
   const [showComments, setShowComments] = useState(false); // Boolean for showing comments when comment button is clicked
   const [newComment, setNewComment] = useState(""); // A comment on a comment box. If this state is empty, the submit button disappears
@@ -320,6 +323,7 @@ const PostElement = ({
     );
     if (confirmDelete) {
       deletePost(postObject?.postID, postObject?.userEmail); // Call the deletePost function passed as a prop
+      onDelete(postObject?.postID);
     }
   };
 

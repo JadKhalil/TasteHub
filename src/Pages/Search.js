@@ -66,6 +66,11 @@ function Search() {
     // The dependency array ensures that this effect runs whenever user changes
   }, [user]);
 
+  const handlePostDelete = (deletedPostId) => {
+    // Update local state to remove the deleted post
+    setAllPosts((prevPosts)=> prevPosts.filter(post => post.postID !== deletedPostId));
+  };
+
   return (
     user && (
       <div className="search-container">
@@ -102,6 +107,7 @@ function Search() {
                       isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
                       isGridLayout={true}
                       isPosterFollowedParam={followedUserEmailList.some(followed => followed.userEmailOfFollowee === post?.userEmail)}
+                      onDelete={handlePostDelete}
                       key={post?.postID}/>)
           })}
         </div>

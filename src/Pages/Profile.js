@@ -33,12 +33,6 @@ function Profile() {
    */ 
   const [isLikedPostIDListLoaded, setIsLikedPostIDListLoaded ] = useState(false); 
   
-  /* 
-   * initially set to false as the list of likedPostIDs take time to load from the database.
-   * This hook is here to ensure the post is loaded AFTER all the liked post IDs are found in the database.
-   * Without this hook, there may be bugs where heart icon of the rendered post is hollow despite the fact that the user has previously
-   * liked the post. 
-   */ 
   const toggleCreatePostOverlay = () => {
     setPostCreate(!showPostCreate);
   };
@@ -49,6 +43,10 @@ function Profile() {
     navigate('/settings');
   }
 
+  const handlePostDelete = (deletedPostId) => {
+    // Update local state to remove the deleted post
+    setPersonalPosts((prevPosts)=> prevPosts.filter(post => post.postID !== deletedPostId));
+  };
 
   // When the user data is fetched, the loadLikedPostIDList, loadListOfFollowing, and loadPersonalPosts functions are called
   // This is to ensure that the posts are rendered after all the liked post is returned
@@ -154,7 +152,6 @@ function Profile() {
             <CreateButton />
             <div className="profile-grid-container">
               {isLikedPostIDListLoaded && personalPosts.map((post) => (
-                <div key={post?.postID}>
                   <PostElement 
                     postObject={post} 
                     userEmail={user?.userEmail}
@@ -162,8 +159,9 @@ function Profile() {
                     isPostLikedParam={likedPostIDList.some(likedPost => likedPost.postID === post?.postID)} 
                     isGridLayout={true}
                     isPosterFollowedParam={false}
+                    onDelete={handlePostDelete}
+                    key={post?.postID}
                   />
-                </div>
               ))}
             </div>
           </>)}
