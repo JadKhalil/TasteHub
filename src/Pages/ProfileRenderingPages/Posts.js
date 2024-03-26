@@ -20,11 +20,6 @@ function Posts({isLikedPostIDListLoaded}) {
    * Without this hook, there may be bugs where heart icon of the rendered post is hollow despite the fact that the user has previously
    * liked the post. 
    */ 
-  
-
-  
-
-
   const toggleCreatePostOverlay = () => {
     setPostCreate(!showPostCreate);
   };
@@ -124,6 +119,7 @@ function Posts({isLikedPostIDListLoaded}) {
             >
               Share your first recipe
             </button>
+          {showPostCreate && <CreatePostOverlay setPostCreate={setPostCreate} />}
           </div>
         </div>
       ) : (

@@ -26,7 +26,7 @@ The elements in FormData must be appended in the following order:
 7. profile picture (image or string of URL)
 8. numberOfPosts (Number)
     const promise = await fetch(
-        "https://insertSomeLambdaFunctionURL.lambda-url.ca-central-1.on.aws/",
+        "https://hqp3zbqf4uunvhiunkf3ttpvgi0euppk.lambda-url.ca-central-1.on.aws/",
         {
             method: "POST",
             body: formData,
