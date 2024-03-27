@@ -1,7 +1,7 @@
 # TasteHub
 ENSF 401 App Project
 
-
+[Website Link](https://main--thetastehub.netlify.app/)
 ### Things to know for backend development
 ###### Some things needs to be hard coded if you want to deploy a backend on YOUR AWS account.
 
