@@ -2,7 +2,12 @@
 ENSF 401 App Project
 
 [Website Link](https://main--thetastehub.netlify.app/)
-### Things to know for backend development
+
+[Demo Video](https://youtu.be/yDBssWRU05M)
+
+
+---
+#### Things to know for backend development
 ###### Some things needs to be hard coded if you want to deploy a backend on YOUR AWS account.
 
 - In AWS Parameter Store, you must manually create a `/tastehub/cloudinary-key` with Cloudinary API Secret Key stored as SecureString. We don't want to include this sensitive data in our lambda functions so this needs to be manually done.
@@ -37,9 +42,4 @@ ENSF 401 App Project
         EOF
         }
         ```
-- The api_key and cloud_name in the `create_post` and `create_user_profile` must be hard coded. Make sure to use the API key, and not the secret API key. 
-
-
-### Start the project
-- `git clone https://github.com/JadKhalil/TasteHub`
-- `npm install` to install all dependencies
+- The api_key and cloud_name in the `create_post` and `create_user_profile` must be hard coded. Make sure to use the API key, and not the secret API key.  d
