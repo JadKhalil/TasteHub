@@ -1,7 +1,7 @@
 # TasteHub
 ENSF 401 App Project
 
-[Website Link](https://main--thetastehub.netlify.app/)
+[Website Link](https://main--thetastehub.netlify.app/) *No longer works as AWS backend configuration is removed to avoid incurring fees. Refer to the demo video instead*
 
 [Demo Video](https://youtu.be/yDBssWRU05M)
 
